@@ -28,9 +28,9 @@ export default async function handler(req, res) {
 
   try {
     // Search by phone OR registration_no OR bib_no
-    let filterQuery = `phone.eq.${encodeURIComponent(query)}`;
+    let filterQuery = `phone=eq.${encodeURIComponent(query)}`;
     if (query.toUpperCase().startsWith('NSC-')) {
-      filterQuery = `registration_no.eq.${encodeURIComponent(query.toUpperCase())}`;
+      filterQuery = `registration_no=eq.${encodeURIComponent(query.toUpperCase())}`;
     } else if (!isNaN(parseInt(query)) && parseInt(query) < 9999) {
       filterQuery = `or=(phone.eq.${encodeURIComponent(query)},bib_no.eq.${parseInt(query)})`;
     }
