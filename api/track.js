@@ -13,7 +13,15 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const query = (req.query.q || req.query.mobile || '').trim();
+  let query = (req.query && (req.query.q || req.query.mobile)) || '';
+  if (!query && req.url) {
+    try {
+      const parsed = new URL(req.url, 'http://localhost');
+      query = parsed.searchParams.get('q') || parsed.searchParams.get('mobile') || '';
+    } catch(e) {}
+  }
+  query = (query || '').trim();
+
   if (!query) {
     return res.status(400).json({ success: false, error: 'Query parameter "q" or "mobile" required' });
   }
@@ -41,7 +49,7 @@ export default async function handler(req, res) {
 
     const results = await response.json();
 
-    if (results.length === 0) {
+    if (!Array.isArray(results) || results.length === 0) {
       return res.status(404).json({ success: false, message: 'No competitor pass found for this search' });
     }
 
