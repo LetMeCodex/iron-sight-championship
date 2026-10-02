@@ -1,5 +1,6 @@
 *.py
-*.png
+/*.png
+!assets/img/*.png
 .vercel
 node_modules/
 .DS_Store
