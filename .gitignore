@@ -1,0 +1,5 @@
+*.py
+*.png
+.vercel
+node_modules/
+.DS_Store

@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Match Timetable & Relay Schedule | 2nd Late Smt. Kiran Chopra Championship 2025</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/pioneer-theme.css">
+</head>
+<body class="selection:bg-[#FF5B37] selection:text-white">
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <nav class="sticky top-0 z-50 glass-nav transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20">
+        
+        <!-- Brand Logo -->
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <svg class="w-6 h-6 text-white group-hover:rotate-45 transition-transform duration-300" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0L13.4 8.6L22 10L13.4 11.4L12 20L10.6 11.4L2 10L10.6 8.6L12 0Z"/>
+            <circle cx="12" cy="10" r="1.5" fill="#FF5B37"/>
+          </svg>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-display font-bold text-base sm:text-lg tracking-wide text-white">Iron Sight</span>
+              <span class="hidden md:inline-flex px-1.5 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70 border border-white/10">
+                CHAMPIONSHIP 2025
+              </span>
+            </div>
+            <p class="text-[9px] font-mono text-white/40 tracking-wider uppercase">BBC Shooting Academy • Sikandrabad</p>
+          </div>
+        </a>
+
+        <!-- Desktop Links -->
+        <div class="hidden lg:flex items-center gap-1 font-mono text-xs">
+          <a href="index.html" class="px-3 py-1.5 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors">Home</a>
+          <a href="match-schedule.html" class="px-3 py-1.5 rounded-xl text-white bg-white/15">Match Schedule</a>
+          <a href="venue.html" class="px-3 py-1.5 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors">Venue</a>
+          <a href="track-booking.html" class="px-3 py-1.5 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors">Track Booking</a>
+          <a href="live-scoring.html" class="px-3 py-1.5 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Live Scoring
+          </a>
+        </div>
+
+        <!-- Right Buttons -->
+        <div class="flex items-center gap-2.5">
+          <a href="admin.html" class="px-3 py-1.5 rounded-xl border border-white/15 hover:border-white/30 text-white/70 hover:text-white font-mono text-[11px] transition-colors btn-tactile">
+            Admin Login
+          </a>
+          <a href="register.html" class="px-4 sm:px-5 py-2 rounded-xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile flex items-center gap-2">
+            <i class="fa-solid fa-crosshairs text-xs"></i>
+            <span>Register</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= MAIN SCHEDULE CONTENT ================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
+
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 text-xs font-mono text-amber-400 uppercase tracking-wider mb-1 font-semibold">
+          <i class="fa-regular fa-clock"></i>
+          Official Tournament Timetable
+        </div>
+        <h1 class="font-display font-extrabold text-2xl sm:text-4xl text-white uppercase tracking-tight">
+          Match Schedule & Relays
+        </h1>
+        <p class="text-xs sm:text-sm text-white/50 mt-1">
+          13–16 April 2025 • 16 Official Relays • Mandatory Reporting: 30 minutes before firing time.
+        </p>
+      </div>
+
+      <!-- Action Button -->
+      <div class="flex items-center gap-3">
+        <a href="register.html" class="px-4 py-2 rounded-xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile flex items-center gap-2 shadow-lg">
+          <i class="fa-solid fa-bullseye text-xs"></i>
+          <span>Book Relay Slot</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Highlight Banner: Champion of Champions (COC) Shootout -->
+    <div class="pioneer-card p-5 sm:p-6 mb-8 border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-transparent to-red-500/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-2xl border border-amber-500/30 flex-shrink-0">
+          <i class="fa-solid fa-trophy"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold bg-amber-400 text-black">Grand Finale</span>
+            <span class="text-xs font-mono text-amber-300">16 April 2025 • 03:00 PM</span>
+          </div>
+          <h2 class="font-display font-bold text-base sm:text-lg text-white mt-0.5">
+            Champion of Champions (COC) Cash Prize Shootout
+          </h2>
+          <p class="text-xs text-white/60">Top 8 Qualifiers in ISSF & NR. ISSF Cash: ₹11,000 (1st), ₹7,100 (2nd), ₹5,100 (3rd). NR Cash: ₹9,100 (1st), ₹5,100 (2nd), ₹3,100 (3rd) + Medals.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 self-start md:self-auto font-mono text-xs">
+        <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-emerald-400 font-semibold">Prize Pool: ₹81,000+ Total Cash</span>
+      </div>
+    </div>
+
+    <!-- Schedule Day Filter Pills & Search -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      
+      <!-- Day Pills -->
+      <div class="flex flex-wrap items-center gap-2 font-mono text-xs" id="dayFilters">
+        <button onclick="filterDay('all')" class="day-btn px-4 py-2 rounded-xl bg-white/15 text-white border border-white/20 transition-all font-semibold active-day" data-day="all">
+          All Days (13–16 Apr)
+        </button>
+        <button onclick="filterDay('13')" class="day-btn px-4 py-2 rounded-xl bg-white/5 text-white/60 hover:text-white border border-white/10 transition-all" data-day="13">
+          Day 1: 13 Apr (Rifle)
+        </button>
+        <button onclick="filterDay('14')" class="day-btn px-4 py-2 rounded-xl bg-white/5 text-white/60 hover:text-white border border-white/10 transition-all" data-day="14">
+          Day 2: 14 Apr (Pistol)
+        </button>
+        <button onclick="filterDay('15')" class="day-btn px-4 py-2 rounded-xl bg-white/5 text-white/60 hover:text-white border border-white/10 transition-all" data-day="15">
+          Day 3: 15 Apr (Champs & Para)
+        </button>
+        <button onclick="filterDay('16')" class="day-btn px-4 py-2 rounded-xl bg-white/5 text-white/60 hover:text-white border border-white/10 transition-all" data-day="16">
+          Day 4: 16 Apr (COC & Ceremony)
+        </button>
+      </div>
+
+      <!-- Quick Search -->
+      <div class="relative min-w-[240px]">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-white/30 text-xs"></i>
+        <input type="text" id="scheduleSearch" onkeyup="searchSchedule()" placeholder="Search relay or event..." class="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-3.5 py-2 text-white placeholder-white/40 text-xs outline-none focus:border-[#FF5B37] transition-colors">
+      </div>
+    </div>
+
+    <!-- ================= RELAYS GRID ================= -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="relaysGrid">
+      
+      <!-- Day 1: Relays 01-04 -->
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="13" data-text="relay 01 10m air rifle issf 60 shots 13 apr april">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-blue-500/20 text-blue-400 font-mono text-xs font-semibold border border-blue-500/30">
+              Relay 01
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">13 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">10M Air Rifle (.177) ISSF</h3>
+          <p class="text-xs text-white/50 mb-3">Senior & Junior Men / Women • 60 Competition Shots</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Firing Time:</span>
+              <span class="text-emerald-400 font-semibold">09:00 AM — 10:15 AM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Reporting (-30m):</span>
+              <span class="text-amber-300">08:30 AM (Mandatory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Equipment Check:</span>
+              <span class="text-white/70">08:15 AM — 08:35 AM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Target Range:</span>
+              <span class="text-white/80">Lanes 01–09 (SIUS Ascor)</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Slots Available
+          </span>
+          <a href="register.html" class="text-[#FF5B37] hover:underline font-semibold flex items-center gap-1">
+            Book <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="13" data-text="relay 02 10m air rifle issf 60 shots 13 apr april youth sub youth">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-blue-500/20 text-blue-400 font-mono text-xs font-semibold border border-blue-500/30">
+              Relay 02
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">13 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">10M Air Rifle (.177) ISSF</h3>
+          <p class="text-xs text-white/50 mb-3">Youth & Sub-Youth Men / Women • 60 Competition Shots</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Firing Time:</span>
+              <span class="text-emerald-400 font-semibold">10:45 AM — 12:00 PM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Reporting (-30m):</span>
+              <span class="text-amber-300">10:15 AM (Mandatory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Equipment Check:</span>
+              <span class="text-white/70">10:00 AM — 10:20 AM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Target Range:</span>
+              <span class="text-white/80">Lanes 01–09 (SIUS Ascor)</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Slots Available
+          </span>
+          <a href="register.html" class="text-[#FF5B37] hover:underline font-semibold flex items-center gap-1">
+            Book <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="13" data-text="relay 03 10m air rifle nr 40 shots 13 apr april senior junior">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-400 font-mono text-xs font-semibold border border-indigo-500/30">
+              Relay 03
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">13 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">10M Air Rifle (.177) NR</h3>
+          <p class="text-xs text-white/50 mb-3">Senior & Junior Men / Women • 40 Competition Shots</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Firing Time:</span>
+              <span class="text-emerald-400 font-semibold">12:30 PM — 01:20 PM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Reporting (-30m):</span>
+              <span class="text-amber-300">12:00 PM (Mandatory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Equipment Check:</span>
+              <span class="text-white/70">11:45 AM — 12:05 PM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Target Range:</span>
+              <span class="text-white/80">Lanes 01–09 (SIUS Ascor)</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Slots Available
+          </span>
+          <a href="register.html" class="text-[#FF5B37] hover:underline font-semibold flex items-center gap-1">
+            Book <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="13" data-text="relay 04 10m air rifle nr 40 shots 13 apr april youth sub youth">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-400 font-mono text-xs font-semibold border border-indigo-500/30">
+              Relay 04
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">13 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">10M Air Rifle (.177) NR</h3>
+          <p class="text-xs text-white/50 mb-3">Youth & Sub-Youth Men / Women • 40 Competition Shots</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Firing Time:</span>
+              <span class="text-emerald-400 font-semibold">01:50 PM — 02:40 PM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Reporting (-30m):</span>
+              <span class="text-amber-300">01:20 PM (Mandatory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Equipment Check:</span>
+              <span class="text-white/70">01:05 PM — 01:25 PM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Target Range:</span>
+              <span class="text-white/80">Lanes 01–09 (SIUS Ascor)</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-amber-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span> Filling Fast (2 Left)
+          </span>
+          <a href="register.html" class="text-[#FF5B37] hover:underline font-semibold flex items-center gap-1">
+            Book <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Day 2: Relays 05-08 -->
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="14" data-text="relay 05 10m air pistol issf 60 shots 14 apr april senior junior">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-400 font-mono text-xs font-semibold border border-rose-500/30">
+              Relay 05
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">14 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">10M Air Pistol (.177) ISSF</h3>
+          <p class="text-xs text-white/50 mb-3">Senior & Junior Men / Women • 60 Competition Shots</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Firing Time:</span>
+              <span class="text-emerald-400 font-semibold">09:00 AM — 10:15 AM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Reporting (-30m):</span>
+              <span class="text-amber-300">08:30 AM (Mandatory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Trigger Weight Check:</span>
+              <span class="text-white/70">500g Minimum Certified</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Target Range:</span>
+              <span class="text-white/80">Lanes 01–09 (SIUS Ascor)</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Slots Available
+          </span>
+          <a href="register.html" class="text-[#FF5B37] hover:underline font-semibold flex items-center gap-1">
+            Book <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="14" data-text="relay 06 10m air pistol issf 60 shots 14 apr april youth sub youth">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-400 font-mono text-xs font-semibold border border-rose-500/30">
+              Relay 06
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">14 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">10M Air Pistol (.177) ISSF</h3>
+          <p class="text-xs text-white/50 mb-3">Youth & Sub-Youth Men / Women • 60 Competition Shots</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Firing Time:</span>
+              <span class="text-emerald-400 font-semibold">10:45 AM — 12:00 PM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Reporting (-30m):</span>
+              <span class="text-amber-300">10:15 AM (Mandatory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Trigger Weight Check:</span>
+              <span class="text-white/70">500g Minimum Certified</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Target Range:</span>
+              <span class="text-white/80">Lanes 01–09 (SIUS Ascor)</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Slots Available
+          </span>
+          <a href="register.html" class="text-[#FF5B37] hover:underline font-semibold flex items-center gap-1">
+            Book <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="14" data-text="relay 07 10m air pistol nr 40 shots 14 apr april senior junior">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-orange-500/20 text-orange-400 font-mono text-xs font-semibold border border-orange-500/30">
+              Relay 07
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">14 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">10M Air Pistol (.177) NR</h3>
+          <p class="text-xs text-white/50 mb-3">Senior & Junior Men / Women • 40 Competition Shots</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Firing Time:</span>
+              <span class="text-emerald-400 font-semibold">12:30 PM — 01:20 PM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Reporting (-30m):</span>
+              <span class="text-amber-300">12:00 PM (Mandatory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Target Range:</span>
+              <span class="text-white/80">Lanes 01–09 (SIUS Ascor)</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Slots Available
+          </span>
+          <a href="register.html" class="text-[#FF5B37] hover:underline font-semibold flex items-center gap-1">
+            Book <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="14" data-text="relay 08 10m air pistol nr 40 shots 14 apr april youth sub youth">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-orange-500/20 text-orange-400 font-mono text-xs font-semibold border border-orange-500/30">
+              Relay 08
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">14 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">10M Air Pistol (.177) NR</h3>
+          <p class="text-xs text-white/50 mb-3">Youth & Sub-Youth Men / Women • 40 Competition Shots</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Firing Time:</span>
+              <span class="text-emerald-400 font-semibold">01:50 PM — 02:40 PM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Reporting (-30m):</span>
+              <span class="text-amber-300">01:20 PM (Mandatory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Target Range:</span>
+              <span class="text-white/80">Lanes 01–09 (SIUS Ascor)</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Slots Available
+          </span>
+          <a href="register.html" class="text-[#FF5B37] hover:underline font-semibold flex items-center gap-1">
+            Book <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Day 3: Relays 09-12 (Little Champs & Para) -->
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="15" data-text="relay 09 little champ rifle 20 shots under 12 15 apr april">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 font-mono text-xs font-semibold border border-emerald-500/30">
+              Relay 09
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">15 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">Little Champ 10M Rifle (Under-12)</h3>
+          <p class="text-xs text-white/50 mb-3">Sub-Junior Young Talent • 20 Competition Shots</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Firing Time:</span>
+              <span class="text-emerald-400 font-semibold">09:00 AM — 09:40 AM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Reporting (-30m):</span>
+              <span class="text-amber-300">08:30 AM (Mandatory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Target Type:</span>
+              <span class="text-white/80">Electronic SIUS (Supported Stand Allowed)</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Slots Available
+          </span>
+          <a href="register.html" class="text-[#FF5B37] hover:underline font-semibold flex items-center gap-1">
+            Book <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="15" data-text="relay 10 little champ pistol 20 shots under 12 15 apr april">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 font-mono text-xs font-semibold border border-emerald-500/30">
+              Relay 10
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">15 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">Little Champ 10M Pistol (Under-12)</h3>
+          <p class="text-xs text-white/50 mb-3">Sub-Junior Young Talent • 20 Competition Shots</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Firing Time:</span>
+              <span class="text-emerald-400 font-semibold">10:10 AM — 10:50 AM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Reporting (-30m):</span>
+              <span class="text-amber-300">09:40 AM (Mandatory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Target Type:</span>
+              <span class="text-white/80">Electronic SIUS (Two-Hand Grip Permitted)</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Slots Available
+          </span>
+          <a href="register.html" class="text-[#FF5B37] hover:underline font-semibold flex items-center gap-1">
+            Book <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="15" data-text="relay 11 deaf para 10m rifle pistol 40 shots 15 apr april">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-purple-500/20 text-purple-400 font-mono text-xs font-semibold border border-purple-500/30">
+              Relay 11
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">15 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">Deaf / Para Shooters 10M Events</h3>
+          <p class="text-xs text-white/50 mb-3">Special Olympics & Para Division • 40 Competition Shots</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Firing Time:</span>
+              <span class="text-emerald-400 font-semibold">11:30 AM — 12:20 PM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Reporting (-30m):</span>
+              <span class="text-amber-300">11:00 AM (Mandatory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Accessibility:</span>
+              <span class="text-emerald-400">Wheelchair Accessible Lanes 01-04</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Slots Available
+          </span>
+          <a href="register.html" class="text-[#FF5B37] hover:underline font-semibold flex items-center gap-1">
+            Book <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="15" data-text="relay 12 mixed open relay 15 apr april">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-400 font-mono text-xs font-semibold border border-cyan-500/30">
+              Relay 12
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">15 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">Open Mixed Relay (Buffer)</h3>
+          <p class="text-xs text-white/50 mb-3">All Categories / Rescheduled Athletes</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Firing Time:</span>
+              <span class="text-emerald-400 font-semibold">01:00 PM — 02:00 PM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Reporting (-30m):</span>
+              <span class="text-amber-300">12:30 PM (Mandatory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Target Range:</span>
+              <span class="text-white/80">Lanes 01–09 (SIUS Ascor)</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Slots Available
+          </span>
+          <a href="register.html" class="text-[#FF5B37] hover:underline font-semibold flex items-center gap-1">
+            Book <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Day 4: Relays 13-16 + COC + Ceremony -->
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="16" data-text="relay 13 14 final qualification rounds 16 apr april">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-yellow-500/20 text-yellow-400 font-mono text-xs font-semibold border border-yellow-500/30">
+              Relays 13–14
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">16 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">Final Qualification Rounds</h3>
+          <p class="text-xs text-white/50 mb-3">Last-Chance Entry for Champion of Champions Cutoff</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Firing Time:</span>
+              <span class="text-emerald-400 font-semibold">09:00 AM — 11:30 AM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Reporting (-30m):</span>
+              <span class="text-amber-300">08:30 AM (Mandatory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Cutoff Declaration:</span>
+              <span class="text-amber-400 font-semibold">12:30 PM Sharp</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-amber-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span> Limited Slots
+          </span>
+          <a href="register.html" class="text-[#FF5B37] hover:underline font-semibold flex items-center gap-1">
+            Book <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="relay-card pioneer-card p-5 border border-amber-500/40 bg-amber-500/5 flex flex-col justify-between" data-day="16" data-text="champion of champions coc shootout cash prize 16 apr april">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-amber-400 text-black font-mono text-xs font-bold">
+              SUPER SHOOTOUT
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-400/20 text-amber-300 font-semibold">16 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-amber-300 text-base">Champion of Champions (COC)</h3>
+          <p class="text-xs text-white/60 mb-3">Top 8 Rifle & Pistol Scorers • Elimination Format</p>
+          
+          <div class="p-3 rounded-xl bg-black/40 border border-amber-500/20 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/50">Start Time:</span>
+              <span class="text-amber-300 font-bold">03:00 PM — 04:30 PM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/50">Format:</span>
+              <span class="text-white">ISSF Progressive Single-Shot Knockout</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/50">ISSF Cash:</span>
+              <span class="text-emerald-400 font-bold">1st ₹11,000 • 2nd ₹7,100 • 3rd ₹5,100</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/50">NR Cash:</span>
+              <span class="text-emerald-400 font-bold">1st ₹9,100 • 2nd ₹5,100 • 3rd ₹3,100</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-amber-500/20 text-[11px] font-mono">
+          <span class="text-amber-300 flex items-center gap-1.5 font-semibold">
+            <i class="fa-solid fa-tv"></i> Live Arena Streamed
+          </span>
+          <a href="live-scoring.html" class="text-amber-400 hover:underline font-bold flex items-center gap-1">
+            Leaderboard <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="relay-card pioneer-card p-5 border border-white/10 flex flex-col justify-between" data-day="16" data-text="grand prize distribution medal ceremony closing gala 16 apr april">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 font-mono text-xs font-semibold border border-emerald-500/30">
+              CEREMONY
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/70">16 APR 2025</span>
+          </div>
+          <h3 class="font-display font-bold text-white text-base">Medal Ceremony & Closing Gala</h3>
+          <p class="text-xs text-white/50 mb-3">Medal awards across all categories, school trophies & cash distribution</p>
+          
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 font-mono text-xs space-y-1.5 mb-4">
+            <div class="flex justify-between">
+              <span class="text-white/40">Ceremony Time:</span>
+              <span class="text-emerald-400 font-semibold">05:00 PM — 06:30 PM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Venue:</span>
+              <span class="text-white/80">Main Auditorium, Babu Bodhraj School</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-white/40">Chief Guests:</span>
+              <span class="text-amber-300 font-medium">Distinguished Shooting Dignitaries</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono">
+          <span class="text-white/50 flex items-center gap-1.5">
+            <i class="fa-solid fa-medal text-amber-400"></i> Open for all athletes & parents
+          </span>
+          <a href="venue.html" class="text-white/70 hover:text-white hover:underline flex items-center gap-1">
+            Venue Info <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Mandatory Reporting Notice Card -->
+    <div class="mt-8 pioneer-card p-5 border border-white/10 bg-black/40 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs">
+      <div class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm border border-amber-500/30 flex-shrink-0">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </span>
+        <div class="text-white/80">
+          <strong class="text-white font-semibold">Important Rule:</strong> Weapon safety and trigger inspection closes 15 minutes before the start of each relay. Failure to report on time will result in forfeiture of the relay slot.
+        </div>
+      </div>
+      <a href="venue.html" class="whitespace-nowrap px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors">
+        View Range Safety Guidelines →
+      </a>
+    </div>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="mt-16 border-t border-white/10 py-8 relative z-10 text-center font-mono text-xs text-white/40">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-white">Iron Sight Club</span>
+        <span>•</span>
+        <span>BBC Shooting Academy, Sikandrabad</span>
+      </div>
+      <div>
+        Helpline / Range Officer: <a href="tel:9012790797" class="text-white hover:underline">+91 9012790797</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/portal.js"></script>
+  <script>
+    function filterDay(day) {
+      // Update button styling
+      document.querySelectorAll('.day-btn').forEach(btn => {
+        if (btn.dataset.day === day) {
+          btn.classList.remove('bg-white/5', 'text-white/60');
+          btn.classList.add('bg-white/15', 'text-white', 'active-day');
+        } else {
+          btn.classList.add('bg-white/5', 'text-white/60');
+          btn.classList.remove('bg-white/15', 'text-white', 'active-day');
+        }
+      });
+
+      // Filter cards
+      const cards = document.querySelectorAll('.relay-card');
+      cards.forEach(card => {
+        if (day === 'all' || card.dataset.day === day) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    function searchSchedule() {
+      const q = document.getElementById('scheduleSearch').value.toLowerCase();
+      const cards = document.querySelectorAll('.relay-card');
+      
+      cards.forEach(card => {
+        const text = card.dataset.text.toLowerCase();
+        if (text.includes(q)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

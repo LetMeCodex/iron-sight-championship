@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Live Electronic Scoring | 2nd Late Smt. Kiran Chopra Championship 2025</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/pioneer-theme.css">
+</head>
+<body class="selection:bg-[#FF5B37] selection:text-white">
+
+  <!-- Nav -->
+  <nav class="sticky top-0 z-50 glass-nav transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20">
+        <a href="index.html" class="flex items-center gap-2.5">
+          <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0L13.4 8.6L22 10L13.4 11.4L12 20L10.6 11.4L2 10L10.6 8.6L12 0Z"/>
+            <circle cx="12" cy="10" r="1.5" fill="#FF5B37"/>
+          </svg>
+          <span class="font-display font-bold text-base sm:text-lg text-white">Iron Sight</span>
+        </a>
+
+        <div class="hidden lg:flex items-center gap-1 font-mono text-xs">
+          <a href="index.html" class="px-3 py-1.5 rounded-xl text-white/70 hover:text-white transition-colors">Home</a>
+          <a href="match-schedule.html" class="px-3 py-1.5 rounded-xl text-white/70 hover:text-white transition-colors">Match Schedule</a>
+          <a href="venue.html" class="px-3 py-1.5 rounded-xl text-white/70 hover:text-white transition-colors">Venue</a>
+          <a href="track-booking.html" class="px-3 py-1.5 rounded-xl text-white/70 hover:text-white transition-colors">Track Booking</a>
+          <a href="live-scoring.html" class="px-3 py-1.5 rounded-xl text-white bg-white/15">Live Scoring</a>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href="category-wise-scoring.html" class="px-3.5 py-1.5 rounded-xl border border-white/15 text-white/80 font-mono text-xs hover:text-white transition-colors btn-tactile">
+            Category Wise
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Live Scoring Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
+    
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 text-xs font-mono text-emerald-400 uppercase tracking-wider mb-1 font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          Live SIUS Telemetry Feed
+        </div>
+        <h1 class="font-display font-extrabold text-2xl sm:text-4xl text-white uppercase tracking-tight">
+          Live Electronic Leaderboard
+        </h1>
+        <p class="text-xs sm:text-sm text-white/50 mt-1">Real-time target scoring with series breakdown (S1–S6), decimal precision, and Inner 10s.</p>
+      </div>
+
+      <!-- Filters & Search -->
+      <div class="flex flex-wrap items-center gap-2.5 font-mono text-xs">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-white/30 text-xs"></i>
+          <input type="text" id="liveSearch" onkeyup="filterLiveScores()" placeholder="Search shooter or school..." class="bg-white/5 border border-white/10 rounded-xl pl-9 pr-3.5 py-2 text-white placeholder-white/40 text-xs outline-none focus:border-[#FF5B37] transition-colors">
+        </div>
+
+        <select id="liveEventFilter" onchange="filterLiveScores()" class="bg-[#1C1624] border border-white/10 rounded-xl px-3 py-2 text-white text-xs outline-none focus:border-[#FF5B37]">
+          <option value="ALL">All Disciplines</option>
+          <option value="Rifle">10M Air Rifle</option>
+          <option value="Pistol">10M Air Pistol</option>
+          <option value="ISSF">ISSF Events</option>
+          <option value="NR">NR Events</option>
+          <option value="Little Champ">Little Champs</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Leaderboard Table Card -->
+    <div class="pioneer-card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs whitespace-nowrap">
+          <thead class="bg-white/5 font-mono text-[11px] text-white/50 border-b border-white/10 uppercase tracking-wider">
+            <tr>
+              <th class="py-3.5 px-4 text-center">Rank</th>
+              <th class="py-3.5 px-4">Shooter Details</th>
+              <th class="py-3.5 px-4">School / Club</th>
+              <th class="py-3.5 px-4">Event Discipline</th>
+              <th class="py-3.5 px-2 text-center text-white/40">S1</th>
+              <th class="py-3.5 px-2 text-center text-white/40">S2</th>
+              <th class="py-3.5 px-2 text-center text-white/40">S3</th>
+              <th class="py-3.5 px-2 text-center text-white/40">S4</th>
+              <th class="py-3.5 px-2 text-center text-white/40">S5</th>
+              <th class="py-3.5 px-2 text-center text-white/40">S6</th>
+              <th class="py-3.5 px-4 text-center font-bold text-cyan-400">Total</th>
+              <th class="py-3.5 px-4 text-center text-[#FF5B37] font-bold">10x</th>
+              <th class="py-3.5 px-4 text-center">Status</th>
+            </tr>
+          </thead>
+          <tbody id="liveScoresTbody" class="divide-y divide-white/5 font-sans">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Table Bottom Strip -->
+      <div class="p-4 bg-black/20 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between font-mono text-[11px] text-white/50 gap-2">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+          <span>Top 8 shooters qualify for the Champion of Champions (COC) Shootout on 16th April.</span>
+        </div>
+        <div>SIUS Ascor Calibrated Radar • Zero Refresh Lag</div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="assets/js/portal.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTable();
+    });
+
+    function renderTable(filter = 'ALL', search = '') {
+      const tbody = document.getElementById('liveScoresTbody');
+      tbody.innerHTML = '';
+      const shooters = getShooters();
+
+      let filtered = shooters.filter(s => {
+        const matchesEvent = (filter === 'ALL' || s.event.includes(filter));
+        const matchesSearch = (!search || s.name.toLowerCase().includes(search.toLowerCase()) || s.school.toLowerCase().includes(search.toLowerCase()));
+        return matchesEvent && matchesSearch;
+      });
+
+      filtered.sort((a, b) => b.total - a.total);
+
+      filtered.forEach((shooter, idx) => {
+        const rank = idx + 1;
+        const tr = document.createElement('tr');
+        tr.className = `hover:bg-white/5 transition-colors ${shooter.active ? 'bg-emerald-500/5' : ''}`;
+
+        let rankBadge = `<span class="font-mono text-white/60 font-bold">#${rank}</span>`;
+        if (rank === 1) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-amber-400/20 text-amber-300 border border-amber-400/40">🥇 1</span>`;
+        if (rank === 2) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-slate-300/20 text-slate-200 border border-slate-300/30">🥈 2</span>`;
+        if (rank === 3) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-amber-700/20 text-amber-500 border border-amber-700/40">🥉 3</span>`;
+
+        tr.innerHTML = `
+          <td class="py-3 px-4 text-center">${rankBadge}</td>
+          <td class="py-3 px-4 font-semibold text-white">${shooter.name}</td>
+          <td class="py-3 px-4 text-white/60 text-xs">${shooter.school}</td>
+          <td class="py-3 px-4 font-mono text-[11px] text-cyan-400">${shooter.event}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/70">${shooter.s1.toFixed(1)}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/70">${shooter.s2.toFixed(1)}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/70">${shooter.s3.toFixed(1)}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/70">${shooter.s4.toFixed(1)}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/50">${shooter.s5 > 0 ? shooter.s5.toFixed(1) : '-'}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/50">${shooter.s6 > 0 ? shooter.s6.toFixed(1) : '-'}</td>
+          <td class="py-3 px-4 text-center font-mono font-bold text-sm text-cyan-300">${shooter.total.toFixed(1)}</td>
+          <td class="py-3 px-4 text-center font-mono font-bold text-[#FF5B37]">${shooter.x10}x</td>
+          <td class="py-3 px-4 text-center">
+            ${shooter.active 
+              ? '<span class="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> FIRING</span>' 
+              : '<span class="text-[10px] font-mono text-white/40">COMPLETED</span>'}
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterLiveScores() {
+      const s = document.getElementById('liveSearch').value;
+      const f = document.getElementById('liveEventFilter').value;
+      renderTable(f, s);
+    }
+  </script>
+</body>
+</html>
