@@ -33,19 +33,19 @@
   --watermark-blend: multiply;
 
   /* Master Poster Footer Variables (Theme 1: Azure Watercolor) */
-  --footer-bg: #FF5B37;
+  --footer-bg: #071926;
   --footer-cutout: #0E2230;
-  --footer-text: #061824;
-  --footer-muted: rgba(6, 24, 36, 0.72);
-  --footer-heading: #040e16;
-  --footer-btn-bg: #061824;
+  --footer-text: #e2f1fb;
+  --footer-muted: rgba(226, 241, 251, 0.72);
+  --footer-heading: #ffffff;
+  --footer-btn-bg: #FF5B37;
   --footer-btn-text: #ffffff;
-  --footer-btn-hover: #000000;
-  --footer-badge-bg: rgba(6, 24, 36, 0.08);
-  --footer-badge-border: rgba(6, 24, 36, 0.22);
-  --footer-badge-text: #061824;
-  --footer-giant-text: #061824;
-  --footer-icon-bg: #061824;
+  --footer-btn-hover: #ff441d;
+  --footer-badge-bg: rgba(144, 194, 219, 0.12);
+  --footer-badge-border: rgba(144, 194, 219, 0.28);
+  --footer-badge-text: #e2f1fb;
+  --footer-giant-text: #ffffff;
+  --footer-icon-bg: rgba(255, 255, 255, 0.12);
   --footer-icon-color: #ffffff;
 }
 
@@ -71,19 +71,19 @@ body[data-theme="azure"] {
   --watermark-emblem-opacity: 0.40;
   --watermark-blend: multiply;
 
-  --footer-bg: #FF5B37;
+  --footer-bg: #071926;
   --footer-cutout: #0E2230;
-  --footer-text: #061824;
-  --footer-muted: rgba(6, 24, 36, 0.72);
-  --footer-heading: #040e16;
-  --footer-btn-bg: #061824;
+  --footer-text: #e2f1fb;
+  --footer-muted: rgba(226, 241, 251, 0.72);
+  --footer-heading: #ffffff;
+  --footer-btn-bg: #FF5B37;
   --footer-btn-text: #ffffff;
-  --footer-btn-hover: #000000;
-  --footer-badge-bg: rgba(6, 24, 36, 0.08);
-  --footer-badge-border: rgba(6, 24, 36, 0.22);
-  --footer-badge-text: #061824;
-  --footer-giant-text: #061824;
-  --footer-icon-bg: #061824;
+  --footer-btn-hover: #ff441d;
+  --footer-badge-bg: rgba(144, 194, 219, 0.12);
+  --footer-badge-border: rgba(144, 194, 219, 0.28);
+  --footer-badge-text: #e2f1fb;
+  --footer-giant-text: #ffffff;
+  --footer-icon-bg: rgba(255, 255, 255, 0.12);
   --footer-icon-color: #ffffff;
 
   background:
@@ -849,6 +849,27 @@ body::before {
   box-shadow: 0 16px 32px -4px rgba(0, 0, 0, 0.45);
 }
 
+/* Brand Logos in Footer */
+.footer-brand-logo {
+  filter: drop-shadow(0 0 24px rgba(255, 91, 55, 0.75)) drop-shadow(0 6px 16px rgba(0, 0, 0, 0.5));
+  transition: transform 0.35s var(--ease-spring), filter 0.3s ease;
+  will-change: transform;
+}
+
+.footer-brand-logo:hover {
+  transform: scale(1.1) rotate(5deg);
+  filter: drop-shadow(0 0 35px rgba(255, 91, 55, 0.95)) drop-shadow(0 8px 24px rgba(0, 0, 0, 0.7));
+}
+
+.footer-sub-logo {
+  filter: drop-shadow(0 0 12px rgba(255, 91, 55, 0.55));
+  transition: transform 0.25s var(--ease-spring);
+}
+
+.footer-sub-logo:hover {
+  transform: scale(1.12);
+}
+
 .footer-contacts-chips {
   display: flex;
   flex-wrap: wrap;
@@ -864,17 +885,19 @@ body::before {
   gap: 0.35rem;
   padding: 0.35rem 0.75rem;
   border-radius: 9999px;
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: var(--footer-badge-bg);
+  border: 1px solid var(--footer-badge-border);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--footer-text);
   text-decoration: none;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .footer-contact-chip:hover {
-  background-color: rgba(0, 0, 0, 0.16);
+  background-color: rgba(255, 255, 255, 0.20);
+  border-color: var(--footer-heading);
   transform: translateY(-1px);
 }
 
@@ -910,13 +933,15 @@ body::before {
   justify-content: center;
   font-size: 0.95rem;
   text-decoration: none;
-  transition: transform 0.25s var(--ease-spring), opacity 0.2s ease, background-color 400ms ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s var(--ease-spring), opacity 0.2s ease, background-color 300ms ease, box-shadow 300ms ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .footer-social-icon:hover {
   transform: translateY(-3px) scale(1.1);
-  opacity: 0.9;
+  background-color: var(--pioneer-coral);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(255, 91, 55, 0.45);
 }
 
 .footer-copyright-wrap {
