@@ -1008,3 +1008,66 @@ body::before {
   transition: color 400ms cubic-bezier(1, 0, 0.4, 1);
 }
 
+/* ================= MOBILE VIEWPORT OPTIMIZATIONS (<= 768px) ================= */
+@media (max-width: 768px) {
+  /* 1. Hide Fixed Watermark on Mobile (Prevents clashing with hero cards & footer) */
+  .site-watermark-bg {
+    display: none !important;
+  }
+
+  /* 2. Scaled Brand Logo */
+  .brand-logo-blended {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  /* 3. Scaled Flame Crest on Mobile */
+  .poster-footer-flame svg {
+    max-height: 80px !important;
+    height: 60px !important;
+  }
+
+  /* 4. Solid Footer Body with Bottom Nav Clearance (pb-32) */
+  .poster-footer-body {
+    padding: 2.5rem 1.25rem 8rem 1.25rem !important;
+    background-color: var(--footer-bg) !important;
+  }
+
+  /* 5. Mobile Centered Grid & Navigation List */
+  .poster-footer-grid {
+    gap: 2.25rem !important;
+    text-align: center;
+  }
+
+  .footer-links-list {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.65rem !important;
+  }
+
+  .footer-nav-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .footer-right-col {
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .footer-socials-row {
+    justify-content: center;
+  }
+
+  /* 6. Mobile Giant Title Scale (Fit comfortably without edge clipping) */
+  .footer-giant-title {
+    font-size: clamp(2.4rem, 11.5vw, 4.2rem) !important;
+    line-height: 0.92 !important;
+    margin-top: 2.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+}

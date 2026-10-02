@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <link rel="stylesheet" href="assets/css/pioneer-theme.css">
+  <link rel="stylesheet" href="assets/css/pioneer-theme.css?v=2.3">
   <style>
     .jersey-preview {
       background: linear-gradient(135deg, #181322 0%, #281D33 100%);
@@ -59,7 +59,7 @@
 
   <!-- ================= TOP NAVIGATION BAR ================= -->
     <!-- ================= AESTHETIC BACKGROUND WATERMARK (ALL 3 THEMES) ================= -->
-  <div class="site-watermark-bg" aria-hidden="true">
+  <div class="site-watermark-bg hidden md:flex" aria-hidden="true">
     <div class="watermark-emblem-wrap">
       <img src="assets/img/nexshot-icon.png" alt="" class="watermark-emblem">
     </div>
@@ -70,20 +70,20 @@
 
 <nav class="sticky top-0 z-50 glass-nav transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16 sm:h-20">
+      <div class="flex items-center justify-between h-16 sm:h-20 gap-3">
         <!-- Brand Logo (Enlarged & Flawlessly Blended with Website Background) -->
-        <a href="index.html" class="flex items-center gap-3 sm:gap-4 group flex-shrink-0">
-          <div class="brand-logo-blended">
+        <a href="index.html" class="flex items-center gap-2 sm:gap-4 group flex-shrink-0 min-w-0">
+          <div class="brand-logo-blended w-10 h-10 sm:w-14 sm:h-14">
             <img src="assets/img/nexshot-icon.png" alt="NexShot Technologies" class="brand-logo-img">
           </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="font-display font-extrabold text-base sm:text-lg tracking-tight text-white group-hover:text-amber-300 transition-colors">BBC Shooting Academy</span>
-              <span class="hidden sm:inline-flex px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/80 border border-white/15">
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5 sm:gap-2 truncate">
+              <span class="font-display font-extrabold text-sm sm:text-base md:text-lg tracking-tight text-white group-hover:text-amber-300 transition-colors truncate">BBC Shooting Academy</span>
+              <span class="hidden md:inline-flex px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/80 border border-white/15">
                 CHAMPIONSHIP 2026
               </span>
             </div>
-            <p class="text-[10px] sm:text-[11px] font-mono text-white/65 tracking-wider mt-0.5">By <span class="text-[#FF5B37] font-semibold">NexShot Technologies</span><span class="hidden sm:inline text-white/45"> • Sikandrabad</span></p>
+            <p class="text-[9px] sm:text-[11px] font-mono text-white/65 tracking-wider mt-0.5 truncate">By <span class="text-[#FF5B37] font-semibold">NexShot Technologies</span><span class="hidden sm:inline text-white/45"> • Sikandrabad</span></p>
           </div>
         </a>
 
@@ -120,7 +120,7 @@
             </label>
           </fieldset>
 
-          <a href="track-booking.html" class="px-3.5 py-1.5 rounded-xl border border-white/15 text-white/80 font-mono text-xs hover:text-white transition-colors btn-tactile">
+          <a href="track-booking.html" class="hidden sm:inline-flex px-3.5 py-1.5 rounded-xl border border-white/15 text-white/80 font-mono text-xs hover:text-white transition-colors btn-tactile">
             Track Booking
           </a>
         </div>
@@ -318,7 +318,7 @@
   <footer class="poster-footer-wrap" aria-label="NexShot Tournament Footer">
     <!-- Top Flame Silhouette Horizon (Organic Cutout Transition) -->
     <div class="poster-footer-flame" aria-hidden="true">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 280" fill="none" class="w-full h-auto block select-none pointer-events-none" preserveAspectRatio="none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 280" fill="none" class="w-full h-auto max-h-[75px] sm:max-h-[160px] lg:max-h-[220px] block select-none pointer-events-none" preserveAspectRatio="none">
         <defs>
           <style>
             .flame-color { fill: var(--footer-bg, #FF5B37); transition: fill 400ms cubic-bezier(1, 0, 0.4, 1); }
@@ -417,27 +417,27 @@
     </div>
 
     <!-- Solid Poster Footer Body Container -->
-    <div class="poster-footer-body">
+    <div class="poster-footer-body pb-32 sm:pb-16">
       <div class="poster-footer-grid">
         
         <!-- Column 1: Navigation -->
         <div>
-          <div class="flex items-center gap-2.5 mb-3.5">
+          <div class="flex items-center gap-2.5 mb-3.5 justify-center md:justify-start">
             <img src="assets/img/nexshot-icon.png" alt="NexShot" class="w-7 h-7 object-contain footer-sub-logo">
             <h3 class="footer-col-title !mb-0">Navigation</h3>
           </div>
-          <div class="footer-links-list">
-            <a href="index.html" class="footer-nav-link">Home</a>
-            <a href="match-schedule.html" class="footer-nav-link">Match Schedule (16 Relays)</a>
-            <a href="register.html" class="footer-nav-link">Athlete Registration</a>
-            <a href="live-scoring.html" class="footer-nav-link">Live Target Scoring</a>
-            <a href="category-wise-scoring.html" class="footer-nav-link">Category Standings</a>
-            <a href="track-booking.html" class="footer-nav-link">Track & Print Pass</a>
-            <a href="https://maps.google.com/?q=Babu+Bodhraj+Convent+School+Sikandrabad+Bulandshahr" target="_blank" rel="noopener noreferrer" class="footer-nav-link">
-              Range Location (Google Maps) <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-70"></i>
+          <div class="footer-links-list flex flex-col gap-2.5 items-center md:items-start">
+            <a href="index.html" class="footer-nav-link inline-flex items-center gap-2">Home</a>
+            <a href="match-schedule.html" class="footer-nav-link inline-flex items-center gap-2">Match Schedule (16 Relays)</a>
+            <a href="register.html" class="footer-nav-link inline-flex items-center gap-2">Athlete Registration</a>
+            <a href="live-scoring.html" class="footer-nav-link inline-flex items-center gap-2">Live Target Scoring</a>
+            <a href="category-wise-scoring.html" class="footer-nav-link inline-flex items-center gap-2">Category Standings</a>
+            <a href="track-booking.html" class="footer-nav-link inline-flex items-center gap-2">Track & Print Pass</a>
+            <a href="https://maps.google.com/?q=Babu+Bodhraj+Convent+School+Sikandrabad+Bulandshahr" target="_blank" rel="noopener noreferrer" class="footer-nav-link inline-flex items-center gap-2">
+              <span>Range Location (Google Maps)</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-70"></i>
             </a>
-            <a href="assets/docs/Championship_Circular_2025.pdf" target="_blank" class="footer-nav-link">
-              Championship Circular PDF <i class="fa-solid fa-file-pdf text-[10px] opacity-70"></i>
+            <a href="assets/docs/Championship_Circular_2025.pdf" target="_blank" class="footer-nav-link inline-flex items-center gap-2">
+              <span>Championship Circular PDF</span> <i class="fa-solid fa-file-pdf text-[10px] opacity-70"></i>
             </a>
           </div>
         </div>
@@ -570,7 +570,7 @@
   <!-- ================= SCRIPTS ================= -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/js/portal.js"></script>
+  <script src="assets/js/portal.js?v=2.3"></script>
   <script src="assets/js/supabase-client.js"></script>
   <script>
     let currentGender = '';

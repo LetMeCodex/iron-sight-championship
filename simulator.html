@@ -13,7 +13,7 @@
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="assets/css/pioneer-theme.css">
+  <link rel="stylesheet" href="assets/css/pioneer-theme.css?v=2.3">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
 <body class="selection:bg-[#FF5B37] selection:text-white">
@@ -30,7 +30,7 @@
   </svg>
 
   <!-- ================= TOP NAVIGATION BAR ================= -->
-  <div class="site-watermark-bg" aria-hidden="true">
+  <div class="site-watermark-bg hidden md:flex" aria-hidden="true">
     <div class="watermark-emblem-wrap">
       <img src="assets/img/nexshot-icon.png" alt="" class="watermark-emblem">
     </div>
@@ -41,20 +41,20 @@
 
   <nav class="sticky top-0 z-50 glass-nav transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16 sm:h-20">
+      <div class="flex items-center justify-between h-16 sm:h-20 gap-3">
         <!-- Brand Logo (Enlarged & Flawlessly Blended with Website Background) -->
-        <a href="index.html" class="flex items-center gap-3 sm:gap-4 group flex-shrink-0">
-          <div class="brand-logo-blended">
+        <a href="index.html" class="flex items-center gap-2 sm:gap-4 group flex-shrink-0 min-w-0">
+          <div class="brand-logo-blended w-10 h-10 sm:w-14 sm:h-14">
             <img src="assets/img/nexshot-icon.png" alt="NexShot Technologies" class="brand-logo-img">
           </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="font-display font-extrabold text-base sm:text-lg tracking-tight text-white group-hover:text-amber-300 transition-colors">BBC Shooting Academy</span>
-              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold uppercase">
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5 sm:gap-2 truncate">
+              <span class="font-display font-extrabold text-sm sm:text-base md:text-lg tracking-tight text-white group-hover:text-amber-300 transition-colors truncate">BBC Shooting Academy</span>
+              <span class="hidden md:inline-flex px-2 py-0.5 rounded text-[10px] font-mono bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold uppercase">
                 Sandbox Simulator
               </span>
             </div>
-            <p class="text-[10px] sm:text-[11px] font-mono text-white/65 tracking-wider mt-0.5">By <span class="text-[#FF5B37] font-semibold">NexShot Technologies</span><span class="hidden sm:inline text-white/45"> • Sikandrabad</span></p>
+            <p class="text-[9px] sm:text-[11px] font-mono text-white/65 tracking-wider mt-0.5 truncate">By <span class="text-[#FF5B37] font-semibold">NexShot Technologies</span><span class="hidden sm:inline text-white/45"> • Sikandrabad</span></p>
           </div>
         </a>
 
@@ -66,7 +66,7 @@
           <a href="admin.html" class="px-3 py-1.5 rounded-xl text-white/70 hover:text-white transition-colors">Admin Console</a>
         </div>
 
-        <div class="flex items-center gap-2 sm:gap-3">
+        <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
           <!-- Animated 3-Option Liquid Theme Switcher (Azure / Onyx / Dusk) -->
           <fieldset class="switcher" aria-label="Theme switcher">
             <legend class="switcher__legend">Choose theme</legend>
@@ -84,7 +84,7 @@
             </label>
           </fieldset>
 
-          <a href="admin.html" class="px-3.5 py-1.5 rounded-xl border border-white/15 text-white/80 font-mono text-xs hover:text-white transition-colors btn-tactile">
+          <a href="admin.html" class="hidden sm:inline-flex px-3.5 py-1.5 rounded-xl border border-white/15 text-white/80 font-mono text-xs hover:text-white transition-colors btn-tactile">
             Admin Console
           </a>
         </div>
@@ -327,7 +327,7 @@
 
   </main>
 
-  <script src="assets/js/portal.js"></script>
+  <script src="assets/js/portal.js?v=2.3"></script>
   <script>
     let globalSimulationData = null;
 
