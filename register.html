@@ -496,15 +496,15 @@
     </div>
   </footer>
 
-  <!-- ================= PAYMENT SIMULATION MODAL ================= -->
+  <!-- ================= RAZORPAY PAYMENT MODAL ================= -->
   <div id="payModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="pioneer-card p-6 sm:p-7 max-w-sm w-full space-y-5 text-center border border-white/20">
-      <div class="w-12 h-12 rounded-full bg-[#FF5B37]/20 text-[#FF5B37] flex items-center justify-center mx-auto text-xl border border-[#FF5B37]/30">
+    <div class="pioneer-card p-6 sm:p-7 max-w-sm w-full space-y-5 text-center border border-white/20 shadow-2xl">
+      <div class="w-12 h-12 rounded-full bg-[#FF5B37]/20 text-[#FF5B37] flex items-center justify-center mx-auto text-xl border border-[#FF5B37]/30 shadow-[0_0_15px_rgba(255,91,55,0.3)]">
         <i class="fa-solid fa-receipt"></i>
       </div>
       <div>
         <h3 class="font-display font-bold text-lg text-white">Payment Checkout</h3>
-        <p class="text-xs text-white/50 mt-1 font-mono" id="modalOrderSummary">Order #NST-2026-ENTRY</p>
+        <p class="text-xs text-white/50 mt-1 font-mono" id="modalOrderSummary">Official Tournament Slot Registration</p>
       </div>
       
       <div class="p-4 rounded-xl bg-white/5 border border-white/10 font-mono text-left space-y-1.5 text-xs">
@@ -530,16 +530,24 @@
         </div>
       </div>
 
-      <button onclick="confirmBookingPayment()" id="btnModalConfirm" class="w-full py-4 rounded-2xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile">
-        SIMULATE SUCCESSFUL PAYMENT
+      <button onclick="initiateRazorpayCheckout()" id="btnModalConfirm" class="w-full py-4 rounded-2xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile flex items-center justify-center gap-2 shadow-lg">
+        <i class="fa-solid fa-lock text-xs"></i>
+        <span>PAY VIA RAZORPAY / UPI</span>
       </button>
+
+      <div class="flex items-center justify-center gap-2 text-[10px] text-white/40 font-mono">
+        <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+        <span>100% Secure • Powered by Razorpay Standard</span>
+      </div>
+
       <button onclick="document.getElementById('payModal').classList.add('hidden')" class="text-xs text-white/40 hover:text-white font-mono">
-        Cancel
+        Cancel & Review Details
       </button>
     </div>
   </div>
 
   <!-- ================= SCRIPTS ================= -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/portal.js"></script>
   <script src="assets/js/supabase-client.js"></script>
@@ -771,13 +779,18 @@
       document.getElementById('payModal').classList.remove('hidden');
     }
 
-    async function confirmBookingPayment() {
+    async function initiateRazorpayCheckout() {
       const btn = document.getElementById('btnModalConfirm');
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Securing Target Lane in Database...`;
+      const origContent = '<i class="fa-solid fa-lock text-xs"></i> <span>PAY VIA RAZORPAY / UPI</span>';
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Initializing Razorpay...`;
       btn.disabled = true;
 
       try {
-        const hasTeam = document.getElementById('checkTeamEntry').checked;
+        if (typeof Razorpay === 'undefined') {
+          throw new Error('Razorpay SDK failed to load. Please check your internet connection and refresh.');
+        }
+
+        const hasTeam = document.getElementById('checkTeamEntry')?.checked || false;
         const regName = document.getElementById('regName').value.trim();
         const regFather = document.getElementById('regFather').value.trim();
         const regSchool = document.getElementById('regSchool').value.trim();
@@ -785,6 +798,13 @@
         const regEmail = document.getElementById('regEmail') ? document.getElementById('regEmail').value.trim() : '';
         const regDob = document.getElementById('regDob') ? document.getElementById('regDob').value : null;
         const relayNum = parseInt((chosenRelay || '1').replace(/\D/g, '')) || 1;
+
+        if (!regName || !regMobile) {
+          throw new Error('Please fill in your name and 10-digit mobile number.');
+        }
+
+        // Amount in paise (₹1 = 100 paise)
+        const amountInPaise = Math.round(Number(totalFee) * 100);
 
         const athletePayload = {
           fullName: regName,
@@ -796,73 +816,168 @@
           dob: regDob,
           gender: currentGender,
           weapon: currentWeapon,
-          eventCategory: selectedMatch.category,
-          ageCategory: selectedMatch.ageLimit || 'Senior',
+          eventCategory: selectedMatch?.category || '10M Air Rifle',
+          ageCategory: selectedMatch?.ageLimit || 'Senior',
           relayNo: relayNum,
           targetLane: chosenLane,
           matchDate: chosenDate,
           reportingTime: chosenReporting,
-          paymentRef: `UPI/TXN${Date.now().toString().slice(-6)}`,
           paymentAmount: totalFee
         };
 
-        let createdAthlete = null;
-        if (window.NexShotDB && typeof NexShotDB.register === 'function') {
-          createdAthlete = await NexShotDB.register(athletePayload);
+        // 1. Create order on backend
+        const orderRes = await fetch('/api/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: amountInPaise,
+            currency: 'INR',
+            receipt: `rcpt_${Date.now().toString().slice(-8)}`,
+            notes: {
+              athlete_name: regName,
+              phone: regMobile,
+              discipline: currentWeapon,
+              match: selectedMatch?.name || 'Championship'
+            }
+          })
+        });
+
+        const orderData = await orderRes.json();
+        if (!orderRes.ok || !orderData.success || !orderData.order_id) {
+          throw new Error(orderData.error || 'Failed to create order on server.');
         }
 
-        const compNumber = createdAthlete && createdAthlete.registration_no 
-          ? createdAthlete.registration_no 
-          : (createdAthlete && createdAthlete.bib_no ? `COMP #NST-2026-${createdAthlete.bib_no}` : `COMP #NST-2026-${Math.floor(100 + Math.random() * 900)}`);
-
-        // Also save to local bookings store for instant sync
-        const bookingRecord = {
-          compNo: compNumber,
-          bibNo: createdAthlete ? createdAthlete.bib_no : null,
-          matchCode: selectedMatch.code,
-          name: regName,
-          fatherName: regFather,
-          school: regSchool,
-          mobile: regMobile,
-          gender: currentGender,
-          weapon: currentWeapon,
-          event: selectedMatch.name,
-          category: selectedMatch.category,
-          targetType: selectedMatch.target,
-          shots: selectedMatch.shots,
-          jerseySize: document.getElementById('regJerseySize').value,
-          hasTeamEntry: hasTeam,
-          date: chosenDate,
-          relay: chosenRelay,
-          time: chosenTime,
-          reporting: chosenReporting,
-          lane: `Lane #${chosenLane < 10 ? '0' + chosenLane : chosenLane} (${selectedMatch.target.includes('SIUS') ? 'SIUS' : 'Paper'})`,
-          status: "Confirmed",
-          fee: totalFee
-        };
-        saveBooking(bookingRecord);
-
+        // Close preview modal before opening Razorpay checkout
         document.getElementById('payModal').classList.add('hidden');
 
-        // Confetti celebration
-        try {
-          confetti({ particleCount: 140, spread: 80, origin: { y: 0.6 } });
-        } catch(e) {}
+        // 2. Open Razorpay Standard Checkout
+        const options = {
+          key: orderData.key_id,
+          amount: orderData.amount,
+          currency: orderData.currency || 'INR',
+          name: 'NexShot Technologies',
+          description: `Championship Entry: ${selectedMatch?.name || '10M Match'} (${chosenRelay}, Lane #${chosenLane})`,
+          image: 'assets/img/nexshot-icon.png',
+          order_id: orderData.order_id,
+          prefill: {
+            name: regName,
+            email: regEmail || '',
+            contact: regMobile
+          },
+          notes: {
+            athlete_name: regName,
+            phone: regMobile,
+            relay: chosenRelay,
+            lane: `Lane #${chosenLane}`
+          },
+          theme: {
+            color: '#FF5B37',
+            backdrop_color: '#0D1117'
+          },
+          modal: {
+            ondismiss: function() {
+              btn.disabled = false;
+              btn.innerHTML = origContent;
+              showToast('Payment cancelled by user.', 'circle-exclamation');
+            }
+          },
+          handler: async function(paymentResponse) {
+            // 3. Verify payment signature on backend
+            try {
+              showToast('Verifying payment signature...', 'spinner fa-spin');
 
-        showToast(`Slot Confirmed! Pass ID: ${compNumber}`, "circle-check");
+              const verifyRes = await fetch('/api/verify-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  razorpay_order_id: paymentResponse.razorpay_order_id,
+                  razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                  razorpay_signature: paymentResponse.razorpay_signature,
+                  athleteData: athletePayload
+                })
+              });
 
-        // Redirect to track-booking.html after 1.2 seconds
-        setTimeout(() => {
-          window.location.href = `track-booking.html?mobile=${encodeURIComponent(regMobile)}`;
-        }, 1200);
+              const verifyData = await verifyRes.json();
+              if (!verifyRes.ok || !verifyData.success || !verifyData.verified) {
+                throw new Error(verifyData.error || 'Payment signature verification failed.');
+              }
+
+              const createdAthlete = verifyData.competitor;
+              const compNumber = createdAthlete && createdAthlete.registration_no 
+                ? createdAthlete.registration_no 
+                : (createdAthlete && createdAthlete.bib_no ? `NSC-2026-${createdAthlete.bib_no}` : `COMP #NST-2026-${Math.floor(100 + Math.random() * 900)}`);
+
+              // Save to offline storage backup
+              const bookingRecord = {
+                compNo: compNumber,
+                bibNo: createdAthlete ? createdAthlete.bib_no : null,
+                matchCode: selectedMatch?.code || 'NST-2026',
+                name: regName,
+                fatherName: regFather,
+                school: regSchool,
+                mobile: regMobile,
+                gender: currentGender,
+                weapon: currentWeapon,
+                event: selectedMatch?.name || '10M Event',
+                category: selectedMatch?.category || 'Senior',
+                targetType: selectedMatch?.target || 'SIUS Electronic',
+                shots: selectedMatch?.shots || 60,
+                jerseySize: document.getElementById('regJerseySize')?.value || 'M',
+                hasTeamEntry: hasTeam,
+                date: chosenDate,
+                relay: chosenRelay,
+                time: chosenTime,
+                reporting: chosenReporting,
+                lane: `Lane #${chosenLane < 10 ? '0' + chosenLane : chosenLane} (${selectedMatch?.target?.includes('SIUS') ? 'SIUS' : 'Paper'})`,
+                paymentId: paymentResponse.razorpay_payment_id,
+                orderId: paymentResponse.razorpay_order_id,
+                status: "Confirmed (Paid)",
+                fee: totalFee
+              };
+              saveBooking(bookingRecord);
+
+              // Celebration confetti
+              try {
+                confetti({ particleCount: 160, spread: 85, origin: { y: 0.6 } });
+              } catch(e) {}
+
+              showToast(`Payment Verified! Pass ID: ${compNumber}`, "circle-check");
+
+              // Redirect to booking tracking pass
+              setTimeout(() => {
+                window.location.href = `track-booking.html?mobile=${encodeURIComponent(regMobile)}&payment_id=${encodeURIComponent(paymentResponse.razorpay_payment_id)}`;
+              }, 1200);
+
+            } catch (vErr) {
+              console.error("Signature verification error:", vErr);
+              alert("Payment verification error: " + vErr.message);
+              btn.disabled = false;
+              btn.innerHTML = origContent;
+            }
+          }
+        };
+
+        const rzp = new Razorpay(options);
+
+        rzp.on('payment.failed', function(resp) {
+          console.error("Razorpay payment.failed:", resp.error);
+          btn.disabled = false;
+          btn.innerHTML = origContent;
+          alert(`Payment Failed: ${resp.error.description || 'Transaction declined.'} (Reason: ${resp.error.reason || 'Declined'})`);
+        });
+
+        rzp.open();
 
       } catch (err) {
-        console.error("Booking error:", err);
+        console.error("Razorpay initiation error:", err);
         btn.disabled = false;
-        btn.innerHTML = `SIMULATE SUCCESSFUL PAYMENT`;
-        alert("Booking error: " + err.message);
+        btn.innerHTML = origContent;
+        alert("Payment Gateway Error: " + err.message);
       }
     }
+
+    // Alias for backwards compatibility
+    const confirmBookingPayment = initiateRazorpayCheckout;
   </script>
 </body>
 </html>
