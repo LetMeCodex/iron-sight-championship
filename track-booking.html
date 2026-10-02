@@ -179,9 +179,9 @@
             <div id="cardMatchCode" class="text-[10px] text-amber-300 font-bold">MATCH AR-04</div>
           </div>
           <div>
-            <div class="text-white/40 text-[10px] uppercase">CATEGORY & JERSEY</div>
+            <div class="text-white/40 text-[10px] uppercase">EVENT CATEGORY</div>
             <div id="cardCategory" class="font-bold text-white/90 mt-0.5">Sub-Youth Men</div>
-            <div id="cardJersey" class="text-[10px] text-emerald-400">Jersey: Size M (Included)</div>
+            <div id="cardTargetType" class="text-[10px] text-emerald-400">SIUS Electronic Target</div>
           </div>
         </div>
 
@@ -289,7 +289,7 @@
           const category = found.age_category 
             ? `${found.age_category} ${found.gender || ''}` 
             : (found.category || 'Senior');
-          const jersey = found.jerseySize ? `Jersey Size: ${found.jerseySize} (Included)` : 'Official Jersey Included';
+          const targetInfo = found.targetType || (found.event ? `${found.event}` : 'SIUS Electronic Target System');
           
           let dateStr = found.match_date || found.date || '25 NOV 2026';
           if (dateStr.includes('-')) {
@@ -307,7 +307,9 @@
           document.getElementById('cardDiscipline').innerText = weaponDiscipline;
           document.getElementById('cardMatchCode').innerText = matchCode;
           document.getElementById('cardCategory').innerText = category;
-          document.getElementById('cardJersey').innerText = jersey;
+          if (document.getElementById('cardTargetType')) {
+            document.getElementById('cardTargetType').innerText = targetInfo;
+          }
           document.getElementById('cardDate').innerText = dateStr;
           document.getElementById('cardRelay').innerText = relayStr;
           document.getElementById('cardLane').innerText = laneStr;

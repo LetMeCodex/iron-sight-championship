@@ -280,6 +280,21 @@
         if (rank === 2) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-slate-300/20 text-slate-200 border border-slate-300/30">2</span>`;
         if (rank === 3) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-amber-700/20 text-amber-500 border border-amber-700/40">3</span>`;
 
+        const isRifle = !shooter.event.toLowerCase().includes('pistol');
+        const isISSF = shooter.event.toLowerCase().includes('issf');
+        const fmtVal = (val) => {
+          if (!val || val <= 0) return '-';
+          return isRifle ? Number(val).toFixed(1) : Math.round(Number(val));
+        };
+
+        const s1Disp = fmtVal(shooter.s1);
+        const s2Disp = fmtVal(shooter.s2);
+        const s3Disp = fmtVal(shooter.s3);
+        const s4Disp = fmtVal(shooter.s4);
+        const s5Disp = isISSF && shooter.s5 > 0 ? fmtVal(shooter.s5) : '-';
+        const s6Disp = isISSF && shooter.s6 > 0 ? fmtVal(shooter.s6) : '-';
+        const totalDisp = isRifle ? shooter.total.toFixed(1) : Math.round(shooter.total);
+
         tr.innerHTML = `
           <td class="py-3 px-4 text-center">${rankBadge}</td>
           <td class="py-3 px-4 font-semibold text-white">
@@ -288,13 +303,13 @@
           </td>
           <td class="py-3 px-4 text-white/60 text-xs">${shooter.school}</td>
           <td class="py-3 px-4 font-mono text-[11px] text-cyan-400">${shooter.event}</td>
-          <td class="py-3 px-2 text-center font-mono text-white/70">${shooter.s1.toFixed(1)}</td>
-          <td class="py-3 px-2 text-center font-mono text-white/70">${shooter.s2.toFixed(1)}</td>
-          <td class="py-3 px-2 text-center font-mono text-white/70">${shooter.s3.toFixed(1)}</td>
-          <td class="py-3 px-2 text-center font-mono text-white/70">${shooter.s4.toFixed(1)}</td>
-          <td class="py-3 px-2 text-center font-mono text-white/50">${shooter.s5 > 0 ? shooter.s5.toFixed(1) : '-'}</td>
-          <td class="py-3 px-2 text-center font-mono text-white/50">${shooter.s6 > 0 ? shooter.s6.toFixed(1) : '-'}</td>
-          <td class="py-3 px-4 text-center font-mono font-bold text-sm text-cyan-300">${shooter.total.toFixed(1)}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/70">${s1Disp}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/70">${s2Disp}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/70">${s3Disp}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/70">${s4Disp}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/50">${s5Disp}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/50">${s6Disp}</td>
+          <td class="py-3 px-4 text-center font-mono font-bold text-sm text-cyan-300">${totalDisp}</td>
           <td class="py-3 px-4 text-center font-mono font-bold text-[#FF5B37]">${shooter.x10}x</td>
           <td class="py-3 px-4 text-center">
             ${shooter.active 

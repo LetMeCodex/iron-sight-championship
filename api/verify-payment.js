@@ -99,8 +99,8 @@ export default async function handler(req, res) {
 
         const athletePhone = String(athleteData.phone || athleteData.mobile || '').trim();
         const athleteGender = athleteData.gender === 'Male' ? 'Men' : (athleteData.gender === 'Female' ? 'Women' : (athleteData.gender || 'Men'));
-        const athleteWeapon = (athleteData.weapon && athleteData.weapon.includes('Pistol')) ? '10M Air Pistol' : '10M Air Rifle';
-        const athleteEventCategory = (athleteData.eventCategory && athleteData.eventCategory.includes('NR')) ? 'National Rules (NR)' : 'ISSF';
+        const athleteWeapon = athleteData.weapon || ((athleteData.eventCategory && athleteData.eventCategory.includes('Pistol')) ? '10M Air Pistol' : '10M Air Rifle');
+        const athleteEventCategory = athleteData.eventCategory || 'ISSF Rifle';
 
         const competitorPayload = {
           registration_no: regNo,
@@ -117,9 +117,9 @@ export default async function handler(req, res) {
           event_category: athleteEventCategory,
           age_category: athleteData.ageCategory || 'Senior',
           relay_no: athleteData.relayNo ? parseInt(athleteData.relayNo) : 1,
-          target_lane: athleteData.targetLane ? parseInt(athleteData.targetLane) : ((nextBib % 9) + 1),
+          target_lane: athleteData.targetLane ? parseInt(athleteData.targetLane) : ((nextBib % 15) + 1),
           match_date: athleteData.matchDate || '2026-11-25',
-          reporting_time: athleteData.reportingTime || '08:30 AM',
+          reporting_time: athleteData.reportingTime || '08:00 AM',
           payment_status: 'verified',
           payment_ref: `RAZORPAY/${razorpay_payment_id}`,
           payment_amount: athleteData.paymentAmount ? Number(athleteData.paymentAmount) : 1500.00

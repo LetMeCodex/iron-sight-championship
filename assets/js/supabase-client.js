@@ -186,7 +186,7 @@ const NexShotDB = {
         event_category: (athleteData.eventCategory && athleteData.eventCategory.includes('NR')) ? 'National Rules (NR)' : 'ISSF',
         age_category: athleteData.ageCategory || 'Senior',
         relay_no: athleteData.relayNo ? parseInt(athleteData.relayNo) : 1,
-        target_lane: athleteData.targetLane ? parseInt(athleteData.targetLane) : ((nextBib % 9) + 1),
+        target_lane: athleteData.targetLane ? parseInt(athleteData.targetLane) : ((nextBib % 15) + 1),
         match_date: athleteData.matchDate || '2026-11-25',
         reporting_time: athleteData.reportingTime || '08:00 AM',
         payment_status: athleteData.paymentRef ? 'verified' : 'pending',

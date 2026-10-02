@@ -70,7 +70,7 @@ export default async function handler(req, res) {
       event_category: (eventCategory && eventCategory.includes('NR')) ? 'National Rules (NR)' : 'ISSF',
       age_category: ageCategory || 'Senior',
       relay_no: relayNo ? parseInt(relayNo) : 1,
-      target_lane: targetLane ? parseInt(targetLane) : ((nextBib % 9) + 1),
+      target_lane: targetLane ? parseInt(targetLane) : ((nextBib % 15) + 1),
       match_date: matchDate || '2026-11-25',
       reporting_time: reportingTime || '08:00 AM',
       payment_status: paymentRef ? 'verified' : 'pending',

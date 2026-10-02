@@ -217,177 +217,56 @@
               <input type="hidden" id="regGender" value="" required>
             </div>
 
-          </div>
-
-          <!-- National Shooter Rule Check (From Page 3 of PDF) -->
-          <div class="mt-4 p-3.5 rounded-xl bg-black/40 border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
-            <div class="flex items-center gap-2.5">
-              <input type="checkbox" id="checkNationalShooter" onchange="handleNationalShooterToggle()" class="w-4 h-4 rounded accent-[#FF5B37]">
-              <label for="checkNationalShooter" class="text-white/80 cursor-pointer">
-                Have you participated in National / Pre-National Shooting Championship?
-              </label>
-            </div>
-            <div id="nationalRuleNotice" class="text-[10px] text-amber-300 hidden">
-              <i class="fa-solid fa-circle-info mr-1"></i> As per Rule: National shooters are categorized as ISSF only (NR prohibited).
-            </div>
-          </div>
         </div>
 
-        <!-- ================= STEP 2: SMART CASCADING EVENT & CATEGORY SELECTOR ================= -->
+        <!-- ================= STEP 2: EVENT & CASCADING CATEGORY SELECTOR ================= -->
         <div class="border-t border-white/10 pt-6">
           <div class="flex items-center justify-between mb-4">
             <h2 class="font-display font-bold text-sm tracking-wider text-white uppercase flex items-center gap-2">
               <span class="w-6 h-6 rounded-md bg-cyan-400/20 text-cyan-400 flex items-center justify-center font-mono text-xs font-bold">2</span>
-              Match Discipline, Event & Smart Category
+              Match Event & Category
             </h2>
             <span class="text-[11px] font-mono text-emerald-400" id="genderFilterStatus">
               <i class="fa-solid fa-lock text-[9px] mr-1"></i> Select Gender above to unlock eligible categories
             </span>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-sans">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans">
             
-            <!-- 1. Discipline -->
+            <!-- 1. Event Selection (Image 1 Options) -->
             <div>
-              <label class="block text-white/60 font-mono text-[10px] uppercase mb-1.5">1. Shooting Discipline *</label>
-              <select id="regWeapon" onchange="onWeaponOrFormatChange()" class="w-full bg-[#1C1624] border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#FF5B37] font-mono">
-                <option value="Rifle">10M Air Rifle (.177 Peep Sight)</option>
-                <option value="Pistol">10M Air Pistol (.177)</option>
+              <label class="block text-white/60 font-mono text-[10px] uppercase mb-1.5">1. Select Event *</label>
+              <select id="regEvent" onchange="onEventSelect()" required class="w-full bg-[#1C1624] border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#FF5B37] font-mono">
+                <option value="">Select event</option>
+                <option value="Deaf / Para 10M Air Pistol">Deaf / Para 10M Air Pistol</option>
+                <option value="Deaf / Para 10M Air Rifle">Deaf / Para 10M Air Rifle</option>
+                <option value="ISSF 10M Air Pistol">ISSF 10M Air Pistol</option>
+                <option value="ISSF 10M Air Rifle">ISSF 10M Air Rifle</option>
+                <option value="Little Champ 10M Air Pistol">Little Champ 10M Air Pistol</option>
+                <option value="Little Champ 10M Air Rifle">Little Champ 10M Air Rifle</option>
+                <option value="NR 10M Air Pistol">NR 10M Air Pistol</option>
+                <option value="NR 10M Air Rifle">NR 10M Air Rifle</option>
+                <option value="Open Sight">Open Sight</option>
               </select>
             </div>
 
-            <!-- 2. Event Standard Format (ISSF / NR / U12 / Para / Deaf / Master) -->
+            <!-- 2. Smart Category (Strictly Populated based on Selected Event & Gender) -->
             <div>
-              <label class="block text-white/60 font-mono text-[10px] uppercase mb-1.5">2. Event Format (From Circular) *</label>
-              <select id="regEventType" onchange="onWeaponOrFormatChange()" class="w-full bg-[#1C1624] border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#FF5B37] font-mono">
-                <option value="ISSF">ISSF Event (60 Competition Shots • SIUS Target)</option>
-                <option value="NR">NR National Rule (40 Competition Shots • SIUS Target)</option>
-                <option value="U12">Under 12 Little Champ (40 Shots • Paper Target)</option>
-                <option value="PARA">Para-Shooter Match (60 Shots • SIUS Target)</option>
-                <option value="DEAF">Deaf-Shooter Match (60 Shots • SIUS Target)</option>
-                <option value="MASTER">Master Division (45+ Years • 60 Shots • SIUS)</option>
+              <label class="block text-white/60 font-mono text-[10px] uppercase mb-1.5">2. Select Category (Event Specific) *</label>
+              <select id="regCategory" onchange="onCategorySelect()" required disabled class="w-full bg-[#1C1624] border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#FF5B37] font-mono opacity-50 cursor-not-allowed">
+                <option value="">-- Please select event first --</option>
               </select>
-            </div>
-
-            <!-- 3. Smart Category (Strictly Populated based on Gender & Event Type) -->
-            <div>
-              <label class="block text-white/60 font-mono text-[10px] uppercase mb-1.5">3. Eligible Category (NRAI Rule 11) *</label>
-              <select id="regCategory" onchange="onCategorySelect()" required class="w-full bg-[#1C1624] border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#FF5B37] font-mono">
-                <option value="">-- Please select gender first --</option>
-              </select>
-            </div>
-
-          </div>
-
-          <!-- Dynamic Match Telemetry Box (Automatically resolves exact Match Code e.g. AR-01 to AR-23 / AP-01 to AP-23) -->
-          <div id="matchTelemetryCard" class="mt-4 p-5 rounded-2xl bg-white/5 border border-white/10 font-mono text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div>
-              <div class="flex items-center gap-2 mb-1.5">
-                <span id="badgeMatchCode" class="px-2.5 py-0.5 rounded-lg bg-[#FF5B37] text-white font-bold text-xs uppercase tracking-wider">
-                  MATCH NO. AR-01
-                </span>
-                <span id="badgeTargetSystem" class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                  Electronic (SIUS)
-                </span>
-                <span id="badgeFormatShots" class="px-2 py-0.5 rounded text-[10px] bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                  60 Shots
-                </span>
-              </div>
-              <div id="matchTelemetryTitle" class="text-sm font-bold text-white font-display">
-                10M Air Rifle (Peep Sight) ISSF • Senior Men
-              </div>
-              <div id="matchTelemetryAgeLimit" class="text-[11px] text-white/50 font-sans mt-0.5">
-                Age Eligibility: Above 21 Years (NRAI Rule 11)
-              </div>
-            </div>
-
-            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full md:w-auto">
-              <!-- Team Entry Checkbox (From Page 6: Team Entry Fees ₹1500) -->
-              <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-black/40 border border-white/10">
-                <input type="checkbox" id="checkTeamEntry" onchange="updateTotalCalculations()" class="w-4 h-4 rounded accent-[#FF5B37]">
-                <label for="checkTeamEntry" class="text-[11px] text-white/80 cursor-pointer">
-                  Team Entry (+ ₹1,500)
-                </label>
-              </div>
-
-              <div class="text-right">
-                <div class="text-[10px] text-white/40 uppercase">Individual Fee</div>
-                <div id="telemetryBaseFee" class="text-base font-bold text-emerald-400">₹ 1,500</div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- ================= STEP 3: FREE CUSTOMIZED T-SHIRT (FROM PAGE 1 OF PDF) ================= -->
-        <div class="border-t border-white/10 pt-6">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="font-display font-bold text-sm tracking-wider text-white uppercase flex items-center gap-2">
-              <span class="w-6 h-6 rounded-md bg-purple-400/20 text-purple-400 flex items-center justify-center font-mono text-xs font-bold">3</span>
-              Free Official Custom T-Shirt (Page 1 Circular)
-            </h2>
-            <span class="text-[11px] font-mono text-emerald-400">
-              <i class="fa-solid fa-gift mr-1"></i> FREE for every registered athlete
-            </span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-            
-            <!-- Left: Jersey Form -->
-            <div class="md:col-span-7 space-y-4 font-mono text-xs">
-              <p class="text-white/60 font-sans text-xs">
-                As per official tournament rules, each competitor receives a customized shooting sports jersey with their name and official championship crest free of charge.
-              </p>
-
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-white/60 text-[10px] uppercase mb-1.5">Select T-Shirt Size *</label>
-                  <select id="regJerseySize" class="w-full bg-[#1C1624] border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#FF5B37]">
-                    <option value="S">S (Chest 36")</option>
-                    <option value="M" selected>M (Chest 38")</option>
-                    <option value="L">L (Chest 40")</option>
-                    <option value="XL">XL (Chest 42")</option>
-                    <option value="XXL">XXL (Chest 44")</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-white/60 text-[10px] uppercase mb-1.5">Printed Name on Jersey</label>
-                  <input type="text" id="regJerseyName" readonly placeholder="Auto-fills from Full Name" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-emerald-400 font-bold outline-none cursor-default">
-                </div>
-              </div>
-            </div>
-
-            <!-- Right: Interactive Live Jersey Card Mockup -->
-            <div class="md:col-span-5">
-              <div class="jersey-preview p-5 text-center flex flex-col items-center justify-center shadow-xl">
-                <div class="text-[10px] font-mono uppercase tracking-widest text-[#FF5B37] font-semibold mb-1">
-                  OFFICIAL ATHLETE JERSEY 2026
-                </div>
-                
-                <!-- Jersey Graphic -->
-                <div class="w-24 h-24 my-2 relative flex items-center justify-center">
-                  <i class="fa-solid fa-shirt text-6xl text-white/90 drop-shadow-md"></i>
-                  <div class="absolute top-9 text-[8px] font-mono font-bold text-black uppercase tracking-tight" id="jerseyPrintName">
-                    YOUR NAME
-                  </div>
-                </div>
-
-                <div class="font-mono text-[11px] text-white/70 mt-1 flex items-center gap-1.5">
-                  <img src="assets/img/nexshot-icon.png" alt="NexShot" class="w-3.5 h-3.5 object-contain">
-                  <span>NexShot Technologies Crest & Tri-Color</span>
-                </div>
-              </div>
             </div>
 
           </div>
         </div>
 
-        <!-- ================= STEP 4: MATCH DATE & RELAYS ================= -->
+        <!-- ================= STEP 3: MATCH DATE & 6 RELAYS (08:30 AM — 06:30 PM) ================= -->
         <div class="border-t border-white/10 pt-6">
           <div class="flex items-center justify-between mb-4">
             <h2 class="font-display font-bold text-sm tracking-wider text-white uppercase flex items-center gap-2">
-              <span class="w-6 h-6 rounded-md bg-amber-400/20 text-amber-400 flex items-center justify-center font-mono text-xs font-bold">4</span>
-              Match Date, Relay Slot & Lane (SIUS Electronic)
+              <span class="w-6 h-6 rounded-md bg-amber-400/20 text-amber-400 flex items-center justify-center font-mono text-xs font-bold">3</span>
+              Match Date & Relay Slot (15 Slots per Relay)
             </h2>
             <span class="text-[11px] font-mono text-amber-300">
               <i class="fa-regular fa-clock mr-1"></i> Reporting: Mandatory 30 mins prior
@@ -410,56 +289,9 @@
             </button>
           </div>
 
-          <!-- Relays Selection Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 font-mono text-xs mb-6">
-            
-            <div onclick="selectRelaySlot('Relay 01', '09:00 — 10:15 AM', '08:30 AM', this)" class="relay-box p-3.5 rounded-2xl border border-[#FF5B37] bg-[#FF5B37]/15 cursor-pointer transition-all">
-              <div class="flex justify-between items-center mb-1">
-                <span class="font-bold text-white">Relay 01</span>
-                <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">Available</span>
-              </div>
-              <div class="text-sm font-bold text-white font-display">09:00 — 10:15 AM</div>
-              <div class="text-[10px] text-amber-300 mt-1">Reporting: 08:30 AM</div>
-            </div>
-
-            <div onclick="selectRelaySlot('Relay 02', '10:45 AM — 12:00 PM', '10:15 AM', this)" class="relay-box p-3.5 rounded-2xl border border-white/10 bg-white/5 hover:border-white/30 cursor-pointer transition-all">
-              <div class="flex justify-between items-center mb-1">
-                <span class="font-bold text-white">Relay 02</span>
-                <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">Available</span>
-              </div>
-              <div class="text-sm font-bold text-white font-display">10:45 AM — 12:00 PM</div>
-              <div class="text-[10px] text-amber-300 mt-1">Reporting: 10:15 AM</div>
-            </div>
-
-            <div onclick="selectRelaySlot('Relay 03', '12:30 — 01:20 PM', '12:00 PM', this)" class="relay-box p-3.5 rounded-2xl border border-white/10 bg-white/5 hover:border-white/30 cursor-pointer transition-all">
-              <div class="flex justify-between items-center mb-1">
-                <span class="font-bold text-white">Relay 03</span>
-                <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold">Fast Filling</span>
-              </div>
-              <div class="text-sm font-bold text-white font-display">12:30 — 01:20 PM</div>
-              <div class="text-[10px] text-amber-300 mt-1">Reporting: 12:00 PM</div>
-            </div>
-
-            <div onclick="selectRelaySlot('Relay 04', '01:50 — 02:40 PM', '01:20 PM', this)" class="relay-box p-3.5 rounded-2xl border border-white/10 bg-white/5 hover:border-white/30 cursor-pointer transition-all">
-              <div class="flex justify-between items-center mb-1">
-                <span class="font-bold text-white">Relay 04</span>
-                <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">Available</span>
-              </div>
-              <div class="text-sm font-bold text-white font-display">01:50 — 02:40 PM</div>
-              <div class="text-[10px] text-amber-300 mt-1">Reporting: 01:20 PM</div>
-            </div>
-
-          </div>
-
-          <!-- 9-Lane Firing Line Visualizer -->
-          <div class="pioneer-card p-4 border border-white/10">
-            <div class="flex items-center justify-between mb-2">
-              <div class="text-[10px] font-mono text-white/50 uppercase">Electronic Range (Pick Lane 01 to 09):</div>
-              <span class="text-[10px] font-mono text-emerald-400" id="selectedLaneText">Selected: Lane #04 (SIUS)</span>
-            </div>
-            <div class="grid grid-cols-9 gap-1.5 font-mono text-center" id="regLanesGrid">
-              <!-- Populated by JS -->
-            </div>
+          <!-- 6 Relays Dynamic Grid (Auto-hides full relays, 15 slots max) -->
+          <div id="relaysContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 font-mono text-xs mb-6">
+            <!-- Populated dynamically by renderRelays() -->
           </div>
 
         </div>
@@ -509,20 +341,20 @@
       
       <div class="p-4 rounded-xl bg-white/5 border border-white/10 font-mono text-left space-y-1.5 text-xs">
         <div class="flex justify-between text-white/50">
-          <span>Match:</span>
-          <span class="text-white font-bold" id="modalMatchCode">AR-01</span>
+          <span>Event:</span>
+          <span class="text-cyan-400 font-bold" id="modalEventName">--</span>
+        </div>
+        <div class="flex justify-between text-white/50">
+          <span>Category:</span>
+          <span class="text-white font-bold" id="modalMatchCode">--</span>
         </div>
         <div class="flex justify-between text-white/50">
           <span>Athlete:</span>
           <span class="text-white" id="modalAthleteName">--</span>
         </div>
         <div class="flex justify-between text-white/50">
-          <span>Relay & Lane:</span>
-          <span class="text-amber-300" id="modalSlot">Relay 01 • Lane 04</span>
-        </div>
-        <div class="flex justify-between text-white/50">
-          <span>Custom Jersey:</span>
-          <span class="text-emerald-400">FREE Included</span>
+          <span>Relay Slot:</span>
+          <span class="text-amber-300" id="modalSlot">Relay 01</span>
         </div>
         <div class="border-t border-white/10 pt-2 flex justify-between text-sm font-bold text-white">
           <span>TOTAL PAYABLE:</span>
@@ -553,141 +385,247 @@
   <script src="assets/js/supabase-client.js"></script>
   <script>
     let currentGender = '';
-    let currentWeapon = 'Rifle';
-    let currentEventType = 'ISSF';
+    let selectedEvent = '';
+    let selectedCategory = '';
     let selectedMatch = null;
     let chosenDate = '25 NOV 2026';
     let chosenRelay = 'Relay 01';
-    let chosenTime = '09:00 — 10:15 AM';
-    let chosenReporting = '08:30 AM';
-    let chosenLane = 4;
-    let baseFee = 1500;
-    let totalFee = 1500;
+    let chosenTime = '08:30 — 09:35 AM';
+    let chosenReporting = '08:00 AM';
+    let chosenRelayType = 'NR';
+    let chosenLane = 1;
+    const baseFee = 1500;
+    const totalFee = 1500;
+
+    // 6 Official Tournament Relays (08:30 AM to 06:30 PM)
+    // NR Match: 1 hr 05 min | ISSF Match: 1 hr 15 min | Reporting: 30 min before
+    // Max 15 slots per relay
+    const RELAYS = [
+      { id: 1, name: 'Relay 01', type: 'NR', matchTitle: 'NR Match (40 Shots)', time: '08:30 — 09:35 AM', reporting: '08:00 AM', duration: '1h 05m', maxSlots: 15 },
+      { id: 2, name: 'Relay 02', type: 'ISSF', matchTitle: 'ISSF Match (60 Shots)', time: '10:00 — 11:15 AM', reporting: '09:30 AM', duration: '1h 15m', maxSlots: 15 },
+      { id: 3, name: 'Relay 03', type: 'NR', matchTitle: 'NR Match (40 Shots)', time: '11:40 AM — 12:45 PM', reporting: '11:10 AM', duration: '1h 05m', maxSlots: 15 },
+      { id: 4, name: 'Relay 04', type: 'NR', matchTitle: 'NR Match (40 Shots)', time: '01:45 — 02:50 PM', reporting: '01:15 PM', duration: '1h 05m', maxSlots: 15 },
+      { id: 5, name: 'Relay 05', type: 'ISSF', matchTitle: 'ISSF Match (60 Shots)', time: '03:15 — 04:30 PM', reporting: '02:45 PM', duration: '1h 15m', maxSlots: 15 },
+      { id: 6, name: 'Relay 06', type: 'NR', matchTitle: 'NR Match (40 Shots)', time: '05:00 — 06:05 PM', reporting: '04:30 PM', duration: '1h 05m', maxSlots: 15 }
+    ];
+
+    // Cascading Categories strictly mapped to the 9 Official Events from Circular / Image 1
+    const EVENT_CATEGORIES = {
+      "ISSF 10M Air Rifle": [
+        { category: "Sub-Youth Men (Under 16)", gender: "Male", ageLimit: "Born 2010 or after", shots: 60, target: "Electronic (SIUS)", code: "AR-04" },
+        { category: "Youth Men (Under 19)", gender: "Male", ageLimit: "Born 2007 or after", shots: 60, target: "Electronic (SIUS)", code: "AR-03" },
+        { category: "Junior Men (Under 21)", gender: "Male", ageLimit: "Born 2005 or after", shots: 60, target: "Electronic (SIUS)", code: "AR-02" },
+        { category: "Senior Men (21+ Years)", gender: "Male", ageLimit: "21+ Years", shots: 60, target: "Electronic (SIUS)", code: "AR-01" },
+        { category: "Master Men (45+ Years)", gender: "Male", ageLimit: "Completed 45+ Years", shots: 60, target: "Electronic (SIUS)", code: "AR-23" },
+        { category: "Senior Master Men (60+ Years)", gender: "Male", ageLimit: "Completed 60+ Years", shots: 60, target: "Electronic (SIUS)", code: "AR-23-SM" },
+
+        { category: "Sub-Youth Women (Under 16)", gender: "Female", ageLimit: "Born 2010 or after", shots: 60, target: "Electronic (SIUS)", code: "AR-08" },
+        { category: "Youth Women (Under 19)", gender: "Female", ageLimit: "Born 2007 or after", shots: 60, target: "Electronic (SIUS)", code: "AR-07" },
+        { category: "Junior Women (Under 21)", gender: "Female", ageLimit: "Born 2005 or after", shots: 60, target: "Electronic (SIUS)", code: "AR-06" },
+        { category: "Senior Women (21+ Years)", gender: "Female", ageLimit: "21+ Years", shots: 60, target: "Electronic (SIUS)", code: "AR-05" },
+        { category: "Master Women (45+ Years)", gender: "Female", ageLimit: "Completed 45+ Years", shots: 60, target: "Electronic (SIUS)", code: "AR-23-W" },
+        { category: "Senior Master Women (60+ Years)", gender: "Female", ageLimit: "Completed 60+ Years", shots: 60, target: "Electronic (SIUS)", code: "AR-23-SMW" }
+      ],
+
+      "ISSF 10M Air Pistol": [
+        { category: "Sub-Youth Men (Under 16)", gender: "Male", ageLimit: "Born 2010 or after", shots: 60, target: "Electronic (SIUS)", code: "AP-04" },
+        { category: "Youth Men (Under 19)", gender: "Male", ageLimit: "Born 2007 or after", shots: 60, target: "Electronic (SIUS)", code: "AP-03" },
+        { category: "Junior Men (Under 21)", gender: "Male", ageLimit: "Born 2005 or after", shots: 60, target: "Electronic (SIUS)", code: "AP-02" },
+        { category: "Senior Men (21+ Years)", gender: "Male", ageLimit: "21+ Years", shots: 60, target: "Electronic (SIUS)", code: "AP-01" },
+        { category: "Master Men (45+ Years)", gender: "Male", ageLimit: "Completed 45+ Years", shots: 60, target: "Electronic (SIUS)", code: "AP-23" },
+        { category: "Senior Master Men (60+ Years)", gender: "Male", ageLimit: "Completed 60+ Years", shots: 60, target: "Electronic (SIUS)", code: "AP-23-SM" },
+
+        { category: "Sub-Youth Women (Under 16)", gender: "Female", ageLimit: "Born 2010 or after", shots: 60, target: "Electronic (SIUS)", code: "AP-08" },
+        { category: "Youth Women (Under 19)", gender: "Female", ageLimit: "Born 2007 or after", shots: 60, target: "Electronic (SIUS)", code: "AP-07" },
+        { category: "Junior Women (Under 21)", gender: "Female", ageLimit: "Born 2005 or after", shots: 60, target: "Electronic (SIUS)", code: "AP-06" },
+        { category: "Senior Women (21+ Years)", gender: "Female", ageLimit: "21+ Years", shots: 60, target: "Electronic (SIUS)", code: "AP-05" },
+        { category: "Master Women (45+ Years)", gender: "Female", ageLimit: "Completed 45+ Years", shots: 60, target: "Electronic (SIUS)", code: "AP-23-W" },
+        { category: "Senior Master Women (60+ Years)", gender: "Female", ageLimit: "Completed 60+ Years", shots: 60, target: "Electronic (SIUS)", code: "AP-23-SMW" }
+      ],
+
+      "NR 10M Air Rifle": [
+        { category: "Sub-Youth Men (Under 16)", gender: "Male", ageLimit: "Born 2010 or after", shots: 40, target: "Electronic (SIUS)", code: "AR-12" },
+        { category: "Youth Men (Under 19)", gender: "Male", ageLimit: "Born 2007 or after", shots: 40, target: "Electronic (SIUS)", code: "AR-11" },
+        { category: "Junior Men (Under 21)", gender: "Male", ageLimit: "Born 2005 or after", shots: 40, target: "Electronic (SIUS)", code: "AR-10" },
+        { category: "Senior Men (21+ Years)", gender: "Male", ageLimit: "21+ Years", shots: 40, target: "Electronic (SIUS)", code: "AR-09" },
+        { category: "Master Men (45+ Years)", gender: "Male", ageLimit: "Completed 45+ Years", shots: 40, target: "Electronic (SIUS)", code: "AR-12-M" },
+        { category: "Senior Master Men (60+ Years)", gender: "Male", ageLimit: "Completed 60+ Years", shots: 40, target: "Electronic (SIUS)", code: "AR-12-SM" },
+
+        { category: "Sub-Youth Women (Under 16)", gender: "Female", ageLimit: "Born 2010 or after", shots: 40, target: "Electronic (SIUS)", code: "AR-16" },
+        { category: "Youth Women (Under 19)", gender: "Female", ageLimit: "Born 2007 or after", shots: 40, target: "Electronic (SIUS)", code: "AR-15" },
+        { category: "Junior Women (Under 21)", gender: "Female", ageLimit: "Born 2005 or after", shots: 40, target: "Electronic (SIUS)", code: "AR-14" },
+        { category: "Senior Women (21+ Years)", gender: "Female", ageLimit: "21+ Years", shots: 40, target: "Electronic (SIUS)", code: "AR-13" },
+        { category: "Master Women (45+ Years)", gender: "Female", ageLimit: "Completed 45+ Years", shots: 40, target: "Electronic (SIUS)", code: "AR-16-M" },
+        { category: "Senior Master Women (60+ Years)", gender: "Female", ageLimit: "Completed 60+ Years", shots: 40, target: "Electronic (SIUS)", code: "AR-16-SM" }
+      ],
+
+      "NR 10M Air Pistol": [
+        { category: "Sub-Youth Men (Under 16)", gender: "Male", ageLimit: "Born 2010 or after", shots: 40, target: "Electronic (SIUS)", code: "AP-12" },
+        { category: "Youth Men (Under 19)", gender: "Male", ageLimit: "Born 2007 or after", shots: 40, target: "Electronic (SIUS)", code: "AP-11" },
+        { category: "Junior Men (Under 21)", gender: "Male", ageLimit: "Born 2005 or after", shots: 40, target: "Electronic (SIUS)", code: "AP-10" },
+        { category: "Senior Men (21+ Years)", gender: "Male", ageLimit: "21+ Years", shots: 40, target: "Electronic (SIUS)", code: "AP-09" },
+        { category: "Master Men (45+ Years)", gender: "Male", ageLimit: "Completed 45+ Years", shots: 40, target: "Electronic (SIUS)", code: "AP-12-M" },
+        { category: "Senior Master Men (60+ Years)", gender: "Male", ageLimit: "Completed 60+ Years", shots: 40, target: "Electronic (SIUS)", code: "AP-12-SM" },
+
+        { category: "Sub-Youth Women (Under 16)", gender: "Female", ageLimit: "Born 2010 or after", shots: 40, target: "Electronic (SIUS)", code: "AP-16" },
+        { category: "Youth Women (Under 19)", gender: "Female", ageLimit: "Born 2007 or after", shots: 40, target: "Electronic (SIUS)", code: "AP-15" },
+        { category: "Junior Women (Under 21)", gender: "Female", ageLimit: "Born 2005 or after", shots: 40, target: "Electronic (SIUS)", code: "AP-14" },
+        { category: "Senior Women (21+ Years)", gender: "Female", ageLimit: "21+ Years", shots: 40, target: "Electronic (SIUS)", code: "AP-13" },
+        { category: "Master Women (45+ Years)", gender: "Female", ageLimit: "Completed 45+ Years", shots: 40, target: "Electronic (SIUS)", code: "AP-16-M" },
+        { category: "Senior Master Women (60+ Years)", gender: "Female", ageLimit: "Completed 60+ Years", shots: 40, target: "Electronic (SIUS)", code: "AP-16-SM" }
+      ],
+
+      "Little Champ 10M Air Rifle": [
+        { category: "Under 10 Boys (Little Champ)", gender: "Male", ageLimit: "Below 10 Years", shots: 40, target: "Paper Target", code: "LC-R1" },
+        { category: "Under 12 Boys (Sub-Sub Youth)", gender: "Male", ageLimit: "Below 12 Years", shots: 40, target: "Paper Target", code: "AR-17" },
+        { category: "Under 10 Girls (Little Champ)", gender: "Female", ageLimit: "Below 10 Years", shots: 40, target: "Paper Target", code: "LC-R2" },
+        { category: "Under 12 Girls (Sub-Sub Youth)", gender: "Female", ageLimit: "Below 12 Years", shots: 40, target: "Paper Target", code: "AR-18" }
+      ],
+
+      "Little Champ 10M Air Pistol": [
+        { category: "Under 10 Boys (Little Champ)", gender: "Male", ageLimit: "Below 10 Years", shots: 40, target: "Paper Target", code: "LC-P1" },
+        { category: "Under 12 Boys (Sub-Sub Youth)", gender: "Male", ageLimit: "Below 12 Years", shots: 40, target: "Paper Target", code: "AP-17" },
+        { category: "Under 10 Girls (Little Champ)", gender: "Female", ageLimit: "Below 10 Years", shots: 40, target: "Paper Target", code: "LC-P2" },
+        { category: "Under 12 Girls (Sub-Sub Youth)", gender: "Female", ageLimit: "Below 12 Years", shots: 40, target: "Paper Target", code: "AP-18" }
+      ],
+
+      "Deaf / Para 10M Air Rifle": [
+        { category: "Para-Shooter SH1 (Men)", gender: "Male", ageLimit: "Open Age", shots: 60, target: "Electronic (SIUS)", code: "AR-19" },
+        { category: "Para-Shooter SH2 (Men)", gender: "Male", ageLimit: "Open Age", shots: 60, target: "Electronic (SIUS)", code: "AR-19-SH2" },
+        { category: "Deaf-Shooter (Men)", gender: "Male", ageLimit: "Open Age", shots: 60, target: "Electronic (SIUS)", code: "AR-21" },
+        { category: "Para-Shooter SH1 (Women)", gender: "Female", ageLimit: "Open Age", shots: 60, target: "Electronic (SIUS)", code: "AR-20" },
+        { category: "Para-Shooter SH2 (Women)", gender: "Female", ageLimit: "Open Age", shots: 60, target: "Electronic (SIUS)", code: "AR-20-SH2" },
+        { category: "Deaf-Shooter (Women)", gender: "Female", ageLimit: "Open Age", shots: 60, target: "Electronic (SIUS)", code: "AR-22" }
+      ],
+
+      "Deaf / Para 10M Air Pistol": [
+        { category: "Para-Shooter SH1 (Men)", gender: "Male", ageLimit: "Open Age", shots: 60, target: "Electronic (SIUS)", code: "AP-19" },
+        { category: "Deaf-Shooter (Men)", gender: "Male", ageLimit: "Open Age", shots: 60, target: "Electronic (SIUS)", code: "AP-21" },
+        { category: "Para-Shooter SH1 (Women)", gender: "Female", ageLimit: "Open Age", shots: 60, target: "Electronic (SIUS)", code: "AP-20" },
+        { category: "Deaf-Shooter (Women)", gender: "Female", ageLimit: "Open Age", shots: 60, target: "Electronic (SIUS)", code: "AP-22" }
+      ],
+
+      "Open Sight": [
+        { category: "Open Sight Men (Air Rifle)", gender: "Male", ageLimit: "21+ Years", shots: 40, target: "Paper / SIUS Target", code: "OS-01" },
+        { category: "Open Sight Junior Men", gender: "Male", ageLimit: "Below 21 Years", shots: 40, target: "Paper / SIUS Target", code: "OS-02" },
+        { category: "Open Sight Women (Air Rifle)", gender: "Female", ageLimit: "21+ Years", shots: 40, target: "Paper / SIUS Target", code: "OS-03" },
+        { category: "Open Sight Junior Women", gender: "Female", ageLimit: "Below 21 Years", shots: 40, target: "Paper / SIUS Target", code: "OS-04" }
+      ]
+    };
 
     document.addEventListener('DOMContentLoaded', () => {
       // Default to Male on load
       setGender('Male');
-      renderLanes();
+      renderRelays();
     });
 
-    // 1. Set Gender and trigger smart filter
+    // 1. Set Gender and trigger smart category update
     function setGender(gender) {
       currentGender = gender;
       document.getElementById('regGender').value = gender;
 
-      // Update button visual states
       const btnMale = document.getElementById('btnGenderMale');
       const btnFemale = document.getElementById('btnGenderFemale');
 
       if (gender === 'Male') {
         btnMale.className = 'gender-btn py-2.5 px-3 rounded-xl border border-blue-500 bg-blue-500/20 text-white font-mono text-xs flex items-center justify-center gap-1.5 transition-all shadow-md';
         btnFemale.className = 'gender-btn py-2.5 px-3 rounded-xl border border-white/15 bg-white/5 text-white/70 hover:text-white font-mono text-xs flex items-center justify-center gap-1.5 transition-all';
-        document.getElementById('genderFilterStatus').innerHTML = `<i class="fa-solid fa-check text-blue-400 mr-1"></i> Male Categories Active (Strict NRAI Rules)`;
+        document.getElementById('genderFilterStatus').innerHTML = `<i class="fa-solid fa-check text-blue-400 mr-1"></i> Male Categories Active`;
       } else {
         btnFemale.className = 'gender-btn py-2.5 px-3 rounded-xl border border-rose-500 bg-rose-500/20 text-white font-mono text-xs flex items-center justify-center gap-1.5 transition-all shadow-md';
         btnMale.className = 'gender-btn py-2.5 px-3 rounded-xl border border-white/15 bg-white/5 text-white/70 hover:text-white font-mono text-xs flex items-center justify-center gap-1.5 transition-all';
-        document.getElementById('genderFilterStatus').innerHTML = `<i class="fa-solid fa-check text-rose-400 mr-1"></i> Female Categories Active (Strict NRAI Rules)`;
+        document.getElementById('genderFilterStatus').innerHTML = `<i class="fa-solid fa-check text-rose-400 mr-1"></i> Female Categories Active`;
       }
 
-      populateSmartCategories();
+      if (selectedEvent) {
+        populateCategoriesForEvent();
+      }
     }
 
-    // 2. Weapon or Format change
-    function onWeaponOrFormatChange() {
-      currentWeapon = document.getElementById('regWeapon').value;
-      currentEventType = document.getElementById('regEventType').value;
-      populateSmartCategories();
-    }
-
-    // 3. Populate Smart Categories STRICTLY matching Gender, Weapon, and Format
-    function populateSmartCategories() {
+    // 2. Event Selected -> Populate relevant categories only
+    function onEventSelect() {
+      const eventSelect = document.getElementById('regEvent');
+      selectedEvent = eventSelect.value;
       const catSelect = document.getElementById('regCategory');
+
+      if (!selectedEvent) {
+        catSelect.innerHTML = `<option value="">-- Please select event first --</option>`;
+        catSelect.disabled = true;
+        catSelect.classList.add('opacity-50', 'cursor-not-allowed');
+        selectedMatch = null;
+        renderRelays();
+        return;
+      }
+
+      catSelect.disabled = false;
+      catSelect.classList.remove('opacity-50', 'cursor-not-allowed');
+      populateCategoriesForEvent();
+      renderRelays();
+    }
+
+    // 3. Populate Categories strictly belonging to selectedEvent
+    function populateCategoriesForEvent() {
+      const catSelect = document.getElementById('regCategory');
+      if (!catSelect || !selectedEvent) return;
+
+      const categories = EVENT_CATEGORIES[selectedEvent] || [];
       catSelect.innerHTML = '';
 
-      if (!currentGender) {
-        catSelect.innerHTML = `<option value="">-- Please select gender first --</option>`;
+      if (categories.length === 0) {
+        catSelect.innerHTML = `<option value="">-- No categories found --</option>`;
         return;
       }
 
-      // Filter matches from official master catalog
-      const availableMatches = OFFICIAL_MATCHES.filter(m => {
-        return m.weapon === currentWeapon &&
-               m.eventType === currentEventType &&
-               (m.gender === currentGender || m.gender === 'All');
-      });
-
-      if (availableMatches.length === 0) {
-        catSelect.innerHTML = `<option value="">No categories available</option>`;
-        return;
+      let filtered = categories;
+      if (currentGender === 'Male') {
+        filtered = categories.filter(c => c.gender === 'Male' || !c.gender || c.gender === 'All');
+      } else if (currentGender === 'Female') {
+        filtered = categories.filter(c => c.gender === 'Female' || !c.gender || c.gender === 'All');
       }
 
-      availableMatches.forEach((m, idx) => {
+      if (filtered.length === 0) {
+        filtered = categories;
+      }
+
+      catSelect.innerHTML = `<option value="">-- Select Category --</option>`;
+      filtered.forEach(c => {
         const opt = document.createElement('option');
-        opt.value = m.code;
-        opt.text = `${m.category} • [${m.code}] • ${m.ageLimit}`;
+        opt.value = c.code || c.category;
+        opt.text = `${c.category} • ${c.ageLimit} • ${c.shots} Shots`;
         catSelect.appendChild(opt);
       });
 
-      // Select first match
-      onCategorySelect();
-    }
-
-    // 4. Category selected - resolve match code and metadata
-    function onCategorySelect() {
-      const code = document.getElementById('regCategory').value;
-      selectedMatch = findMatchByCode(code);
-      if (!selectedMatch) return;
-
-      // Update Telemetry Display
-      document.getElementById('badgeMatchCode').innerText = `MATCH NO. ${selectedMatch.code}`;
-      document.getElementById('badgeTargetSystem').innerText = selectedMatch.target;
-      document.getElementById('badgeFormatShots').innerText = `${selectedMatch.shots} Shots`;
-      document.getElementById('matchTelemetryTitle').innerText = `${selectedMatch.name} • ${selectedMatch.category}`;
-      document.getElementById('matchTelemetryAgeLimit').innerText = `Age Criterion: ${selectedMatch.ageLimit} (NRAI Rule 11)`;
-
-      baseFee = selectedMatch.fee;
-      document.getElementById('telemetryBaseFee').innerText = `₹ ${baseFee.toLocaleString('en-IN')}`;
-
-      updateTotalCalculations();
-    }
-
-    // 5. Total Calculations (Base + Optional Team Entry)
-    function updateTotalCalculations() {
-      const hasTeam = document.getElementById('checkTeamEntry').checked;
-      totalFee = baseFee + (hasTeam ? 1500 : 0);
-
-      document.getElementById('feeValue').innerText = `₹ ${totalFee.toLocaleString('en-IN')}`;
-      document.getElementById('btnPayAmount').innerText = totalFee.toLocaleString('en-IN');
-      document.getElementById('modalPayAmt').innerText = `₹ ${totalFee.toLocaleString('en-IN')}.00`;
-      
-      const sub = hasTeam ? `Individual (₹${baseFee}) + Team Entry (₹1,500)` : `Individual Entry (${selectedMatch ? selectedMatch.target : 'SIUS'})`;
-      document.getElementById('feeSubtitle').innerText = sub;
-    }
-
-    // 6. National Shooter Toggle
-    function handleNationalShooterToggle() {
-      const isNational = document.getElementById('checkNationalShooter').checked;
-      const notice = document.getElementById('nationalRuleNotice');
-      const formatSelect = document.getElementById('regEventType');
-
-      if (isNational) {
-        notice.classList.remove('hidden');
-        // Force ISSF format
-        formatSelect.value = 'ISSF';
-        // Disable NR option
-        for (let opt of formatSelect.options) {
-          if (opt.value === 'NR') opt.disabled = true;
-        }
-      } else {
-        notice.classList.add('hidden');
-        for (let opt of formatSelect.options) {
-          opt.disabled = false;
-        }
+      // Auto-select first category
+      if (filtered.length > 0) {
+        catSelect.selectedIndex = 1;
+        onCategorySelect();
       }
-      onWeaponOrFormatChange();
     }
 
-    // 7. DOB Change auto-calculation
+    // 4. Category Selected
+    function onCategorySelect() {
+      const catSelect = document.getElementById('regCategory');
+      const val = catSelect.value;
+      if (!val) {
+        selectedMatch = null;
+        return;
+      }
+
+      const categories = EVENT_CATEGORIES[selectedEvent] || [];
+      const match = categories.find(c => (c.code === val || c.category === val)) || categories[0];
+
+      selectedMatch = {
+        code: match.code || `NST-${val.slice(0, 4)}`,
+        name: selectedEvent,
+        category: match.category,
+        ageLimit: match.ageLimit,
+        shots: match.shots || 60,
+        target: match.target || 'Electronic (SIUS)',
+        fee: 1500
+      };
+    }
+
+    // 5. DOB change auto-calculation
     function handleDobChange() {
       const dobVal = document.getElementById('regDob').value;
       if (!dobVal) return;
@@ -697,88 +635,152 @@
       const age = currentYear - birthYear;
       
       const badge = document.getElementById('ageBadge');
-      badge.innerText = `(Approx. Age: ${age} Yrs)`;
+      if (badge) {
+        badge.innerText = `(Approx. Age: ${age} Yrs)`;
+      }
 
-      // Smart recommendation
       if (age < 12) {
-        showToast("Shooter age < 12: Eligible for Under-12 Little Champ (Paper Target)", "circle-info");
+        showToast("Shooter age < 12: Little Champ event recommended", "circle-info");
       } else if (age <= 16) {
         showToast("Shooter age ≤ 16: Eligible for Sub-Youth, Youth, Junior & Senior", "circle-info");
       } else if (age >= 45) {
-        showToast("Shooter age 45+: Eligible for Masters & Seniors", "circle-info");
+        showToast("Shooter age 45+: Eligible for Masters category", "circle-info");
       }
     }
 
-    // 8. Jersey live name preview
-    function updateJerseyPreview() {
-      const name = document.getElementById('regName').value.trim();
-      const display = name ? name.toUpperCase() : 'YOUR NAME';
-      document.getElementById('jerseyPrintName').innerText = display.length > 14 ? display.slice(0, 14) + '..' : display;
-      document.getElementById('regJerseyName').value = display;
-    }
-
-    // 9. Lane Picker Logic (9 Lanes)
-    function renderLanes() {
-      const container = document.getElementById('regLanesGrid');
-      container.innerHTML = '';
-      for (let i = 1; i <= 9; i++) {
-        const isOccupied = (i === 1 || i === 7);
-        const isSelected = (i === chosenLane);
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = `py-2.5 px-1 sm:px-2.5 rounded-xl text-[11px] sm:text-xs font-mono transition-all ${
-          isOccupied ? 'bg-white/5 text-white/20 cursor-not-allowed' :
-          isSelected ? 'bg-[#FF5B37] text-white font-bold shadow-md shadow-[#FF5B37]/40 scale-105' :
-          'bg-white/10 text-white/70 hover:bg-white/20'
-        }`;
-        btn.innerText = i < 10 ? '0' + i : i;
-        if (!isOccupied) {
-          btn.onclick = () => {
-            chosenLane = i;
-            document.getElementById('selectedLaneText').innerText = `Selected: Lane #${i < 10 ? '0' + i : i} (SIUS)`;
-            renderLanes();
-          };
-        }
-        container.appendChild(btn);
-      }
-    }
-
+    // 6. Date Selection
     function selectDate(dateStr, btn) {
       chosenDate = dateStr;
       document.querySelectorAll('.date-tab').forEach(b => {
         b.className = 'date-tab px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white transition-all';
       });
-      btn.className = 'date-tab px-4 py-2.5 rounded-xl border border-[#FF5B37] bg-[#FF5B37]/20 text-white font-bold transition-all';
+      if (btn) {
+        btn.className = 'date-tab px-4 py-2.5 rounded-xl border border-[#FF5B37] bg-[#FF5B37]/20 text-white font-bold transition-all';
+      }
+      renderRelays();
     }
 
-    function selectRelaySlot(relayName, timeRange, reportingTime, el) {
-      chosenRelay = relayName;
-      chosenTime = timeRange;
-      chosenReporting = reportingTime;
-      document.querySelectorAll('.relay-box').forEach(b => {
-        b.className = 'relay-box p-3.5 rounded-2xl border border-white/10 bg-white/5 hover:border-white/30 cursor-pointer transition-all';
+    // Helper: Count bookings in a relay on a given date (max 15 slots)
+    function getRelayBookedCount(date, relayId) {
+      let count = 0;
+      try {
+        const bookings = (typeof getBookings === 'function') ? getBookings() : [];
+        count = bookings.filter(b => (b.date === date || b.matchDate === date) && (b.relay === `Relay 0${relayId}` || b.relay === `Relay ${relayId}` || b.relayNo === relayId)).length;
+      } catch(e) {}
+      return count;
+    }
+
+    // 7. Render 6 Relays with 15 Slots Capacity (Auto-hides full relays)
+    function renderRelays() {
+      const container = document.getElementById('relaysContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      let availableRelays = [];
+
+      RELAYS.forEach(relay => {
+        const booked = getRelayBookedCount(chosenDate, relay.id);
+        const slotsLeft = relay.maxSlots - booked;
+
+        // RULE: If slots are full (0 left), option is completely removed / hidden!
+        if (slotsLeft <= 0) {
+          return;
+        }
+
+        availableRelays.push({ ...relay, booked, slotsLeft });
       });
-      el.className = 'relay-box p-3.5 rounded-2xl border border-[#FF5B37] bg-[#FF5B37]/15 cursor-pointer transition-all';
+
+      if (availableRelays.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full p-6 text-center rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400 font-mono text-xs">
+            <i class="fa-solid fa-circle-exclamation text-lg mb-2 block"></i>
+            All 6 relays on ${chosenDate} are completely full (15/15 slots taken)! Please choose another date.
+          </div>
+        `;
+        return;
+      }
+
+      // If current chosenRelay is not among available, pick first available
+      const currentStillAvailable = availableRelays.some(r => r.name === chosenRelay);
+      if (!currentStillAvailable && availableRelays.length > 0) {
+        chosenRelay = availableRelays[0].name;
+        chosenTime = availableRelays[0].time;
+        chosenReporting = availableRelays[0].reporting;
+        chosenRelayType = availableRelays[0].type;
+        chosenLane = (availableRelays[0].booked % 15) + 1;
+      }
+
+      availableRelays.forEach(relay => {
+        const isSelected = (relay.name === chosenRelay);
+        const isNR = (relay.type === 'NR');
+
+        const box = document.createElement('div');
+        box.className = `relay-box p-4 rounded-2xl border cursor-pointer transition-all ${
+          isSelected 
+            ? 'border-[#FF5B37] bg-[#FF5B37]/20 shadow-lg shadow-[#FF5B37]/30 ring-1 ring-[#FF5B37]' 
+            : 'border-white/10 bg-white/5 hover:border-white/30'
+        }`;
+
+        box.onclick = () => {
+          chosenRelay = relay.name;
+          chosenTime = relay.time;
+          chosenReporting = relay.reporting;
+          chosenRelayType = relay.type;
+          chosenLane = (relay.booked % 15) + 1;
+          renderRelays();
+        };
+
+        const typeBadgeColor = isNR 
+          ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' 
+          : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
+
+        box.innerHTML = `
+          <div class="flex justify-between items-center mb-2">
+            <div class="flex items-center gap-1.5">
+              <span class="font-bold text-white text-sm">${relay.name}</span>
+              <span class="text-[9px] px-1.5 py-0.5 rounded border ${typeBadgeColor} font-bold">${relay.type}</span>
+            </div>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">
+              ${relay.slotsLeft} / ${relay.maxSlots} Available
+            </span>
+          </div>
+          <div class="text-sm font-bold text-white font-display">${relay.time}</div>
+          <div class="text-[10px] text-white/50 mt-1 flex justify-between">
+            <span class="text-amber-300">Reporting: ${relay.reporting}</span>
+            <span class="text-white/40">(${relay.duration})</span>
+          </div>
+        `;
+
+        container.appendChild(box);
+      });
     }
 
+    // 8. Handle Form Submission -> Open Review Modal
     function handleRegistration(e) {
       e.preventDefault();
       if (!currentGender) {
         alert("Please select gender (Male or Female) to verify eligibility.");
         return;
       }
+      if (!selectedEvent) {
+        alert("Please select an event from the list.");
+        return;
+      }
       if (!selectedMatch) {
-        alert("Please select a valid match category.");
+        alert("Please select a valid category.");
         return;
       }
 
       // Populate Modal Details
-      document.getElementById('modalMatchCode').innerText = selectedMatch.code;
+      document.getElementById('modalEventName').innerText = selectedEvent;
+      document.getElementById('modalMatchCode').innerText = `${selectedMatch.category} [${selectedMatch.code}]`;
       document.getElementById('modalAthleteName').innerText = document.getElementById('regName').value;
-      document.getElementById('modalSlot').innerText = `${chosenRelay} • Lane #${chosenLane < 10 ? '0' + chosenLane : chosenLane}`;
+      document.getElementById('modalSlot').innerText = `${chosenRelay} (${chosenRelayType}) • ${chosenTime}`;
+      document.getElementById('modalPayAmt').innerText = `₹ 1,500.00`;
       document.getElementById('payModal').classList.remove('hidden');
     }
 
+    // 9. Razorpay Standard Checkout & Signature Verification
     async function initiateRazorpayCheckout() {
       const btn = document.getElementById('btnModalConfirm');
       const origContent = '<i class="fa-solid fa-lock text-xs"></i> <span>PAY VIA RAZORPAY / UPI</span>';
@@ -790,12 +792,10 @@
           throw new Error('Razorpay SDK failed to load. Please check your internet connection and refresh.');
         }
 
-        const hasTeam = document.getElementById('checkTeamEntry')?.checked || false;
         const regName = document.getElementById('regName').value.trim();
         const regFather = document.getElementById('regFather').value.trim();
         const regSchool = document.getElementById('regSchool').value.trim();
         const regMobile = document.getElementById('regMobile').value.trim();
-        const regEmail = document.getElementById('regEmail') ? document.getElementById('regEmail').value.trim() : '';
         const regDob = document.getElementById('regDob') ? document.getElementById('regDob').value : null;
         const relayNum = parseInt((chosenRelay || '1').replace(/\D/g, '')) || 1;
 
@@ -803,8 +803,12 @@
           throw new Error('Please fill in your name and 10-digit mobile number.');
         }
 
-        // Amount in paise (₹1 = 100 paise)
-        const amountInPaise = Math.round(Number(totalFee) * 100);
+        // Amount in paise (₹1,500 = 150000 paise)
+        const amountInPaise = 150000;
+
+        const weaponLabel = selectedEvent.includes('Pistol') 
+          ? '10M Air Pistol' 
+          : (selectedEvent.includes('Open Sight') ? 'Open Sight Rifle' : '10M Air Rifle');
 
         const athletePayload = {
           fullName: regName,
@@ -812,17 +816,16 @@
           school: regSchool,
           clubName: regSchool,
           phone: regMobile,
-          email: regEmail,
           dob: regDob,
           gender: currentGender,
-          weapon: currentWeapon,
-          eventCategory: selectedMatch?.category || '10M Air Rifle',
-          ageCategory: selectedMatch?.ageLimit || 'Senior',
+          weapon: weaponLabel,
+          eventCategory: selectedEvent,
+          ageCategory: selectedMatch?.category || 'Senior',
           relayNo: relayNum,
           targetLane: chosenLane,
           matchDate: chosenDate,
           reportingTime: chosenReporting,
-          paymentAmount: totalFee
+          paymentAmount: 1500
         };
 
         // 1. Create order on backend
@@ -836,8 +839,9 @@
             notes: {
               athlete_name: regName,
               phone: regMobile,
-              discipline: currentWeapon,
-              match: selectedMatch?.name || 'Championship'
+              event: selectedEvent,
+              category: selectedMatch?.category || 'Senior',
+              relay: chosenRelay
             }
           })
         });
@@ -856,12 +860,11 @@
           amount: orderData.amount,
           currency: orderData.currency || 'INR',
           name: 'NexShot Technologies',
-          description: `Championship Entry: ${selectedMatch?.name || '10M Match'} (${chosenRelay}, Lane #${chosenLane})`,
+          description: `${selectedEvent} • ${chosenRelay}`,
           image: 'assets/img/nexshot-icon.png',
           order_id: orderData.order_id,
           prefill: {
             name: regName,
-            email: regEmail || '',
             contact: regMobile
           },
           notes: {
@@ -917,22 +920,20 @@
                 school: regSchool,
                 mobile: regMobile,
                 gender: currentGender,
-                weapon: currentWeapon,
-                event: selectedMatch?.name || '10M Event',
+                weapon: weaponLabel,
+                event: selectedEvent,
                 category: selectedMatch?.category || 'Senior',
                 targetType: selectedMatch?.target || 'SIUS Electronic',
                 shots: selectedMatch?.shots || 60,
-                jerseySize: document.getElementById('regJerseySize')?.value || 'M',
-                hasTeamEntry: hasTeam,
                 date: chosenDate,
                 relay: chosenRelay,
                 time: chosenTime,
                 reporting: chosenReporting,
-                lane: `Lane #${chosenLane < 10 ? '0' + chosenLane : chosenLane} (${selectedMatch?.target?.includes('SIUS') ? 'SIUS' : 'Paper'})`,
+                lane: `Lane #${chosenLane < 10 ? '0' + chosenLane : chosenLane} (SIUS Electronic)`,
                 paymentId: paymentResponse.razorpay_payment_id,
                 orderId: paymentResponse.razorpay_order_id,
                 status: "Confirmed (Paid)",
-                fee: totalFee
+                fee: 1500
               };
               saveBooking(bookingRecord);
 
@@ -976,7 +977,6 @@
       }
     }
 
-    // Alias for backwards compatibility
     const confirmBookingPayment = initiateRazorpayCheckout;
   </script>
 </body>
