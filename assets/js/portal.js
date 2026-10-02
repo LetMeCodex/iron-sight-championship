@@ -26,7 +26,7 @@ const DEFAULT_BOOKINGS = [
     gender: "Male",
     event: "10M Air Rifle (.177) ISSF",
     category: "Sub-Youth Men",
-    date: "13 APR 2025",
+    date: "25 NOV 2026",
     relay: "Relay 01",
     time: "09:00 — 10:15 AM",
     reporting: "08:30 AM",
@@ -441,14 +441,46 @@ function initGSAPAnimations() {
   });
 }
 
+/* ================= LIVE CHAMPIONSHIP COUNTDOWN ================= */
+function initChampionshipCountdown() {
+  const countdownEl = document.getElementById('countdownText');
+  if (!countdownEl) return;
+
+  // Championship start: 25 Nov 2026, 08:30 AM IST (Indian Standard Time UTC+05:30)
+  const targetDate = new Date('2026-11-25T08:30:00+05:30').getTime();
+
+  function update() {
+    const now = new Date().getTime();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      countdownEl.innerText = 'CHAMPIONSHIP LIVE';
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    const pad = n => String(n).padStart(2, '0');
+    countdownEl.innerText = `T-${days}D ${pad(hours)}H ${pad(minutes)}M ${pad(seconds)}S`;
+  }
+
+  update();
+  setInterval(update, 1000);
+}
+
 // Auto-init on DOMContentLoaded or immediate if ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     initThemeSwitcher();
     initGSAPAnimations();
+    initChampionshipCountdown();
   });
 } else {
   initThemeSwitcher();
   initGSAPAnimations();
+  initChampionshipCountdown();
 }
 

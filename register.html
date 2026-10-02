@@ -385,17 +385,17 @@
 
           <!-- Date Tabs -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 font-mono text-xs">
-            <button type="button" onclick="selectDate('13 APR 2025', this)" class="date-tab px-4 py-2.5 rounded-xl border border-[#FF5B37] bg-[#FF5B37]/20 text-white font-bold transition-all">
-              13 APR (Day 1)
+            <button type="button" onclick="selectDate('25 NOV 2026', this)" class="date-tab px-4 py-2.5 rounded-xl border border-[#FF5B37] bg-[#FF5B37]/20 text-white font-bold transition-all">
+              25 NOV (Day 1)
             </button>
-            <button type="button" onclick="selectDate('14 APR 2025', this)" class="date-tab px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white transition-all">
-              14 APR (Day 2)
+            <button type="button" onclick="selectDate('26 NOV 2026', this)" class="date-tab px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white transition-all">
+              26 NOV (Day 2)
             </button>
-            <button type="button" onclick="selectDate('15 APR 2025', this)" class="date-tab px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white transition-all">
-              15 APR (Day 3)
+            <button type="button" onclick="selectDate('27 NOV 2026', this)" class="date-tab px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white transition-all">
+              27 NOV (Day 3)
             </button>
-            <button type="button" onclick="selectDate('16 APR 2025', this)" class="date-tab px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white transition-all">
-              16 APR (Finals & COC)
+            <button type="button" onclick="selectDate('28 NOV 2026', this)" class="date-tab px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white transition-all">
+              28 NOV (Finals & COC)
             </button>
           </div>
 
@@ -521,7 +521,7 @@
     let currentWeapon = 'Rifle';
     let currentEventType = 'ISSF';
     let selectedMatch = null;
-    let chosenDate = '13 APR 2025';
+    let chosenDate = '25 NOV 2026';
     let chosenRelay = 'Relay 01';
     let chosenTime = '09:00 — 10:15 AM';
     let chosenReporting = '08:30 AM';
@@ -658,7 +658,7 @@
       if (!dobVal) return;
 
       const birthYear = new Date(dobVal).getFullYear();
-      const currentYear = 2025;
+      const currentYear = 2026;
       const age = currentYear - birthYear;
       
       const badge = document.getElementById('ageBadge');
