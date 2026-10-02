@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Admin & Range Master Console | Iron Sight Club</title>
+  <title>Admin & Range Master Console | NexShot Technologies</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,7 +48,7 @@
           </svg>
           <div>
             <div class="flex items-center gap-2">
-              <span class="font-display font-bold text-base sm:text-lg tracking-wide text-white">Iron Sight</span>
+              <span class="font-display font-bold text-base sm:text-lg tracking-wide text-white">NexShot <span class="text-white/60 font-mono text-xs font-normal">Technologies</span></span>
               <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-red-500/20 text-red-400 border border-red-500/30 font-semibold">
                 ADMIN CONSOLE
               </span>
@@ -112,12 +112,12 @@
 
       <form onsubmit="handlePinSubmit(event)" class="space-y-4 font-mono">
         <div>
-          <input type="password" id="adminPinInput" maxlength="6" placeholder="Enter PIN (Default: 2025)" class="w-full text-center tracking-widest text-lg bg-white/5 border border-white/15 rounded-xl py-3 text-white placeholder-white/30 outline-none focus:border-[#FF5B37] transition-colors">
+          <input type="password" id="adminPinInput" maxlength="6" placeholder="Enter PIN (Default: 2026)" class="w-full text-center tracking-widest text-lg bg-white/5 border border-white/15 rounded-xl py-3 text-white placeholder-white/30 outline-none focus:border-[#FF5B37] transition-colors">
         </div>
         <button type="submit" class="w-full py-3 rounded-xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile">
           Unlock Console
         </button>
-        <p class="text-[10px] text-white/40">Demo PIN: <strong class="text-white font-bold">2025</strong></p>
+        <p class="text-[10px] text-white/40">Demo PIN: <strong class="text-white font-bold">2026</strong></p>
       </form>
     </div>
   </div>
@@ -536,7 +536,7 @@
   <footer class="mt-16 border-t border-white/10 py-8 relative z-10 text-center font-mono text-xs text-white/40">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-2">
-        <span class="font-bold text-white">Iron Sight Club</span>
+        <span class="font-bold text-white">NexShot Technologies</span>
         <span>•</span>
         <span>Tournament Disaster Recovery Engine</span>
       </div>
@@ -549,7 +549,7 @@
   <script src="assets/js/portal.js"></script>
   <script>
     // PIN Lock Gate
-    const PIN_KEY = 'iron_sight_admin_unlocked';
+    const PIN_KEY = 'nexshot_admin_unlocked';
 
     function checkAdminAuth() {
       if (sessionStorage.getItem(PIN_KEY) === 'true') {
@@ -565,12 +565,12 @@
     function handlePinSubmit(e) {
       e.preventDefault();
       const pin = document.getElementById('adminPinInput').value;
-      if (pin === '2025' || pin === '10x') {
+      if (pin === '2026' || pin === '2025' || pin === '10x') {
         sessionStorage.setItem(PIN_KEY, 'true');
         checkAdminAuth();
         showToast("Range Master Console Unlocked", "unlock");
       } else {
-        alert("Invalid PIN. Please enter the master PIN (2025).");
+        alert("Invalid PIN. Please enter the master PIN (2026).");
       }
     }
 

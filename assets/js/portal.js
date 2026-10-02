@@ -1,7 +1,7 @@
 // ================= PIONEER SHARED PORTAL DATA STORE ================= //
 
-const STORAGE_KEY_SHOOTERS = 'iron_sight_shooters_db';
-const STORAGE_KEY_BOOKINGS = 'iron_sight_bookings_db';
+const STORAGE_KEY_SHOOTERS = 'nexshot_shooters_db';
+const STORAGE_KEY_BOOKINGS = 'nexshot_bookings_db';
 
 // Initial Shooters Dataset
 const DEFAULT_SHOOTERS = [
@@ -18,7 +18,7 @@ const DEFAULT_SHOOTERS = [
 // Initial Bookings
 const DEFAULT_BOOKINGS = [
   {
-    compNo: "COMP #ISC-2025-084",
+    compNo: "COMP #NST-2026-084",
     name: "Aarav Sharma",
     fatherName: "Rajesh Sharma",
     school: "Babu Bodhraj Convent School",
@@ -37,7 +37,10 @@ const DEFAULT_BOOKINGS = [
 ];
 
 function getShooters() {
-  const data = localStorage.getItem(STORAGE_KEY_SHOOTERS);
+  let data = localStorage.getItem(STORAGE_KEY_SHOOTERS);
+  if (!data) {
+    data = localStorage.getItem('iron_sight_shooters_db');
+  }
   if (!data) {
     localStorage.setItem(STORAGE_KEY_SHOOTERS, JSON.stringify(DEFAULT_SHOOTERS));
     return DEFAULT_SHOOTERS;
@@ -54,7 +57,10 @@ function saveShooters(shooters) {
 }
 
 function getBookings() {
-  const data = localStorage.getItem(STORAGE_KEY_BOOKINGS);
+  let data = localStorage.getItem(STORAGE_KEY_BOOKINGS);
+  if (!data) {
+    data = localStorage.getItem('iron_sight_bookings_db');
+  }
   if (!data) {
     localStorage.setItem(STORAGE_KEY_BOOKINGS, JSON.stringify(DEFAULT_BOOKINGS));
     return DEFAULT_BOOKINGS;
@@ -149,7 +155,7 @@ if (document.readyState === 'loading') {
 // 1. Export Complete JSON Backup
 function exportBackupJSON() {
   const backupData = {
-    app: "Iron Sight Championship Portal 2025",
+    app: "NexShot Technologies Championship Portal 2026",
     version: "2.0",
     exportedAt: new Date().toISOString(),
     shooters: getShooters(),
@@ -161,7 +167,7 @@ function exportBackupJSON() {
   const a = document.createElement("a");
   const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
   a.href = url;
-  a.download = `IronSight_Championship_Backup_${stamp}.json`;
+  a.download = `NexShot_Championship_Backup_${stamp}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -201,7 +207,7 @@ function exportBookingsCSV() {
   const a = document.createElement("a");
   const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 10);
   a.setAttribute("href", encodedUri);
-  a.setAttribute("download", `IronSight_Athletes_Roster_${stamp}.csv`);
+  a.setAttribute("download", `NexShot_Athletes_Roster_${stamp}.csv`);
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -346,6 +352,7 @@ function applyTheme(themeValue) {
 
   document.body.setAttribute('data-theme', themeName);
   try {
+    localStorage.setItem('nexshot_theme', themeValue);
     localStorage.setItem('iron_sight_theme', themeValue);
   } catch (e) {}
 
@@ -362,7 +369,7 @@ function initThemeSwitcher() {
   const switchers = document.querySelectorAll('.switcher');
   let savedTheme = 'light';
   try {
-    savedTheme = localStorage.getItem('iron_sight_theme') || 'light';
+    savedTheme = localStorage.getItem('nexshot_theme') || localStorage.getItem('iron_sight_theme') || 'light';
   } catch (e) {}
 
   applyTheme(savedTheme);

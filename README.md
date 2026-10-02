@@ -1,6 +1,6 @@
-# Iron Sight Championship 2025 - Official Tournament Portal
+# NexShot Technologies - Official Championship Portal 2026
 
-Official multi-page tournament portal for the **2nd Late Smt. Kiran Chopra Inter School Shooting Championship 2025**, organized by **Iron Sight Club** at **BBC Shooting Academy, Babu Bodhraj Convent School, Sikandrabad, District Bulandshahr, Uttar Pradesh – 203205**.
+Official multi-page tournament portal for the **2nd Late Smt. Kiran Chopra Shooting Championship 2026**, powered by **NexShot Technologies** at **BBC Shooting Academy, Babu Bodhraj Convent School, Sikandrabad, District Bulandshahr, Uttar Pradesh – 203205**.
 
 ## 🌟 Architecture & Features
 
@@ -21,4 +21,4 @@ Official multi-page tournament portal for the **2nd Late Smt. Kiran Chopra Inter
 - `track-booking.html` — Competitor Card Lookup & Print Pass
 - `live-scoring.html` — Real-Time SIUS Leaderboard
 - `category-wise-scoring.html` — Rifle, Pistol, U-12 & Para Division Rankings
-- `admin.html` — Range Master Control & Backup Hub (PIN: `2025`)
+- `admin.html` — Range Master Control & Backup Hub (PIN: `2026`)
