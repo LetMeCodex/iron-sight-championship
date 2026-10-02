@@ -31,6 +31,22 @@
   --watermark-emblem-filter: grayscale(100%) contrast(150%) brightness(20%);
   --watermark-emblem-opacity: 0.30;
   --watermark-blend: multiply;
+
+  /* Master Poster Footer Variables (Theme 1: Azure Watercolor) */
+  --footer-bg: #FF5B37;
+  --footer-cutout: #0E2230;
+  --footer-text: #061824;
+  --footer-muted: rgba(6, 24, 36, 0.72);
+  --footer-heading: #040e16;
+  --footer-btn-bg: #061824;
+  --footer-btn-text: #ffffff;
+  --footer-btn-hover: #000000;
+  --footer-badge-bg: rgba(6, 24, 36, 0.08);
+  --footer-badge-border: rgba(6, 24, 36, 0.22);
+  --footer-badge-text: #061824;
+  --footer-giant-text: #061824;
+  --footer-icon-bg: #061824;
+  --footer-icon-color: #ffffff;
 }
 
 /* ================= THEME 1: AZURE WATERCOLOR (REFERENCE IMAGE) ================= */
@@ -54,6 +70,21 @@ body[data-theme="azure"] {
   --watermark-emblem-filter: grayscale(100%) contrast(160%) brightness(15%);
   --watermark-emblem-opacity: 0.40;
   --watermark-blend: multiply;
+
+  --footer-bg: #FF5B37;
+  --footer-cutout: #0E2230;
+  --footer-text: #061824;
+  --footer-muted: rgba(6, 24, 36, 0.72);
+  --footer-heading: #040e16;
+  --footer-btn-bg: #061824;
+  --footer-btn-text: #ffffff;
+  --footer-btn-hover: #000000;
+  --footer-badge-bg: rgba(6, 24, 36, 0.08);
+  --footer-badge-border: rgba(6, 24, 36, 0.22);
+  --footer-badge-text: #061824;
+  --footer-giant-text: #061824;
+  --footer-icon-bg: #061824;
+  --footer-icon-color: #ffffff;
 
   background:
     radial-gradient(ellipse 100% 60% at 50% -10%, rgba(140, 195, 225, 0.35) 0%, transparent 70%),
@@ -83,6 +114,21 @@ body[data-theme="onyx"] {
   --watermark-emblem-filter: brightness(220%) drop-shadow(0 0 40px rgba(255, 91, 55, 0.45));
   --watermark-emblem-opacity: 0.28;
   --watermark-blend: screen;
+
+  --footer-bg: #FF441D;
+  --footer-cutout: #050608;
+  --footer-text: #000000;
+  --footer-muted: rgba(0, 0, 0, 0.75);
+  --footer-heading: #000000;
+  --footer-btn-bg: #000000;
+  --footer-btn-text: #ffffff;
+  --footer-btn-hover: #16181f;
+  --footer-badge-bg: rgba(0, 0, 0, 0.09);
+  --footer-badge-border: rgba(0, 0, 0, 0.25);
+  --footer-badge-text: #000000;
+  --footer-giant-text: #000000;
+  --footer-icon-bg: #000000;
+  --footer-icon-color: #ffffff;
 
   background:
     radial-gradient(ellipse 100% 50% at 50% -10%, #20242e 0%, rgba(18, 20, 26, 0.6) 40%, transparent 80%),
@@ -114,6 +160,21 @@ body[data-theme="dusk"] {
   --watermark-emblem-filter: brightness(180%) drop-shadow(0 0 40px rgba(255, 91, 55, 0.4));
   --watermark-emblem-opacity: 0.28;
   --watermark-blend: plus-lighter;
+
+  --footer-bg: #FF5A78;
+  --footer-cutout: #0B0810;
+  --footer-text: #120A1A;
+  --footer-muted: rgba(18, 10, 26, 0.75);
+  --footer-heading: #0D0514;
+  --footer-btn-bg: #120A1A;
+  --footer-btn-text: #ffffff;
+  --footer-btn-hover: #000000;
+  --footer-badge-bg: rgba(18, 10, 26, 0.09);
+  --footer-badge-border: rgba(18, 10, 26, 0.25);
+  --footer-badge-text: #120A1A;
+  --footer-giant-text: #120A1A;
+  --footer-icon-bg: #120A1A;
+  --footer-icon-color: #ffffff;
 
   background: 
     radial-gradient(ellipse 100% 50% at 50% -10%, #765D7B 0%, rgba(93, 73, 101, 0.6) 35%, transparent 75%),
@@ -615,3 +676,310 @@ body::before {
     padding-bottom: 5.5rem !important;
   }
 }
+
+/* ================= ENLARGED & SEAMLESS BLENDED NAVBAR LOGO ================= */
+.brand-logo-blended {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  transition: transform 0.35s var(--ease-spring);
+}
+
+@media (min-width: 640px) {
+  .brand-logo-blended {
+    width: 62px;
+    height: 62px;
+  }
+}
+
+.brand-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 16px rgba(255, 91, 55, 0.45));
+  transition: transform 0.35s var(--ease-spring), filter 0.35s ease;
+}
+
+.group:hover .brand-logo-blended {
+  transform: scale(1.08);
+}
+
+.group:hover .brand-logo-img {
+  filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 24px rgba(255, 91, 55, 0.85));
+}
+
+/* ================= PROFESSIONAL POSTER FOOTER (BREAVER AWWWARDS SPEC) ================= */
+.poster-footer-wrap {
+  position: relative;
+  width: 100%;
+  margin-top: 5rem;
+  z-index: 20;
+}
+
+.poster-footer-flame {
+  width: 100%;
+  line-height: 0;
+  margin-bottom: -2px; /* Prevent any 1px subpixel rendering gap */
+  pointer-events: none;
+}
+
+.poster-footer-flame svg {
+  width: 100%;
+  height: auto;
+  max-height: 240px;
+  display: block;
+}
+
+.poster-footer-body {
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  padding: 2.5rem 1.5rem 2rem 1.5rem;
+  transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1),
+              color 400ms cubic-bezier(1, 0, 0.4, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .poster-footer-body {
+    padding: 3.5rem 3rem 2.5rem 3rem;
+  }
+}
+
+.poster-footer-grid {
+  max-width: 80rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .poster-footer-grid {
+    grid-template-columns: 1.1fr 1.6fr 1.3fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+}
+
+/* Column Titles */
+.footer-col-title {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  color: var(--footer-heading);
+  letter-spacing: -0.025em;
+  margin-bottom: 1.1rem;
+  transition: color 400ms ease;
+}
+
+/* Navigation Links List */
+.footer-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer-nav-link {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--footer-text);
+  text-decoration: none;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease, color 400ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: fit-content;
+}
+
+.footer-nav-link:hover {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+/* Center Say Hi! Column */
+.footer-center-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.footer-subtext {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--footer-muted);
+  margin-bottom: 1.35rem;
+  max-width: 26rem;
+  line-height: 1.5;
+  transition: color 400ms ease;
+}
+
+.footer-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  background-color: var(--footer-btn-bg);
+  color: var(--footer-btn-text);
+  padding: 0.9rem 2.4rem;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s var(--ease-spring), 
+              background-color 0.25s ease, 
+              box-shadow 0.25s ease,
+              color 400ms ease;
+}
+
+.footer-action-btn:hover {
+  background-color: var(--footer-btn-hover);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 16px 32px -4px rgba(0, 0, 0, 0.45);
+}
+
+.footer-contacts-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.footer-contact-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background-color: rgba(0, 0, 0, 0.08);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--footer-text);
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-contact-chip:hover {
+  background-color: rgba(0, 0, 0, 0.16);
+  transform: translateY(-1px);
+}
+
+/* Right Column: Socials, Copyright, Badge */
+.footer-right-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .footer-right-col {
+    align-items: flex-end;
+    text-align: right;
+  }
+}
+
+.footer-socials-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.footer-social-icon {
+  width: 2.45rem;
+  height: 2.45rem;
+  border-radius: 9999px;
+  background-color: var(--footer-icon-bg);
+  color: var(--footer-icon-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: transform 0.25s var(--ease-spring), opacity 0.2s ease, background-color 400ms ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.footer-social-icon:hover {
+  transform: translateY(-3px) scale(1.1);
+  opacity: 0.9;
+}
+
+.footer-copyright-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.footer-copyright {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: -0.015em;
+  color: var(--footer-heading);
+  transition: color 400ms ease;
+}
+
+.footer-subcopy {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  opacity: 0.75;
+  color: var(--footer-text);
+  transition: color 400ms ease;
+}
+
+.footer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid var(--footer-badge-border);
+  background-color: var(--footer-badge-bg);
+  color: var(--footer-badge-text);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: all 400ms ease;
+}
+
+.footer-badge:hover {
+  border-color: var(--footer-heading);
+  transform: translateY(-1px);
+}
+
+/* Giant Display Title at Bottom (BREAVER Spec) */
+.footer-giant-title {
+  font-family: var(--font-sans);
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  line-height: 0.82;
+  text-align: center;
+  color: var(--footer-giant-text);
+  font-size: clamp(2.6rem, 11.2vw, 11.5rem);
+  width: 100%;
+  margin-top: 3.5rem;
+  padding-bottom: 0.5rem;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.95;
+  transition: color 400ms cubic-bezier(1, 0, 0.4, 1);
+}
+

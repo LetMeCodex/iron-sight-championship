@@ -1,0 +1,108 @@
+import fs from 'fs';
+
+// Accurate SVG vector matching the reference illustration in media_1790973437371.png
+// Uses SVG <mask> with black cutouts so eyes, teeth, and roasting sticks are 100% physically transparent!
+
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 280" fill="none" class="w-full h-auto block select-none pointer-events-none" preserveAspectRatio="none">
+  <defs>
+    <style>
+      .flame-color { fill: var(--footer-bg, #FF5B37); transition: fill 400ms cubic-bezier(1, 0, 0.4, 1); }
+      .flame-stroke { stroke: var(--footer-bg, #FF5B37); transition: stroke 400ms cubic-bezier(1, 0, 0.4, 1); }
+    </style>
+
+    <!-- Cutout Mask: White is visible flame, Black cuts holes straight through to page background -->
+    <mask id="bonfire-cutout-mask">
+      <rect width="1440" height="280" fill="white" />
+      
+      <!-- Mascot Eyes -->
+      <path d="M 672 106 C 678 98, 692 98, 698 106 C 692 102, 678 102, 672 106 Z" fill="black" />
+      <path d="M 742 106 C 748 98, 762 98, 768 106 C 762 102, 748 102, 742 106 Z" fill="black" />
+
+      <!-- Mascot Front Teeth -->
+      <rect x="704" y="118" width="14" height="20" rx="3" fill="black" />
+      <rect x="722" y="118" width="14" height="20" rx="3" fill="black" />
+
+      <!-- Left Stick & Marshmallow Cutout -->
+      <path d="M 590 146 L 635 132" stroke="black" stroke-width="5" stroke-linecap="round" />
+      <rect x="580" y="132" width="22" height="26" rx="6" transform="rotate(-15 591 145)" fill="black" />
+
+      <!-- Right Stick & Marshmallow Cutout -->
+      <path d="M 850 146 L 805 132" stroke="black" stroke-width="5" stroke-linecap="round" />
+      <rect x="838" y="132" width="22" height="26" rx="6" transform="rotate(15 849 145)" fill="black" />
+    </mask>
+  </defs>
+
+  <!-- Group with Cutout Mask applied -->
+  <g mask="url(#bonfire-cutout-mask)">
+    <!-- 1. SOLID BOTTOM CONTAINER & FLAME SILHOUETTE (Primary Theme Fill) -->
+    <path class="flame-color" d="
+      M 0 280
+      L 0 185
+      C 15 175, 30 155, 38 135
+      C 48 108, 42 75, 62 88
+      C 80 102, 75 138, 88 165
+      C 100 142, 115 105, 138 68
+      C 158 35, 178 18, 185 45
+      C 192 78, 168 125, 188 152
+      C 205 175, 228 158, 245 130
+      C 265 95, 258 55, 278 72
+      C 298 92, 302 130, 322 155
+      C 342 175, 368 152, 392 122
+      C 412 98, 422 68, 438 88
+      C 455 108, 460 142, 482 155
+      C 498 165, 515 152, 530 128
+      C 545 102, 548 70, 568 45
+      C 585 22, 608 10, 622 35
+      C 635 62, 620 105, 642 128
+      C 658 145, 678 132, 692 108
+      C 705 85, 710 55, 720 38
+      C 730 55, 735 85, 748 108
+      C 762 132, 782 145, 798 128
+      C 820 105, 805 62, 818 35
+      C 832 10, 855 22, 872 45
+      C 892 70, 895 102, 910 128
+      C 925 152, 942 165, 958 155
+      C 980 142, 985 108, 1002 88
+      C 1018 68, 1028 98, 1048 122
+      C 1072 152, 1098 175, 1118 155
+      C 1138 130, 1142 92, 1162 72
+      C 1182 55, 1175 95, 1195 130
+      C 1212 158, 1235 175, 1252 152
+      C 1272 125, 1248 78, 1255 45
+      C 1262 18, 1282 35, 1302 68
+      C 1325 105, 1340 142, 1352 165
+      C 1365 138, 1360 102, 1378 88
+      C 1398 75, 1392 108, 1402 135
+      C 1410 155, 1425 175, 1440 185
+      L 1440 280
+      Z
+    "/>
+
+    <!-- 2. CENTER BONFIRE HIGHER FLAME CREST -->
+    <path class="flame-color" d="
+      M 540 160
+      C 530 115, 545 70, 575 42
+      C 605 15, 638 8, 655 35
+      C 670 60, 665 95, 685 80
+      C 705 65, 710 25, 720 12
+      C 730 25, 735 65, 755 80
+      C 775 95, 770 60, 785 35
+      C 802 8, 835 15, 865 42
+      C 895 70, 910 115, 900 160
+      Z
+    "/>
+  </g>
+
+  <!-- 3. EXCLAMATION POINT BADGE ABOVE CREST (Floating Flame Orange with Thick Border) -->
+  <g transform="translate(840, 25) rotate(16)">
+    <!-- Outer flame wedge & dot -->
+    <path class="flame-stroke" d="M -9 -45 L 9 -45 L 6 0 L -6 0 Z" stroke-width="7" stroke-linejoin="round" fill="none" />
+    <circle cx="0" cy="14" r="7.5" class="flame-stroke" stroke-width="7" fill="none" />
+    <!-- Center white/light fill for contrast -->
+    <path d="M -9 -45 L 9 -45 L 6 0 L -6 0 Z" class="flame-color" />
+    <circle cx="0" cy="14" r="7.5" class="flame-color" />
+  </g>
+</svg>`;
+
+fs.writeFileSync('assets/img/footer-flame.svg', svg.trim());
+console.log('Successfully generated assets/img/footer-flame.svg with true cutout mask');

@@ -51,15 +51,19 @@
 <nav class="sticky top-0 z-50 glass-nav transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16 sm:h-20">
-        <a href="index.html" class="flex items-center gap-3 group flex-shrink-0">
-          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black/50 border border-white/15 p-1 overflow-hidden flex items-center justify-center shadow-lg group-hover:border-[#FF5B37]/60 group-hover:shadow-[0_0_14px_rgba(255,91,55,0.4)] transition-all flex-shrink-0">
-            <img src="assets/img/nexshot-icon.png" alt="NexShot Technologies" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300">
+        <!-- Brand Logo (Enlarged & Flawlessly Blended with Website Background) -->
+        <a href="index.html" class="flex items-center gap-3 sm:gap-4 group flex-shrink-0">
+          <div class="brand-logo-blended">
+            <img src="assets/img/nexshot-icon.png" alt="NexShot Technologies" class="brand-logo-img">
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <span class="font-display font-bold text-base sm:text-lg tracking-wide text-white">NexShot <span class="text-white/60 font-mono text-xs font-normal">Technologies</span></span>
+              <span class="font-display font-extrabold text-lg sm:text-xl tracking-tight text-white group-hover:text-amber-300 transition-colors">NexShot <span class="text-white/60 font-mono text-xs font-normal">Technologies</span></span>
+              <span class="hidden md:inline-flex px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/80 border border-white/15">
+                CHAMPIONSHIP 2026
+              </span>
             </div>
-            <p class="hidden sm:block text-[9px] font-mono text-white/40 tracking-wider uppercase">BBC Shooting Academy • Sikandrabad</p>
+            <p class="hidden sm:block text-[10px] font-mono text-white/50 tracking-wider uppercase mt-0.5">BBC Shooting Academy • Sikandrabad</p>
           </div>
         </a>
 
@@ -184,17 +188,195 @@
 
   </main>
 
-  <!-- ================= FOOTER ================= -->
-  <footer class="mt-16 border-t border-white/10 py-8 relative z-10 text-center font-mono text-xs text-white/40">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <img src="assets/img/nexshot-icon.png" alt="NexShot" class="w-5 h-5 object-contain">
-        <span class="font-bold text-white">NexShot Technologies</span>
-        <span>•</span>
-        <span>BBC Shooting Academy, Sikandrabad</span>
+  <!-- ================= PROFESSIONAL POSTER FOOTER (AWWWARDS / BREAVER ARCHITECTURE) ================= -->
+  <footer class="poster-footer-wrap" aria-label="NexShot Tournament Footer">
+    <!-- Top Flame Silhouette Horizon (Organic Cutout Transition) -->
+    <div class="poster-footer-flame" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 280" fill="none" class="w-full h-auto block select-none pointer-events-none" preserveAspectRatio="none">
+        <defs>
+          <style>
+            .flame-color { fill: var(--footer-bg, #FF5B37); transition: fill 400ms cubic-bezier(1, 0, 0.4, 1); }
+            .flame-stroke { stroke: var(--footer-bg, #FF5B37); transition: stroke 400ms cubic-bezier(1, 0, 0.4, 1); }
+          </style>
+
+          <!-- Cutout Mask: White is visible flame, Black cuts true holes through to whatever background is active -->
+          <mask id="bonfire-cutout-mask-live">
+            <rect width="1440" height="280" fill="white" />
+            
+            <!-- Mascot Eyes -->
+            <path d="M 672 106 C 678 98, 692 98, 698 106 C 692 102, 678 102, 672 106 Z" fill="black" />
+            <path d="M 742 106 C 748 98, 762 98, 768 106 C 762 102, 748 102, 742 106 Z" fill="black" />
+
+            <!-- Mascot Front Teeth -->
+            <rect x="704" y="118" width="14" height="20" rx="3" fill="black" />
+            <rect x="722" y="118" width="14" height="20" rx="3" fill="black" />
+
+            <!-- Left Stick & Marshmallow Cutout -->
+            <path d="M 590 146 L 635 132" stroke="black" stroke-width="5" stroke-linecap="round" />
+            <rect x="580" y="132" width="22" height="26" rx="6" transform="rotate(-15 591 145)" fill="black" />
+
+            <!-- Right Stick & Marshmallow Cutout -->
+            <path d="M 850 146 L 805 132" stroke="black" stroke-width="5" stroke-linecap="round" />
+            <rect x="838" y="132" width="22" height="26" rx="6" transform="rotate(15 849 145)" fill="black" />
+          </mask>
+        </defs>
+
+        <!-- Group with Cutout Mask applied -->
+        <g mask="url(#bonfire-cutout-mask-live)">
+          <!-- 1. Flame Silhouette Contour -->
+          <path class="flame-color" d="
+            M 0 280
+            L 0 185
+            C 15 175, 30 155, 38 135
+            C 48 108, 42 75, 62 88
+            C 80 102, 75 138, 88 165
+            C 100 142, 115 105, 138 68
+            C 158 35, 178 18, 185 45
+            C 192 78, 168 125, 188 152
+            C 205 175, 228 158, 245 130
+            C 265 95, 258 55, 278 72
+            C 298 92, 302 130, 322 155
+            C 342 175, 368 152, 392 122
+            C 412 98, 422 68, 438 88
+            C 455 108, 460 142, 482 155
+            C 498 165, 515 152, 530 128
+            C 545 102, 548 70, 568 45
+            C 585 22, 608 10, 622 35
+            C 635 62, 620 105, 642 128
+            C 658 145, 678 132, 692 108
+            C 705 85, 710 55, 720 38
+            C 730 55, 735 85, 748 108
+            C 762 132, 782 145, 798 128
+            C 820 105, 805 62, 818 35
+            C 832 10, 855 22, 872 45
+            C 892 70, 895 102, 910 128
+            C 925 152, 942 165, 958 155
+            C 980 142, 985 108, 1002 88
+            C 1018 68, 1028 98, 1048 122
+            C 1072 152, 1098 175, 1118 155
+            C 1138 130, 1142 92, 1162 72
+            C 1182 55, 1175 95, 1195 130
+            C 1212 158, 1235 175, 1252 152
+            C 1272 125, 1248 78, 1255 45
+            C 1262 18, 1282 35, 1302 68
+            C 1325 105, 1340 142, 1352 165
+            C 1365 138, 1360 102, 1378 88
+            C 1398 75, 1392 108, 1402 135
+            C 1410 155, 1425 175, 1440 185
+            L 1440 280
+            Z
+          "/>
+
+          <!-- 2. Center Bonfire Higher Flame Crest -->
+          <path class="flame-color" d="
+            M 540 160
+            C 530 115, 545 70, 575 42
+            C 605 15, 638 8, 655 35
+            C 670 60, 665 95, 685 80
+            C 705 65, 710 25, 720 12
+            C 730 25, 735 65, 755 80
+            C 775 95, 770 60, 785 35
+            C 802 8, 835 15, 865 42
+            C 895 70, 910 115, 900 160
+            Z
+          "/>
+        </g>
+
+        <!-- 3. Exclamation Point Badge Above Crest -->
+        <g transform="translate(840, 25) rotate(16)">
+          <path d="M -9 -45 L 9 -45 L 6 0 L -6 0 Z" class="flame-color" stroke="var(--footer-heading, #000000)" stroke-width="5" stroke-linejoin="round" />
+          <circle cx="0" cy="14" r="7.5" class="flame-color" stroke="var(--footer-heading, #000000)" stroke-width="5" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Solid Poster Footer Body Container -->
+    <div class="poster-footer-body">
+      <div class="poster-footer-grid">
+        
+        <!-- Column 1: Navigation -->
+        <div>
+          <h3 class="footer-col-title">Navigation</h3>
+          <div class="footer-links-list">
+            <a href="index.html" class="footer-nav-link">Home</a>
+            <a href="match-schedule.html" class="footer-nav-link">Match Schedule (16 Relays)</a>
+            <a href="register.html" class="footer-nav-link">Athlete Registration</a>
+            <a href="live-scoring.html" class="footer-nav-link">Live Target Scoring</a>
+            <a href="category-wise-scoring.html" class="footer-nav-link">Category Standings</a>
+            <a href="track-booking.html" class="footer-nav-link">Track & Print Pass</a>
+            <a href="https://maps.google.com/?q=Babu+Bodhraj+Convent+School+Sikandrabad+Bulandshahr" target="_blank" rel="noopener noreferrer" class="footer-nav-link">
+              Range Location (Google Maps) <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-70"></i>
+            </a>
+            <a href="assets/docs/Championship_Circular_2025.pdf" target="_blank" class="footer-nav-link">
+              Championship Circular PDF <i class="fa-solid fa-file-pdf text-[10px] opacity-70"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Column 2: Say Hi! / Queries -->
+        <div class="footer-center-col">
+          <h3 class="footer-col-title">Say Hi!</h3>
+          <p class="footer-subtext">
+            Interested in competing or have questions about relays, weapon check, or reporting?
+          </p>
+          <a href="https://wa.me/918445070791?text=Hello%20NexShot%20Team,%20I%20have%20a%20query%20regarding%20the%202nd%20Late%20Smt.%20Kiran%20Chopra%20Memorial%20Championship" 
+             target="_blank" 
+             rel="noopener noreferrer" 
+             class="footer-action-btn">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span>Lets Chat!</span>
+          </a>
+
+          <!-- Quick Contact Direct Line Chips -->
+          <div class="footer-contacts-chips">
+            <a href="tel:+918445070791" class="footer-contact-chip">
+              <i class="fa-solid fa-phone text-[10px]"></i> Ritesh: +91 8445070791
+            </a>
+            <a href="tel:+919105697793" class="footer-contact-chip">
+              <i class="fa-solid fa-phone text-[10px]"></i> Shivam: +91 9105697793
+            </a>
+            <a href="tel:+918630920955" class="footer-contact-chip">
+              <i class="fa-solid fa-phone text-[10px]"></i> Tech: +91 8630920955
+            </a>
+          </div>
+        </div>
+
+        <!-- Column 3: Socials, Copyright, Badge -->
+        <div class="footer-right-col">
+          <!-- Social & Action Circles -->
+          <div class="footer-socials-row">
+            <a href="https://wa.me/918445070791" target="_blank" rel="noopener noreferrer" class="footer-social-icon" title="WhatsApp Support">
+              <i class="fa-brands fa-whatsapp"></i>
+            </a>
+            <a href="tel:+918445070791" class="footer-social-icon" title="Call Organiser">
+              <i class="fa-solid fa-phone"></i>
+            </a>
+            <a href="https://maps.google.com/?q=Babu+Bodhraj+Convent+School+Sikandrabad+Bulandshahr" target="_blank" rel="noopener noreferrer" class="footer-social-icon" title="Range on Google Maps">
+              <i class="fa-solid fa-location-dot"></i>
+            </a>
+            <a href="admin.html" class="footer-social-icon" title="Official Admin Login">
+              <i class="fa-solid fa-lock"></i>
+            </a>
+          </div>
+
+          <!-- Copyright Block -->
+          <div class="footer-copyright-wrap">
+            <div class="footer-copyright">© 2026 NexShot Technologies</div>
+            <div class="footer-subcopy">2nd Late Smt. Kiran Chopra Championship • BBC Shooting Academy</div>
+          </div>
+
+          <!-- Badge Pill (Matches Reference Spec) -->
+          <a href="admin.html" class="footer-badge" title="Precision Timing & Portal Instrumentation">
+            <i class="fa-solid fa-bolt text-amber-500"></i>
+            <span>Engineered with precision by Anish Jha</span>
+          </a>
+        </div>
+
       </div>
-      <div>
-        Helpline / Range Officer: <a href="tel:8445070791" class="text-white hover:underline">+91 8445070791</a>
+
+      <!-- Giant Edge-to-Edge Typography (Matches Reference BREAVER STUDIOS) -->
+      <div class="footer-giant-title">
+        NEXSHOT TECHNOLOGIES
       </div>
     </div>
   </footer>
