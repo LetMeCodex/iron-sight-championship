@@ -335,3 +335,120 @@ function getOfficialMatches(filters = {}) {
 function findMatchByCode(code) {
   return OFFICIAL_MATCHES.find(m => m.code === code);
 }
+
+// ================= THEME SWITCHER & OPTICAL LIQUID SYSTEM ================= //
+
+function applyTheme(themeValue) {
+  let themeName = 'azure';
+  if (themeValue === 'dark') themeName = 'onyx';
+  else if (themeValue === 'dim') themeName = 'dusk';
+  else themeName = 'azure';
+
+  document.body.setAttribute('data-theme', themeName);
+  try {
+    localStorage.setItem('iron_sight_theme', themeValue);
+  } catch (e) {}
+
+  // Sync all switcher elements on the page
+  document.querySelectorAll('.switcher').forEach(sw => {
+    const targetRadio = sw.querySelector(`input[value="${themeValue}"]`);
+    if (targetRadio && !targetRadio.checked) {
+      targetRadio.checked = true;
+    }
+  });
+}
+
+function initThemeSwitcher() {
+  const switchers = document.querySelectorAll('.switcher');
+  let savedTheme = 'light';
+  try {
+    savedTheme = localStorage.getItem('iron_sight_theme') || 'light';
+  } catch (e) {}
+
+  applyTheme(savedTheme);
+
+  switchers.forEach(switcher => {
+    const radios = switcher.querySelectorAll('input[type="radio"]');
+    
+    // Set checked state for saved theme
+    const matching = switcher.querySelector(`input[value="${savedTheme}"]`);
+    if (matching) {
+      matching.checked = true;
+    }
+
+    const initiallyChecked = switcher.querySelector('input[type="radio"]:checked');
+    let previousValue = initiallyChecked ? initiallyChecked.getAttribute('c-option') : '1';
+    switcher.setAttribute('c-previous', previousValue);
+
+    radios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (radio.checked) {
+          switcher.setAttribute('c-previous', previousValue ?? '');
+          previousValue = radio.getAttribute('c-option');
+          applyTheme(radio.value);
+        }
+      });
+    });
+  });
+}
+
+// GSAP Animations and Liquid Motion Interactions
+function initGSAPAnimations() {
+  if (typeof gsap === 'undefined') return;
+
+  // Split and reveal hero title
+  const heroTitles = document.querySelectorAll('.hero-title-reveal');
+  heroTitles.forEach(title => {
+    const text = title.innerText.trim();
+    if (!text || title.dataset.animated) return;
+    title.dataset.animated = 'true';
+    
+    const words = text.split(' ');
+    title.innerHTML = words.map(w => 
+      `<span class="inline-block overflow-hidden"><span class="inline-block gsap-word transform translate-y-full opacity-0 will-change-transform">${w}&nbsp;</span></span>`
+    ).join('');
+
+    gsap.to(title.querySelectorAll('.gsap-word'), {
+      y: '0%',
+      opacity: 1,
+      duration: 0.75,
+      stagger: 0.035,
+      ease: 'power3.out',
+      delay: 0.08
+    });
+  });
+
+  // Staggered card entrance
+  if (document.querySelectorAll('.pioneer-card').length > 0) {
+    gsap.from('.pioneer-card', {
+      y: 18,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.05,
+      ease: 'power2.out',
+      delay: 0.15
+    });
+  }
+
+  // Tactile liquid button physics
+  document.querySelectorAll('.btn-tactile, .pioneer-btn-coral').forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      gsap.to(btn, { scale: 1.025, duration: 0.18, ease: 'power2.out' });
+    });
+    btn.addEventListener('mouseleave', () => {
+      gsap.to(btn, { scale: 1.0, duration: 0.22, ease: 'power2.out' });
+    });
+  });
+}
+
+// Auto-init on DOMContentLoaded or immediate if ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    initThemeSwitcher();
+    initGSAPAnimations();
+  });
+} else {
+  initThemeSwitcher();
+  initGSAPAnimations();
+}
+

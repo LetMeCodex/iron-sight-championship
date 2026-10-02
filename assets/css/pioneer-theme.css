@@ -1,26 +1,100 @@
-/* ================= PIONEER MASTER THEME CSS ================= */
+/* ================= PIONEER MASTER THEME CSS: LIQUID GLASS & GEIST EDITION ================= */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap');
+
 :root {
   --pioneer-coral: #FF5B37;
   --pioneer-coral-hover: #FF441D;
+  --pioneer-coral-glow: rgba(255, 91, 55, 0.35);
+  
+  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Default Theme Settings: Azure Watercolor (matching reference image) */
+  --c-glass: #90c2db;
+  --c-light: #ffffff;
+  --c-dark: #061824;
+  --c-content: #f0f9ff;
+  --c-action: #FF5B37;
+  --c-bg: #142a38;
+  --glass-reflex-dark: 1.5;
+  --glass-reflex-light: 1.2;
+  --saturation: 160%;
+  --card-bg: rgba(18, 42, 60, 0.65);
+  --card-border: rgba(255, 255, 255, 0.16);
+  --card-border-top: rgba(255, 255, 255, 0.35);
+  --nav-bg: rgba(12, 28, 40, 0.82);
 }
 
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+/* ================= THEME 1: AZURE WATERCOLOR (REFERENCE IMAGE) ================= */
+body:has(input[value="light"]:checked),
+body[data-theme="azure"] {
+  --c-glass: #90c2db;
+  --c-light: #ffffff;
+  --c-dark: #061824;
+  --c-content: #f0f9ff;
+  --c-action: #FF5B37;
+  --c-bg: #142a38;
+  --glass-reflex-dark: 1.5;
+  --glass-reflex-light: 1.2;
+  --saturation: 160%;
+  --card-bg: rgba(18, 42, 60, 0.65);
+  --card-border: rgba(255, 255, 255, 0.16);
+  --card-border-top: rgba(255, 255, 255, 0.35);
+  --nav-bg: rgba(12, 28, 40, 0.82);
+
+  background:
+    radial-gradient(ellipse 120% 70% at 50% 0%, rgba(106, 163, 190, 0.42) 0%, rgba(33, 75, 99, 0.65) 50%, rgba(10, 26, 38, 0.96) 100%),
+    url('../img/azure-bg.jpg') center top / cover no-repeat fixed,
+    linear-gradient(180deg, #1C445C 0%, #153245 40%, #0E2230 100%);
+  background-attachment: fixed;
 }
 
-html, body {
-  background-color: #0B0810;
-  color: #F1F3F7;
-  min-height: 100vh;
-  overflow-x: hidden;
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+/* ================= THEME 2: ONYX STEALTH DARK ================= */
+body:has(input[value="dark"]:checked),
+body[data-theme="onyx"] {
+  --c-glass: #bbbbbc;
+  --c-light: #ffffff;
+  --c-dark: #000000;
+  --c-content: #e2e8f0;
+  --c-action: #FF5B37;
+  --c-bg: #090a0d;
+  --glass-reflex-dark: 2;
+  --glass-reflex-light: 0.35;
+  --saturation: 140%;
+  --card-bg: rgba(18, 20, 26, 0.75);
+  --card-border: rgba(255, 255, 255, 0.11);
+  --card-border-top: rgba(255, 255, 255, 0.22);
+  --nav-bg: rgba(10, 11, 15, 0.88);
+
+  background:
+    radial-gradient(ellipse 100% 50% at 50% -10%, #20242e 0%, rgba(18, 20, 26, 0.6) 40%, transparent 80%),
+    radial-gradient(circle 800px at 80% 25%, rgba(40, 45, 60, 0.2) 0%, transparent 60%),
+    linear-gradient(180deg, #12141a 0%, #0a0b0e 45%, #050608 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-attachment: fixed;
 }
 
-/* Twilight Cinematic Atmosphere Background */
-body {
+/* ================= THEME 3: DUSK TWILIGHT PLUM ================= */
+body:has(input[value="dim"]:checked),
+body[data-theme="dusk"] {
+  --c-light: #FFDFEA;
+  --c-dark: #120A1A;
+  --c-glass: hsl(335 50% 74% / 1);
+  --c-content: #f1f3f7;
+  --c-action: #FF5B37;
+  --c-bg: #150F1D;
+  --glass-reflex-dark: 1.8;
+  --glass-reflex-light: 0.75;
+  --saturation: 180%;
+  --card-bg: rgba(36, 30, 44, 0.65);
+  --card-border: rgba(255, 255, 255, 0.12);
+  --card-border-top: rgba(255, 255, 255, 0.25);
+  --nav-bg: rgba(22, 18, 28, 0.85);
+
   background: 
     radial-gradient(ellipse 100% 50% at 50% -10%, #765D7B 0%, rgba(93, 73, 101, 0.6) 35%, transparent 75%),
     radial-gradient(circle 800px at 80% 25%, rgba(200, 130, 140, 0.22) 0%, transparent 60%),
@@ -29,6 +103,36 @@ body {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-attachment: fixed;
+}
+
+/* ================= BASE TYPOGRAPHY & RESET ================= */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+html, body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv01' on, 'cv02' on, 'zero' on;
+  letter-spacing: -0.015em;
+  color: var(--c-content);
+  transition: background 400ms cubic-bezier(1, 0, 0.4, 1),
+              color 400ms cubic-bezier(1, 0, 0.4, 1);
+}
+
+/* Overriding font helper classes to use Geist & Geist Mono */
+.font-sans, .font-display {
+  font-family: var(--font-sans) !important;
+  letter-spacing: -0.02em;
+}
+
+.font-mono, pre, code {
+  font-family: var(--font-mono) !important;
+  font-feature-settings: 'zero' on, 'ss01' on;
+  letter-spacing: -0.01em;
 }
 
 /* Film Grain Texture */
@@ -41,102 +145,382 @@ body::before {
   z-index: 0;
 }
 
-/* Frosted Acrylic Glass Cards */
-.pioneer-card {
-  background: rgba(36, 30, 44, 0.65);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-top: 1px solid rgba(255, 255, 255, 0.22);
+/* ================= AUTHENTIC LIQUID GLASS SYSTEM ================= */
+.pioneer-card,
+.liquid-glass {
+  background-color: var(--card-bg);
+  backdrop-filter: blur(20px) url(#liquid-glass) saturate(var(--saturation));
+  -webkit-backdrop-filter: blur(20px) saturate(var(--saturation));
+  border: 1px solid var(--card-border);
+  border-top: 1px solid var(--card-border-top);
   border-radius: 28px;
   box-shadow: 
-    0 20px 50px -10px rgba(0, 0, 0, 0.45),
-    0 4px 12px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.10);
-  transition: all 0.25s var(--ease-out-expo);
+    inset 0 0 0 1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 10%), transparent),
+    inset 1.8px 3px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 85%), transparent),
+    inset -2px -2px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 70%), transparent),
+    inset -3px -8px 1px -6px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 50%), transparent),
+    inset -0.3px -1px 4px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 15%), transparent),
+    inset -1.5px 2.5px 0px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 20%), transparent),
+    inset 0px 3px 4px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 20%), transparent),
+    inset 2px -6.5px 1px -4px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent),
+    0px 8px 32px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 35%), transparent),
+    0px 2px 8px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 20%), transparent);
+  transition: transform 0.25s var(--ease-out-expo), 
+              box-shadow 0.25s var(--ease-out-expo), 
+              border-color 0.25s var(--ease-out-expo),
+              background-color 400ms cubic-bezier(1, 0, 0.4, 1);
+  position: relative;
 }
 
 .pioneer-card:hover {
-  border-color: rgba(255, 255, 255, 0.20);
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
 .pioneer-card-subtle {
-  background: rgba(26, 21, 33, 0.55);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background-color: color-mix(in srgb, var(--c-glass) 10%, transparent);
+  backdrop-filter: blur(16px) saturate(var(--saturation));
+  -webkit-backdrop-filter: blur(16px) saturate(var(--saturation));
+  border: 1px solid var(--card-border);
   border-radius: 24px;
 }
 
-/* Tactile Physics */
+/* ================= TACTILE PHYSICS & LIQUID BUTTONS ================= */
 .btn-tactile {
-  transition: transform 0.15s var(--ease-out-expo), box-shadow 0.15s ease, background 0.15s ease;
+  transition: transform 0.16s var(--ease-out-expo), 
+              box-shadow 0.16s ease, 
+              background-color 0.16s ease,
+              border-color 0.16s ease;
   transform: translate3d(0, 0, 0);
+  cursor: pointer;
+  user-select: none;
 }
 .btn-tactile:active {
-  transform: scale3d(0.96, 0.96, 1);
+  transform: scale3d(0.965, 0.965, 1);
 }
 
-/* Pioneer Action Button */
+/* Liquid Pill & Action Button */
 .pioneer-btn-coral {
-  background: #FF5B37;
+  background: linear-gradient(135deg, #FF6947 0%, #FF441D 100%);
   color: #FFFFFF;
-  box-shadow: 0 6px 20px rgba(255, 91, 55, 0.35);
-  transition: all 0.2s var(--ease-out-expo);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.2),
+    0 8px 24px var(--pioneer-coral-glow);
+  transition: all 0.22s var(--ease-out-expo);
+}
+.pioneer-btn-coral::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
+  pointer-events: none;
 }
 .pioneer-btn-coral:hover {
-  background: #FF441D;
+  background: linear-gradient(135deg, #FF7757 0%, #FF330A 100%);
   transform: translateY(-1px);
-  box-shadow: 0 8px 26px rgba(255, 91, 55, 0.5);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.25),
+    0 12px 30px rgba(255, 91, 55, 0.55);
+}
+.pioneer-btn-coral:hover::before {
+  left: 100%;
 }
 .pioneer-btn-coral:active {
   transform: scale3d(0.96, 0.96, 1);
 }
 
+/* Liquid Frosted Buttons (Ghost/Outline) */
+.btn-liquid-glass {
+  background-color: color-mix(in srgb, var(--c-glass) 12%, transparent);
+  backdrop-filter: blur(12px) url(#liquid-glass) saturate(var(--saturation));
+  -webkit-backdrop-filter: blur(12px) saturate(var(--saturation));
+  border: 1px solid var(--card-border);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s var(--ease-out-expo);
+}
+.btn-liquid-glass:hover {
+  background-color: color-mix(in srgb, var(--c-glass) 22%, transparent);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+.btn-liquid-glass:active {
+  transform: scale3d(0.96, 0.96, 1);
+}
+
+/* Glass Nav Header */
+.glass-nav {
+  background-color: var(--nav-bg);
+  backdrop-filter: blur(24px) saturate(var(--saturation));
+  -webkit-backdrop-filter: blur(24px) saturate(var(--saturation));
+  border-bottom: 1px solid var(--card-border);
+  transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1),
+              border-color 400ms cubic-bezier(1, 0, 0.4, 1);
+}
+
 /* Glass Pills */
 .glass-pill {
-  background: rgba(255, 255, 255, 0.10);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: color-mix(in srgb, var(--c-glass) 12%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 9999px;
   padding: 6px 14px;
   font-size: 12px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-/* Glass Nav */
-.glass-nav {
-  background: rgba(22, 18, 28, 0.80);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+/* ================= THEME SWITCHER WIDGET (USER SPEC) ================= */
+.switcher {
+  position: relative;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: 148px;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 4px;
+  margin: 0;
+  border: none;
+  border-radius: 99em;
+  font-size: 13px;
+  background-color: color-mix(in srgb, var(--c-glass) 16%, transparent);
+  backdrop-filter: blur(10px) url(#switcher) saturate(var(--saturation));
+  -webkit-backdrop-filter: blur(10px) saturate(var(--saturation));
+  box-shadow: 
+    inset 0 0 0 1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 12%), transparent),
+    inset 1.5px 2px 0px -1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 85%), transparent),
+    inset -1.5px -1.5px 0px -1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 75%), transparent),
+    inset -2px -5px 1px -4px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 55%), transparent),
+    inset -0.3px -1px 3px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 12%), transparent),
+    inset -1px 2px 0px -1.5px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 18%), transparent),
+    inset 0px 2px 3px -1.5px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 18%), transparent),
+    0px 1px 4px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent),
+    0px 4px 12px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 8%), transparent);
+  transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1),
+              box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
 }
 
-/* Custom Minimal Scrollbar */
+.switcher__legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.switcher__input {
+  clip: rect(0 0 0 0);
+  clip-path: inset(100%);
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.switcher__icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+  transition: scale 200ms cubic-bezier(0.5, 0, 0, 1), filter 200ms ease;
+  pointer-events: none;
+}
+
+.switcher__filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.switcher__option {
+  --c: var(--c-content);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  width: 44px;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 99em;
+  opacity: 0.85;
+  transition: all 180ms ease;
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.switcher__option:hover {
+  --c: var(--c-action);
+  opacity: 1;
+}
+
+.switcher__option:hover .switcher__icon {
+  scale: 1.15;
+}
+
+.switcher__option:has(input:checked) {
+  --c: var(--c-content);
+  opacity: 1;
+  cursor: default;
+}
+
+.switcher__option:has(input:checked) .switcher__icon {
+  scale: 1;
+}
+
+/* Sliding Liquid Toggle Pill */
+.switcher::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  display: block;
+  width: 44px;
+  height: calc(100% - 6px);
+  border-radius: 99em;
+  background-color: color-mix(in srgb, var(--c-glass) 40%, transparent);
+  z-index: 1;
+  pointer-events: none;
+  box-shadow: 
+    inset 0 0 0 1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 12%), transparent),
+    inset 1.5px 1px 0px -1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 85%), transparent),
+    inset -1px -1px 0px -1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 75%), transparent),
+    inset -1.5px -4px 1px -3px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 55%), transparent),
+    inset -0.5px 1.5px 2px -1px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 18%), transparent),
+    0px 2px 6px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent);
+}
+
+.switcher:has(input[c-option="1"]:checked)::after {
+  translate: 0 0;
+  transform-origin: right;
+  transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1),
+              box-shadow 400ms cubic-bezier(1, 0, 0.4, 1),
+              translate 400ms cubic-bezier(1, 0, 0.4, 1);
+  animation: scaleToggle 440ms ease;
+}
+
+.switcher:has(input[c-option="2"]:checked)::after {
+  translate: 47px 0;
+  transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1),
+              box-shadow 400ms cubic-bezier(1, 0, 0.4, 1),
+              translate 400ms cubic-bezier(1, 0, 0.4, 1);
+  animation: scaleToggle2 440ms ease;
+}
+
+.switcher[c-previous="1"]:has(input[c-option="2"]:checked)::after {
+  transform-origin: left;
+}
+
+.switcher[c-previous="3"]:has(input[c-option="2"]:checked)::after {
+  transform-origin: right;
+}
+
+.switcher:has(input[c-option="3"]:checked)::after {
+  translate: 94px 0;
+  transform-origin: left;
+  transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1),
+              box-shadow 400ms cubic-bezier(1, 0, 0.4, 1),
+              translate 400ms cubic-bezier(1, 0, 0.4, 1);
+  animation: scaleToggle3 440ms ease;
+}
+
+@keyframes scaleToggle {
+  0% { scale: 1 1; }
+  50% { scale: 1.12 1; }
+  100% { scale: 1 1; }
+}
+
+@keyframes scaleToggle2 {
+  0% { scale: 1 1; }
+  50% { scale: 1.18 1; }
+  100% { scale: 1 1; }
+}
+
+@keyframes scaleToggle3 {
+  0% { scale: 1 1; }
+  50% { scale: 1.12 1; }
+  100% { scale: 1 1; }
+}
+
+/* Mobile Switcher Responsiveness (< 640px) */
+@media (max-width: 639px) {
+  .switcher {
+    width: 124px;
+    height: 34px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .switcher__option {
+    width: 38px;
+  }
+  .switcher__icon {
+    width: 15px;
+    height: 15px;
+  }
+  .switcher::after {
+    left: 3px;
+    top: 3px;
+    width: 38px;
+    height: calc(100% - 6px);
+  }
+  .switcher:has(input[c-option="1"]:checked)::after {
+    translate: 0 0;
+  }
+  .switcher:has(input[c-option="2"]:checked)::after {
+    translate: 40px 0;
+  }
+  .switcher:has(input[c-option="3"]:checked)::after {
+    translate: 80px 0;
+  }
+}
+
+/* ================= GSAP TEXT REVEAL & ANIMATIONS ================= */
+.gsap-reveal-title {
+  display: inline-block;
+  overflow: hidden;
+}
+.gsap-reveal-char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* Minimal Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
+  background: color-mix(in srgb, var(--c-light) 18%, transparent);
+  border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 91, 55, 0.6);
+  background: var(--pioneer-coral);
 }
 
-/* Mobile Safe Area & Bottom Dock Spacing */
+/* Mobile Safe Area */
 @media (max-width: 1023px) {
   body {
     padding-bottom: 5.5rem !important;
   }
-}
-
-/* Touch momentum for tables */
-.overflow-x-auto {
-  -webkit-overflow-scrolling: touch;
 }
