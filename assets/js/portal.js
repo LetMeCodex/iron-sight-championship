@@ -1,7 +1,4 @@
-// ==========================================================================
-// IRON SIGHT CHAMPIONSHIP — PORTAL ENGINE & MOTION CONTROLLER
-// Lenis Smooth Scroll • GSAP Choreography • Precision Cursor • State Store
-// ==========================================================================
+// ================= PIONEER SHARED PORTAL DATA STORE ================= //
 
 const STORAGE_KEY_SHOOTERS = 'iron_sight_shooters_db';
 const STORAGE_KEY_BOOKINGS = 'iron_sight_bookings_db';
@@ -81,7 +78,7 @@ function showToast(msg, icon = 'check') {
   if (!toast) {
     toast = document.createElement('div');
     toast.id = 'globalToast';
-    toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-50 glass-lvl-3 px-5 py-3 text-xs font-mono flex items-center gap-3 transition-all duration-300 transform -translate-y-16 opacity-0 pointer-events-none shadow-2xl border border-white/20 whitespace-nowrap rounded-xl';
+    toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-50 pioneer-card px-5 py-3 text-xs font-mono flex items-center gap-3 transition-all duration-300 transform -translate-y-16 opacity-0 pointer-events-none shadow-2xl border border-white/20 whitespace-nowrap';
     document.body.appendChild(toast);
   }
 
@@ -106,7 +103,7 @@ function renderMobileBottomNav() {
   if (document.getElementById('mobileBottomNav')) return;
   const nav = document.createElement('nav');
   nav.id = 'mobileBottomNav';
-  nav.className = 'fixed bottom-3 inset-x-3 z-40 lg:hidden glass-lvl-2 px-2 py-2 flex items-center justify-around text-center border border-white/15 backdrop-blur-2xl shadow-2xl rounded-2xl';
+  nav.className = 'fixed bottom-3 inset-x-3 z-40 lg:hidden pioneer-card px-2 py-2 flex items-center justify-around text-center border border-white/15 backdrop-blur-2xl shadow-2xl rounded-2xl';
 
   const path = window.location.pathname.toLowerCase();
   const isHome = path.endsWith('index.html') || path.endsWith('/') || path === '' || (!path.includes('.html'));
@@ -124,8 +121,8 @@ function renderMobileBottomNav() {
       <i class="fa-regular fa-clock text-sm"></i>
       <span>Schedule</span>
     </a>
-    <a href="register.html" class="flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl font-mono text-[10px] trigger-control text-white font-bold transition-transform active:scale-95 shadow-md shadow-[#FF5B37]/30">
-      <i class="fa-solid fa-crosshairs text-xs"></i>
+    <a href="register.html" class="flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl font-mono text-[10px] pioneer-btn-coral text-white font-bold transition-transform active:scale-95 shadow-md shadow-[#FF5B37]/30">
+      <i class="fa-solid fa-bullseye text-sm"></i>
       <span>Register</span>
     </a>
     <a href="live-scoring.html" class="flex flex-col items-center gap-0.5 px-2.5 py-1.5 rounded-xl font-mono text-[10px] transition-colors ${isLive ? 'text-emerald-400 font-bold' : 'text-white/60 hover:text-white'}">
@@ -143,205 +140,12 @@ function renderMobileBottomNav() {
   document.body.appendChild(nav);
 }
 
-// ================= LENIS SMOOTH SCROLL INITIALIZATION ================= //
-let lenis = null;
-function initLenis() {
-  if (typeof Lenis !== 'undefined') {
-    lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 0.95,
-      touchMultiplier: 1.2
-    });
-
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-  }
-}
-
-// ================= PRECISION CUSTOM CURSOR ================= //
-function initPrecisionCursor() {
-  // Only activate on devices with fine pointer (mouse / trackpad)
-  if (window.matchMedia('(pointer: coarse)').matches) return;
-
-  const dot = document.createElement('div');
-  dot.className = 'pioneer-cursor-dot';
-  const ring = document.createElement('div');
-  ring.className = 'pioneer-cursor-ring';
-
-  document.body.appendChild(dot);
-  document.body.appendChild(ring);
-
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
-  let ringX = mouseX;
-  let ringY = mouseY;
-
-  window.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
-  });
-
-  // Smooth trailing for the outer target reticle ring
-  function animateCursor() {
-    ringX += (mouseX - ringX) * 0.22;
-    ringY += (mouseY - ringY) * 0.22;
-    ring.style.transform = `translate(${ringX - 16}px, ${ringY - 16}px)`;
-    requestAnimationFrame(animateCursor);
-  }
-  requestAnimationFrame(animateCursor);
-
-  // Expand target reticle on interactive elements
-  const hoverSelectors = 'a, button, [role="button"], input, select, textarea, .mod-instrument, .doc-artifact, .bracket-box';
-  document.querySelectorAll(hoverSelectors).forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-  });
-
-  // Re-bind when new elements might appear
-  document.addEventListener('mouseover', (e) => {
-    if (e.target.closest(hoverSelectors)) {
-      document.body.classList.add('cursor-hover');
-    } else {
-      document.body.classList.remove('cursor-hover');
-    }
-  });
-}
-
-// ================= MAGNETIC INTERACTION SYSTEM ================= //
-function initMagneticControls() {
-  if (window.matchMedia('(pointer: coarse)').matches) return;
-  if (typeof gsap === 'undefined') return;
-
-  const magneticElements = document.querySelectorAll('.trigger-control, .magnetic-btn');
-  magneticElements.forEach(el => {
-    el.addEventListener('mousemove', (e) => {
-      const rect = el.getBoundingClientRect();
-      const relX = e.clientX - (rect.left + rect.width / 2);
-      const relY = e.clientY - (rect.top + rect.height / 2);
-      
-      // Controlled max delta 5-8px
-      gsap.to(el, {
-        x: relX * 0.18,
-        y: relY * 0.18,
-        duration: 0.25,
-        ease: 'power2.out'
-      });
-    });
-
-    el.addEventListener('mouseleave', () => {
-      gsap.to(el, {
-        x: 0,
-        y: 0,
-        duration: 0.4,
-        ease: 'elastic.out(1, 0.4)'
-      });
-    });
-  });
-}
-
-// ================= GSAP CHOREOGRAPHED PAGE ENTRANCE ================= //
-function initPageChoreography() {
-  if (typeof gsap === 'undefined') return;
-
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReducedMotion) return;
-
-  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-  // 1. Header slides down
-  if (document.querySelector('.floating-control-header')) {
-    tl.from('.floating-control-header', {
-      y: -24,
-      opacity: 0,
-      duration: 0.7
-    }, 0);
-  }
-
-  // 2. Editorial Title Lines Reveal
-  if (document.querySelectorAll('.split-line-content').length > 0) {
-    tl.from('.split-line-content', {
-      y: '100%',
-      opacity: 0,
-      stagger: 0.08,
-      duration: 0.75,
-      ease: 'power4.out'
-    }, 0.15);
-  }
-
-  // 3. Technical Status Badge & Metadata Strips
-  if (document.querySelector('.hero-meta-strip')) {
-    tl.from('.hero-meta-strip', {
-      opacity: 0,
-      y: 12,
-      duration: 0.6
-    }, 0.35);
-  }
-
-  // 4. Hero Target Visual System
-  const targetSvg = document.getElementById('heroTargetSvg');
-  if (targetSvg) {
-    tl.from(targetSvg, {
-      scale: 0.88,
-      opacity: 0,
-      rotation: -12,
-      duration: 1.1,
-      ease: 'expo.out'
-    }, 0.2);
-
-    // Subtle Mouse Parallax on Desktop
-    if (!window.matchMedia('(pointer: coarse)').matches) {
-      window.addEventListener('mousemove', (e) => {
-        const xOffset = (e.clientX / window.innerWidth - 0.5) * 20;
-        const yOffset = (e.clientY / window.innerHeight - 0.5) * 20;
-        gsap.to(targetSvg, {
-          x: xOffset,
-          y: yOffset,
-          duration: 1,
-          ease: 'power2.out'
-        });
-      });
-    }
-  }
-
-  // 5. The 6 Modular Instruments
-  if (document.querySelectorAll('.mod-instrument').length > 0) {
-    tl.from('.mod-instrument', {
-      y: 20,
-      opacity: 0,
-      stagger: 0.06,
-      duration: 0.65,
-      ease: 'power3.out'
-    }, 0.4);
-  }
-
-  // 6. Secondary Information Grid (Venue, Circular PDF, Contacts)
-  if (document.querySelectorAll('.secondary-info-module').length > 0) {
-    tl.from('.secondary-info-module', {
-      y: 20,
-      opacity: 0,
-      stagger: 0.08,
-      duration: 0.7,
-      ease: 'power3.out'
-    }, 0.6);
-  }
-}
-
-// Auto-run on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
+// Auto-attach bottom dock on DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderMobileBottomNav);
+} else {
   renderMobileBottomNav();
-  initLenis();
-  initPrecisionCursor();
-  initMagneticControls();
-  initPageChoreography();
-});
+}
 
 // ================= BACKUP & DISASTER RECOVERY HUB ================= //
 
