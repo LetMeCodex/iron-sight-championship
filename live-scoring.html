@@ -48,14 +48,13 @@
     
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
       <div>
-        <div class="inline-flex items-center gap-2 text-xs font-mono text-emerald-400 uppercase tracking-wider mb-1 font-semibold">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-          Live SIUS Telemetry Feed
+        <div class="text-xs font-mono text-white/50 uppercase tracking-wider mb-1">
+          SIUS Electronic Targets
         </div>
         <h1 class="font-display font-extrabold text-2xl sm:text-4xl text-white uppercase tracking-tight">
           Live Electronic Leaderboard
         </h1>
-        <p class="text-xs sm:text-sm text-white/50 mt-1">Real-time target scoring with series breakdown (S1–S6), decimal precision, and Inner 10s.</p>
+        <p class="text-xs sm:text-sm text-white/50 mt-1">Series score breakdown (S1–S6), decimal precision, and Inner 10s.</p>
       </div>
 
       <!-- Filters & Search -->
@@ -149,9 +148,9 @@
         tr.className = `hover:bg-white/5 transition-colors ${shooter.active ? 'bg-emerald-500/5' : ''}`;
 
         let rankBadge = `<span class="font-mono text-white/60 font-bold">#${rank}</span>`;
-        if (rank === 1) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-amber-400/20 text-amber-300 border border-amber-400/40">🥇 1</span>`;
-        if (rank === 2) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-slate-300/20 text-slate-200 border border-slate-300/30">🥈 2</span>`;
-        if (rank === 3) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-amber-700/20 text-amber-500 border border-amber-700/40">🥉 3</span>`;
+        if (rank === 1) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-amber-400/20 text-amber-300 border border-amber-400/40">1</span>`;
+        if (rank === 2) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-slate-300/20 text-slate-200 border border-slate-300/30">2</span>`;
+        if (rank === 3) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-amber-700/20 text-amber-500 border border-amber-700/40">3</span>`;
 
         tr.innerHTML = `
           <td class="py-3 px-4 text-center">${rankBadge}</td>

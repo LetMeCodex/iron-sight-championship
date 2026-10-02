@@ -125,11 +125,8 @@ function renderMobileBottomNav() {
       <i class="fa-solid fa-bullseye text-sm"></i>
       <span>Register</span>
     </a>
-    <a href="live-scoring.html" class="flex flex-col items-center gap-0.5 px-2.5 py-1.5 rounded-xl font-mono text-[10px] transition-colors ${isLive ? 'text-emerald-400 font-bold' : 'text-white/60 hover:text-white'}">
-      <div class="relative">
-        <i class="fa-solid fa-bolt text-sm"></i>
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse absolute -top-1 -right-1"></span>
-      </div>
+    <a href="live-scoring.html" class="flex flex-col items-center gap-0.5 px-2.5 py-1.5 rounded-xl font-mono text-[10px] transition-colors ${isLive ? 'text-white font-bold' : 'text-white/60 hover:text-white'}">
+      <i class="fa-solid fa-bolt text-sm"></i>
       <span>Scores</span>
     </a>
     <a href="track-booking.html" class="flex flex-col items-center gap-0.5 px-2.5 py-1.5 rounded-xl font-mono text-[10px] transition-colors ${isTrack ? 'text-cyan-400 font-bold' : 'text-white/60 hover:text-white'}">
