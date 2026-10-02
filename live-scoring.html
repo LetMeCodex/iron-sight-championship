@@ -199,24 +199,76 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/portal.js"></script>
+  <script src="assets/js/supabase-client.js"></script>
   <script>
+    let currentFilter = 'ALL';
+    let currentSearch = '';
+    let autoRefreshTimer = null;
+
     document.addEventListener('DOMContentLoaded', () => {
-      renderTable();
+      loadAndRenderScores();
+      // Auto-refresh every 6 seconds from Edge Cache without hammering Supabase
+      autoRefreshTimer = setInterval(() => {
+        loadAndRenderScores(true);
+      }, 6000);
     });
 
-    function renderTable(filter = 'ALL', search = '') {
+    async function loadAndRenderScores(isAuto = false) {
+      const tbody = document.getElementById('liveScoresTbody');
+      if (!isAuto && (!tbody.children || tbody.children.length === 0)) {
+        tbody.innerHTML = `<tr><td colspan="13" class="text-center py-8 font-mono text-white/40"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Syncing live telemetry from Supabase Edge...</td></tr>`;
+      }
+
+      try {
+        const rawScores = await NexShotDB.getLiveScores(isAuto);
+        renderTableData(rawScores, currentFilter, currentSearch);
+      } catch (err) {
+        console.error('Failed to load scores:', err);
+      }
+    }
+
+    function renderTableData(data, filter = 'ALL', search = '') {
       const tbody = document.getElementById('liveScoresTbody');
       tbody.innerHTML = '';
-      const shooters = getShooters();
 
-      let filtered = shooters.filter(s => {
-        const matchesEvent = (filter === 'ALL' || s.event.includes(filter));
-        const matchesSearch = (!search || s.name.toLowerCase().includes(search.toLowerCase()) || s.school.toLowerCase().includes(search.toLowerCase()));
+      if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="13" class="text-center py-8 font-mono text-white/40">No live match scores recorded yet.</td></tr>`;
+        return;
+      }
+
+      // Normalize items whether from Supabase join or local format
+      let normalized = data.map(item => {
+        const comp = item.competitor || {};
+        return {
+          id: item.id || comp.id,
+          name: comp.full_name || item.name || 'Shooter',
+          bib: comp.bib_no || item.id || 100,
+          school: comp.club_name || item.school || 'BBC Shooting Academy',
+          event: comp.weapon ? `${comp.weapon} (${comp.event_category || 'ISSF'})` : (item.event || '10M Air Rifle'),
+          s1: parseFloat(item.series_1 !== undefined ? item.series_1 : item.s1) || 0,
+          s2: parseFloat(item.series_2 !== undefined ? item.series_2 : item.s2) || 0,
+          s3: parseFloat(item.series_3 !== undefined ? item.series_3 : item.s3) || 0,
+          s4: parseFloat(item.series_4 !== undefined ? item.series_4 : item.s4) || 0,
+          s5: parseFloat(item.series_5 !== undefined ? item.series_5 : item.s5) || 0,
+          s6: parseFloat(item.series_6 !== undefined ? item.series_6 : item.s6) || 0,
+          total: parseFloat(item.total_score !== undefined ? item.total_score : item.total) || 0,
+          x10: parseInt(item.inner_tens !== undefined ? item.inner_tens : item.x10) || 0,
+          active: (item.status === 'shooting') || item.active || false
+        };
+      });
+
+      let filtered = normalized.filter(s => {
+        const matchesEvent = (filter === 'ALL' || s.event.toLowerCase().includes(filter.toLowerCase()));
+        const matchesSearch = (!search || s.name.toLowerCase().includes(search.toLowerCase()) || s.school.toLowerCase().includes(search.toLowerCase()) || s.bib.toString().includes(search));
         return matchesEvent && matchesSearch;
       });
 
-      filtered.sort((a, b) => b.total - a.total);
+      filtered.sort((a, b) => {
+        if (b.total !== a.total) return b.total - a.total;
+        return b.x10 - a.x10;
+      });
 
       filtered.forEach((shooter, idx) => {
         const rank = idx + 1;
@@ -230,7 +282,10 @@
 
         tr.innerHTML = `
           <td class="py-3 px-4 text-center">${rankBadge}</td>
-          <td class="py-3 px-4 font-semibold text-white">${shooter.name}</td>
+          <td class="py-3 px-4 font-semibold text-white">
+            <div>${shooter.name}</div>
+            <div class="text-[10px] font-mono text-white/40">BIB #${shooter.bib}</div>
+          </td>
           <td class="py-3 px-4 text-white/60 text-xs">${shooter.school}</td>
           <td class="py-3 px-4 font-mono text-[11px] text-cyan-400">${shooter.event}</td>
           <td class="py-3 px-2 text-center font-mono text-white/70">${shooter.s1.toFixed(1)}</td>
@@ -253,9 +308,9 @@
     }
 
     function filterLiveScores() {
-      const s = document.getElementById('liveSearch').value;
-      const f = document.getElementById('liveEventFilter').value;
-      renderTable(f, s);
+      currentSearch = document.getElementById('liveSearch').value;
+      currentFilter = document.getElementById('liveEventFilter').value;
+      loadAndRenderScores(false);
     }
   </script>
 </body>

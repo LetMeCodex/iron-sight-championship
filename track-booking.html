@@ -240,44 +240,93 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/portal.js"></script>
+  <script src="assets/js/supabase-client.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
-      const mob = urlParams.get('mobile');
+      const mob = urlParams.get('mobile') || urlParams.get('q');
       if (mob) {
         document.getElementById('searchMobile').value = mob;
         executeSearch(mob);
       }
     });
 
-    function searchBooking(e) {
+    async function searchBooking(e) {
       e.preventDefault();
-      const mobile = document.getElementById('searchMobile').value;
-      executeSearch(mobile);
+      const mobile = document.getElementById('searchMobile').value.trim();
+      if (mobile) {
+        await executeSearch(mobile);
+      }
     }
 
-    function executeSearch(mobile) {
-      const bookings = getBookings();
-      const found = bookings.find(b => b.mobile === mobile);
+    async function executeSearch(query) {
+      const btn = document.querySelector('button[type="submit"]');
+      const origText = btn.innerHTML;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Searching...</span>`;
+      btn.disabled = true;
 
-      if (found) {
-        document.getElementById('cardCompNo').innerText = found.compNo;
-        document.getElementById('cardAthleteName').innerText = found.name;
-        document.getElementById('cardSchool').innerText = found.school;
-        document.getElementById('cardDiscipline').innerText = found.event;
-        document.getElementById('cardMatchCode').innerText = found.matchCode ? `[MATCH NO. ${found.matchCode}]` : 'OFFICIAL ENTRY';
-        document.getElementById('cardCategory').innerText = found.category;
-        document.getElementById('cardJersey').innerText = found.jerseySize ? `Jersey Size: ${found.jerseySize} (Included)` : 'Jersey: Size M (Included)';
-        document.getElementById('cardDate').innerText = found.date;
-        document.getElementById('cardRelay').innerText = found.relay;
-        document.getElementById('cardLane').innerText = found.lane;
-        document.getElementById('cardReporting').innerText = found.reporting;
+      try {
+        let found = null;
+        if (window.NexShotDB && typeof NexShotDB.getCompetitor === 'function') {
+          found = await NexShotDB.getCompetitor(query);
+        }
 
-        document.getElementById('bookingResultArea').classList.remove('hidden');
-        showToast("Competitor record verified!", "check");
-      } else {
-        alert("No booking record found for mobile " + mobile + ". Please check the number or register anew.");
+        // Fallback to local storage if needed
+        if (!found && typeof getBookings === 'function') {
+          const bookings = getBookings();
+          found = bookings.find(b => (b.mobile && b.mobile === query) || (b.compNo && b.compNo.includes(query)));
+        }
+
+        if (found) {
+          // Normalize whether data is from Supabase or LocalStorage
+          const compNo = found.registration_no || found.compNo || `BIB #${found.bib_no || '101'}`;
+          const athleteName = found.full_name || found.name || 'Shooter';
+          const school = found.club_name || found.school || 'BBC Shooting Academy';
+          const weaponDiscipline = found.weapon || found.event || '10M Air Rifle (.177)';
+          const matchCode = found.matchCode ? `[MATCH NO. ${found.matchCode}]` : (found.event_category ? `[${found.event_category}]` : 'OFFICIAL ENTRY');
+          const category = found.age_category 
+            ? `${found.age_category} ${found.gender || ''}` 
+            : (found.category || 'Senior');
+          const jersey = found.jerseySize ? `Jersey Size: ${found.jerseySize} (Included)` : 'Official Jersey Included';
+          
+          let dateStr = found.match_date || found.date || '25 NOV 2026';
+          if (dateStr.includes('-')) {
+            const parts = dateStr.split('-');
+            dateStr = `${parts[2]} NOV ${parts[0]}`;
+          }
+
+          const relayStr = found.relay_no ? `Relay 0${found.relay_no}` : (found.relay || 'Relay 01');
+          const laneStr = found.target_lane ? `Lane #0${found.target_lane} (SIUS)` : (found.lane || 'Lane #04 (SIUS)');
+          const reportingStr = found.reporting_time ? `${found.reporting_time} (Sharp)` : (found.reporting || '08:30 AM (Sharp)');
+
+          document.getElementById('cardCompNo').innerText = compNo;
+          document.getElementById('cardAthleteName').innerText = athleteName;
+          document.getElementById('cardSchool').innerText = school;
+          document.getElementById('cardDiscipline').innerText = weaponDiscipline;
+          document.getElementById('cardMatchCode').innerText = matchCode;
+          document.getElementById('cardCategory').innerText = category;
+          document.getElementById('cardJersey').innerText = jersey;
+          document.getElementById('cardDate').innerText = dateStr;
+          document.getElementById('cardRelay').innerText = relayStr;
+          document.getElementById('cardLane').innerText = laneStr;
+          document.getElementById('cardReporting').innerText = reportingStr;
+
+          document.getElementById('bookingResultArea').classList.remove('hidden');
+          showToast("Competitor pass verified!", "check");
+          
+          // Scroll to result card
+          document.getElementById('bookingResultArea').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+          alert(`No registered competitor found for "${query}".\n\nPlease check your registered mobile number or complete a new registration.`);
+        }
+      } catch (err) {
+        console.error("Search error:", err);
+        alert("Search could not be completed. Please try again.");
+      } finally {
+        btn.innerHTML = origText;
+        btn.disabled = false;
       }
     }
   </script>

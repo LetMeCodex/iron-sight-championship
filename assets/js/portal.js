@@ -177,6 +177,12 @@ function exportBackupJSON() {
 
 // 2. Export Bookings CSV for Jury & School Verification
 function exportBookingsCSV() {
+  if (window.NexShotDB && typeof NexShotDB.exportCSV === 'function') {
+    showToast("Generating comprehensive database CSV...", "file-csv");
+    NexShotDB.exportCSV();
+    return;
+  }
+
   const bookings = getBookings();
   if (!bookings || bookings.length === 0) {
     showToast("No athlete registrations found to export", "circle-exclamation");

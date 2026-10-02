@@ -540,7 +540,9 @@
   </div>
 
   <!-- ================= SCRIPTS ================= -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/portal.js"></script>
+  <script src="assets/js/supabase-client.js"></script>
   <script>
     let currentGender = '';
     let currentWeapon = 'Rifle';
@@ -769,19 +771,59 @@
       document.getElementById('payModal').classList.remove('hidden');
     }
 
-    function confirmBookingPayment() {
+    async function confirmBookingPayment() {
       const btn = document.getElementById('btnModalConfirm');
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Securing Target Lane...`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Securing Target Lane in Database...`;
+      btn.disabled = true;
 
-      setTimeout(() => {
+      try {
         const hasTeam = document.getElementById('checkTeamEntry').checked;
+        const regName = document.getElementById('regName').value.trim();
+        const regFather = document.getElementById('regFather').value.trim();
+        const regSchool = document.getElementById('regSchool').value.trim();
+        const regMobile = document.getElementById('regMobile').value.trim();
+        const regEmail = document.getElementById('regEmail') ? document.getElementById('regEmail').value.trim() : '';
+        const regDob = document.getElementById('regDob') ? document.getElementById('regDob').value : null;
+        const relayNum = parseInt((chosenRelay || '1').replace(/\D/g, '')) || 1;
+
+        const athletePayload = {
+          fullName: regName,
+          fatherName: regFather,
+          school: regSchool,
+          clubName: regSchool,
+          phone: regMobile,
+          email: regEmail,
+          dob: regDob,
+          gender: currentGender,
+          weapon: currentWeapon,
+          eventCategory: selectedMatch.category,
+          ageCategory: selectedMatch.ageLimit || 'Senior',
+          relayNo: relayNum,
+          targetLane: chosenLane,
+          matchDate: chosenDate,
+          reportingTime: chosenReporting,
+          paymentRef: `UPI/TXN${Date.now().toString().slice(-6)}`,
+          paymentAmount: totalFee
+        };
+
+        let createdAthlete = null;
+        if (window.NexShotDB && typeof NexShotDB.register === 'function') {
+          createdAthlete = await NexShotDB.register(athletePayload);
+        }
+
+        const compNumber = createdAthlete && createdAthlete.registration_no 
+          ? createdAthlete.registration_no 
+          : (createdAthlete && createdAthlete.bib_no ? `COMP #NST-2026-${createdAthlete.bib_no}` : `COMP #NST-2026-${Math.floor(100 + Math.random() * 900)}`);
+
+        // Also save to local bookings store for instant sync
         const bookingRecord = {
-          compNo: `COMP #NST-2026-${Math.floor(100 + Math.random() * 900)}`,
+          compNo: compNumber,
+          bibNo: createdAthlete ? createdAthlete.bib_no : null,
           matchCode: selectedMatch.code,
-          name: document.getElementById('regName').value,
-          fatherName: document.getElementById('regFather').value,
-          school: document.getElementById('regSchool').value,
-          mobile: document.getElementById('regMobile').value,
+          name: regName,
+          fatherName: regFather,
+          school: regSchool,
+          mobile: regMobile,
           gender: currentGender,
           weapon: currentWeapon,
           event: selectedMatch.name,
@@ -798,22 +840,28 @@
           status: "Confirmed",
           fee: totalFee
         };
-
         saveBooking(bookingRecord);
+
         document.getElementById('payModal').classList.add('hidden');
 
         // Confetti celebration
         try {
-          confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+          confetti({ particleCount: 140, spread: 80, origin: { y: 0.6 } });
         } catch(e) {}
 
-        showToast("Slot Successfully Booked & Confirmed!", "circle-check");
+        showToast(`Slot Confirmed! Pass ID: ${compNumber}`, "circle-check");
 
         // Redirect to track-booking.html after 1.2 seconds
         setTimeout(() => {
-          window.location.href = `track-booking.html?mobile=${bookingRecord.mobile}`;
+          window.location.href = `track-booking.html?mobile=${encodeURIComponent(regMobile)}`;
         }, 1200);
-      }, 900);
+
+      } catch (err) {
+        console.error("Booking error:", err);
+        btn.disabled = false;
+        btn.innerHTML = `SIMULATE SUCCESSFUL PAYMENT`;
+        alert("Booking error: " + err.message);
+      }
     }
   </script>
 </body>
