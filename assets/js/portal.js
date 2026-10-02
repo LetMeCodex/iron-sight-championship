@@ -72,30 +72,79 @@ function saveBooking(booking) {
   localStorage.setItem(STORAGE_KEY_BOOKINGS, JSON.stringify(bookings));
 }
 
-// Global Floating Toast
+// Global Floating Toast (Top Dynamic Island Style)
 function showToast(msg, icon = 'check') {
   let toast = document.getElementById('globalToast');
   if (!toast) {
     toast = document.createElement('div');
     toast.id = 'globalToast';
-    toast.className = 'fixed bottom-6 right-6 z-50 pioneer-card px-5 py-3 text-xs font-mono flex items-center gap-3 transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none';
+    toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-50 pioneer-card px-5 py-3 text-xs font-mono flex items-center gap-3 transition-all duration-300 transform -translate-y-16 opacity-0 pointer-events-none shadow-2xl border border-white/20 whitespace-nowrap';
     document.body.appendChild(toast);
   }
 
   toast.innerHTML = `
-    <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs">
+    <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs flex-shrink-0">
       <i class="fa-solid fa-${icon}"></i>
     </span>
     <span class="text-white font-medium">${msg}</span>
   `;
 
-  toast.classList.remove('translate-y-24', 'opacity-0');
+  toast.classList.remove('-translate-y-16', 'opacity-0');
   toast.classList.add('translate-y-0', 'opacity-100');
 
   setTimeout(() => {
     toast.classList.remove('translate-y-0', 'opacity-100');
-    toast.classList.add('translate-y-24', 'opacity-0');
+    toast.classList.add('-translate-y-16', 'opacity-0');
   }, 3200);
+}
+
+// Global Floating Mobile Bottom Dock (App-Style Navigation)
+function renderMobileBottomNav() {
+  if (document.getElementById('mobileBottomNav')) return;
+  const nav = document.createElement('nav');
+  nav.id = 'mobileBottomNav';
+  nav.className = 'fixed bottom-3 inset-x-3 z-40 lg:hidden pioneer-card px-2 py-2 flex items-center justify-around text-center border border-white/15 backdrop-blur-2xl shadow-2xl rounded-2xl';
+
+  const path = window.location.pathname.toLowerCase();
+  const isHome = path.endsWith('index.html') || path.endsWith('/') || path === '' || (!path.includes('.html'));
+  const isSchedule = path.includes('match-schedule');
+  const isRegister = path.includes('register');
+  const isLive = path.includes('live-scoring') || path.includes('category-wise');
+  const isTrack = path.includes('track-booking');
+
+  nav.innerHTML = `
+    <a href="index.html" class="flex flex-col items-center gap-0.5 px-2.5 py-1.5 rounded-xl font-mono text-[10px] transition-colors ${isHome ? 'text-[#FF5B37] font-bold' : 'text-white/60 hover:text-white'}">
+      <i class="fa-solid fa-house text-sm"></i>
+      <span>Home</span>
+    </a>
+    <a href="match-schedule.html" class="flex flex-col items-center gap-0.5 px-2.5 py-1.5 rounded-xl font-mono text-[10px] transition-colors ${isSchedule ? 'text-amber-400 font-bold' : 'text-white/60 hover:text-white'}">
+      <i class="fa-regular fa-clock text-sm"></i>
+      <span>Schedule</span>
+    </a>
+    <a href="register.html" class="flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl font-mono text-[10px] pioneer-btn-coral text-white font-bold transition-transform active:scale-95 shadow-md shadow-[#FF5B37]/30">
+      <i class="fa-solid fa-bullseye text-sm"></i>
+      <span>Register</span>
+    </a>
+    <a href="live-scoring.html" class="flex flex-col items-center gap-0.5 px-2.5 py-1.5 rounded-xl font-mono text-[10px] transition-colors ${isLive ? 'text-emerald-400 font-bold' : 'text-white/60 hover:text-white'}">
+      <div class="relative">
+        <i class="fa-solid fa-bolt text-sm"></i>
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse absolute -top-1 -right-1"></span>
+      </div>
+      <span>Scores</span>
+    </a>
+    <a href="track-booking.html" class="flex flex-col items-center gap-0.5 px-2.5 py-1.5 rounded-xl font-mono text-[10px] transition-colors ${isTrack ? 'text-cyan-400 font-bold' : 'text-white/60 hover:text-white'}">
+      <i class="fa-solid fa-id-card text-sm"></i>
+      <span>Pass</span>
+    </a>
+  `;
+  document.body.appendChild(nav);
+}
+
+// Auto-attach bottom dock on DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderMobileBottomNav);
+} else {
+  renderMobileBottomNav();
 }
 
 // ================= BACKUP & DISASTER RECOVERY HUB ================= //

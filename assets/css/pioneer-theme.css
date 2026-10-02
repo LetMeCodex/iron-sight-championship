@@ -128,3 +128,15 @@ body::before {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 91, 55, 0.6);
 }
+
+/* Mobile Safe Area & Bottom Dock Spacing */
+@media (max-width: 1023px) {
+  body {
+    padding-bottom: 5.5rem !important;
+  }
+}
+
+/* Touch momentum for tables */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+}

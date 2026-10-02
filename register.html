@@ -646,7 +646,7 @@
         const isSelected = (i === chosenLane);
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = `p-2.5 rounded-xl text-xs font-mono transition-all ${
+        btn.className = `py-2.5 px-1 sm:px-2.5 rounded-xl text-[11px] sm:text-xs font-mono transition-all ${
           isOccupied ? 'bg-white/5 text-white/20 cursor-not-allowed' :
           isSelected ? 'bg-[#FF5B37] text-white font-bold shadow-md shadow-[#FF5B37]/40 scale-105' :
           'bg-white/10 text-white/70 hover:bg-white/20'
