@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Precision Bullseye Splash Animation | BBC Shooting Academy & NexShot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  
+  <style>
+    :root {
+      --brand-primary: #FF5B37;
+      --brand-dark: #D43815;
+      --brand-glow: rgba(255, 91, 55, 0.45);
+      --accent-color: #10B981;
+      --accent-gold: #F59E0B;
+      
+      --bg-tactical: #0a0c10;
+      --bg-final: #100C16;
+      --target-black: #12141a;
+      --target-ring: rgba(255, 255, 255, 0.22);
+      
+      --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Geist Mono', monospace;
+      --font-hud: 'Orbitron', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: #0d0f14;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(255, 91, 55, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+        linear-gradient(180deg, #111318 0%, #08090b 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      padding: 24px;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Fullscreen Mode Override */
+    body.fullscreen-mode {
+      padding: 0;
+      gap: 0;
+    }
+    body.fullscreen-mode .controls-panel {
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      z-index: 100;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+      transform: translateX(110%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    body.fullscreen-mode .controls-panel.open {
+      transform: translateX(0);
+    }
+    body.fullscreen-mode .device-wrapper {
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+    }
+    body.fullscreen-mode .device-screen {
+      border-radius: 0;
+    }
+    body.fullscreen-mode .splash-final {
+      justify-content: center;
+      gap: 28px;
+      padding: 60px 24px 48px;
+    }
+    body.fullscreen-mode .brand-content {
+      margin-top: 0;
+      max-width: 520px;
+      width: 100%;
+    }
+    body.fullscreen-mode .button-group {
+      max-width: 440px;
+      width: 100%;
+      margin-top: 0;
+    }
+
+    /* Floating toggle for controls in fullscreen */
+    .btn-panel-toggle {
+      display: none;
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 110;
+      background: rgba(255, 91, 55, 0.9);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 99px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(255, 91, 55, 0.4);
+    }
+    body.fullscreen-mode .btn-panel-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Device Mockup Shell */
+    .device-wrapper {
+      position: relative;
+      width: 385px;
+      height: 790px;
+      background: #000;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 
+        0 25px 70px rgba(0, 0, 0, 0.8), 
+        0 0 0 2px #262930,
+        0 0 0 5px #14161b,
+        0 0 50px rgba(255, 91, 55, 0.15);
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .device-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 40px;
+      overflow: hidden;
+      background: var(--bg-tactical);
+    }
+
+    /* Top Status Bar & Dynamic Island */
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 44px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      z-index: 60;
+      color: rgba(255, 255, 255, 0.8);
+      pointer-events: none;
+    }
+
+    .dynamic-island {
+      width: 108px;
+      height: 25px;
+      background: #000;
+      border-radius: 20px;
+      margin: 0 auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .island-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--brand-primary);
+      box-shadow: 0 0 8px var(--brand-primary);
+    }
+
+    /* ================= LAYER 1: TACTICAL SHOOTING RANGE & TARGET LOCK ================= */
+    .splash-initial {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 42%, #181d26 0%, #0d1016 55%, #050608 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+      /* Duolingo style circle reveal clip-path */
+      clip-path: circle(150% at 50% 42%);
+      transition: clip-path 0.85s cubic-bezier(0.77, 0, 0.175, 1);
+      overflow: hidden;
+    }
+
+    .splash-initial.reveal {
+      /* Iris expansion reveal from dead center */
+      clip-path: circle(0% at 50% 42%);
+    }
+
+    /* Range HUD Grid Lines */
+    .hud-grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .hud-top-telemetry {
+      position: absolute;
+      top: 54px;
+      width: 100%;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      z-index: 5;
+    }
+
+    .hud-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .hud-badge.live {
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34D399;
+    }
+    .hud-badge.live i {
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.85); }
+    }
+
+    /* The SIUS Olympic Target Graphic */
+    .target-wrapper {
+      position: relative;
+      width: 290px;
+      height: 290px;
+      margin-top: -30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .target-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.9));
+    }
+
+    /* Animated Precision Reticle (Sniper Scope) */
+    .scope-reticle {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transform: scale(1.15) translate(15px, -15px);
+      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .scope-reticle.locked {
+      transform: scale(1) translate(0, 0);
+    }
+
+    .reticle-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* Supersonic Bullet Tracer & Particle Shockwave */
+    .particle-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 15;
+    }
+
+    /* Impact Bullet Hole */
+    .bullet-hole {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: #000;
+      border: 2px solid #555;
+      border-radius: 50%;
+      box-shadow: 
+        inset 0 0 6px #000,
+        0 0 15px #FF5B37,
+        0 0 30px #F59E0B;
+      opacity: 0;
+      transform: scale(4);
+      transition: opacity 0.05s ease, transform 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 12;
+    }
+
+    /* Supersonic Bullet Tracer */
+    .bullet-tracer {
+      position: absolute;
+      width: 6px;
+      height: 52px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #FDE047 35%, rgba(255, 91, 55, 0) 100%);
+      border-radius: 99px;
+      filter: drop-shadow(0 0 10px #FF5B37) drop-shadow(0 0 22px #F59E0B);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 18;
+      transform-origin: center center;
+    }
+
+    .bullet-hole.impact {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Shockwave Flash Overlay */
+    .muzzle-flash {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 91, 55, 0.6) 40%, transparent 80%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 25;
+      transition: opacity 0.08s ease-out;
+    }
+
+    .muzzle-flash.flash {
+      opacity: 1;
+    }
+
+    /* Telemetry Target Readout (10.9 Pop) */
+    .impact-telemetry {
+      position: absolute;
+      bottom: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px) scale(0.9);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 20;
+    }
+
+    .impact-telemetry.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .telemetry-score-badge {
+      font-family: var(--font-hud);
+      font-size: 34px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 20px var(--brand-primary), 0 0 40px var(--brand-primary);
+      letter-spacing: 2px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .telemetry-score-badge .decimal {
+      font-size: 22px;
+      color: #FBBF24;
+    }
+    .telemetry-x-pill {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      background: var(--brand-primary);
+      color: #fff;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 800;
+      vertical-align: middle;
+    }
+
+    .telemetry-subtext {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* ================= LAYER 2: CHAMPIONSHIP PORTAL REVEAL ================= */
+    .splash-final {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 70px 20px 36px 20px;
+      z-index: 20;
+      background: var(--bg-final);
+      background-image: 
+        radial-gradient(ellipse 90% 50% at 50% 0%, rgba(118, 93, 123, 0.45) 0%, transparent 70%),
+        radial-gradient(circle 400px at 50% 40%, rgba(255, 91, 55, 0.12) 0%, transparent 80%),
+        linear-gradient(180deg, #2b1f36 0%, #150F1D 40%, #0B0810 100%);
+      overflow-y: auto;
+    }
+
+    /* Tournament Crest & 3D Target Emblem */
+    .emblem-showcase {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      margin-top: 10px;
+    }
+
+    .full-emblem-wrap {
+      width: 145px;
+      height: 145px;
+      position: relative;
+      opacity: 0;
+      transform: translateY(50px) scale(0.65) rotate(-10deg);
+      transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .full-emblem-wrap.animate-in {
+      opacity: 1;
+      transform: translateY(0) scale(1) rotate(0deg);
+    }
+
+    .emblem-glow-ring {
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--brand-glow) 0%, transparent 70%);
+      animation: rotateGlow 12s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes rotateGlow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .emblem-shadow {
+      width: 110px;
+      height: 18px;
+      background: rgba(0, 0, 0, 0.45);
+      border-radius: 50%;
+      margin-top: -6px;
+      transform: scale(0);
+      filter: blur(4px);
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .emblem-shadow.animate-in {
+      transform: scale(1);
+    }
+
+    /* Branding Typography */
+    .brand-content {
+      text-align: center;
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: all 0.55s ease;
+    }
+
+    .brand-content.animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .brand-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      background: rgba(255, 91, 55, 0.16);
+      border: 1px solid rgba(255, 91, 55, 0.35);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: #FF7757;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .brand-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      text-transform: uppercase;
+    }
+
+    .brand-subtitle {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 6px;
+      line-height: 1.4;
+      font-family: var(--font-mono);
+    }
+
+    .brand-meta-pill {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #34D399;
+      font-family: var(--font-mono);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Action Buttons (Duolingo 3D Extruded Style + Tactical Precision) */
+    .button-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 24px;
+      opacity: 0;
+      transform: translateY(35px);
+      transition: all 0.65s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .button-group.animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .btn-tactical-primary {
+      width: 100%;
+      padding: 15px 18px;
+      background: linear-gradient(135deg, #FF6A49 0%, #FF441D 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 5px 0 var(--brand-dark), 0 10px 25px var(--brand-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.12s ease;
+      text-decoration: none;
+    }
+
+    .btn-tactical-primary:hover {
+      background: linear-gradient(135deg, #FF7B5C 0%, #FF330A 100%);
+    }
+
+    .btn-tactical-primary:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 var(--brand-dark), 0 5px 15px var(--brand-glow);
+    }
+
+    .btn-tactical-secondary {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.12s ease;
+      text-decoration: none;
+    }
+
+    .btn-tactical-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-tactical-secondary:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+    }
+
+    .btn-ghost-row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      gap: 8px;
+    }
+    .btn-ghost-sm {
+      flex: 1;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 11px;
+      font-family: var(--font-mono);
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .btn-ghost-sm:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    /* ================= INTERACTIVE CUSTOMIZER SIDEBAR ================= */
+    .controls-panel {
+      width: 380px;
+      background: #181b22;
+      border-radius: 28px;
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
+      flex-shrink: 0;
+    }
+
+    .panel-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 14px;
+    }
+
+    .panel-header h2 {
+      font-size: 19px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-header p {
+      font-size: 12px;
+      color: #8b92a0;
+      margin-top: 4px;
+    }
+
+    .control-item {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .control-item label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #9aa1b0;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-family: var(--font-mono);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-item input, 
+    .control-item select {
+      background: #0f1116;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .control-item input:focus, 
+    .control-item select:focus {
+      border-color: var(--brand-primary);
+    }
+
+    /* Mode Toggles */
+    .btn-toggle-row {
+      display: flex;
+      background: #0f1116;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 3px;
+      gap: 4px;
+    }
+    .btn-toggle-opt {
+      flex: 1;
+      padding: 8px 10px;
+      border-radius: 9px;
+      background: transparent;
+      border: none;
+      color: #888;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .btn-toggle-opt.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Color Swatches */
+    .color-swatches {
+      display: flex;
+      gap: 10px;
+    }
+
+    .swatch {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .swatch:hover {
+      transform: scale(1.12);
+    }
+
+    .swatch.active {
+      border-color: #fff;
+      transform: scale(1.1);
+    }
+
+    .btn-action-replay {
+      margin-top: 6px;
+      background: var(--brand-primary);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--brand-dark), 0 8px 20px var(--brand-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.12s ease;
+    }
+
+    .btn-action-replay:hover {
+      background: #ff471e;
+    }
+
+    .btn-action-replay:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--brand-dark);
+    }
+
+    .btn-direct-portal {
+      background: transparent;
+      color: #34D399;
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      padding: 12px;
+      border-radius: 14px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-direct-portal:hover {
+      background: rgba(52, 211, 153, 0.12);
+      border-color: #34D399;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 0;
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+      }
+      .btn-panel-toggle {
+        display: flex;
+        top: 14px;
+        right: 14px;
+        padding: 8px 14px;
+        font-size: 11px;
+      }
+      .device-wrapper {
+        width: 100vw;
+        height: 100vh;
+        max-width: none;
+        border-radius: 0;
+        padding: 0;
+        box-shadow: none;
+        border: none;
+      }
+      .device-screen {
+        border-radius: 0;
+      }
+      .controls-panel {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: auto;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 28px 28px 0 0;
+        z-index: 100;
+        max-height: 80vh;
+        overflow-y: auto;
+        transform: translateY(110%);
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom: none;
+      }
+      .controls-panel.open {
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fullscreen Toggle Button -->
+  <button class="btn-panel-toggle" id="btnPanelToggle">
+    <i class="fa-solid fa-sliders"></i>
+    <span>Settings</span>
+  </button>
+
+  <!-- Phone Mockup Container -->
+  <div class="device-wrapper" id="deviceWrapper">
+    <div class="device-screen" id="deviceScreen">
+      
+      <!-- iOS Status Bar -->
+      <div class="status-bar" id="statusBar">
+        <span>08:30</span>
+        <div class="dynamic-island">
+          <div class="island-dot"></div>
+          <span style="font-size: 9px; letter-spacing: 0.5px;">SIUS LIVE</span>
+        </div>
+        <span>10.0m <i class="fa-solid fa-crosshairs text-[10px] ml-1"></i></span>
+      </div>
+
+      <!-- ================= LAYER 1: TACTICAL TARGET & BULLSEYE ANIMATION ================= -->
+      <div class="splash-initial" id="splashInitial">
+        <div class="hud-grid-overlay"></div>
+        
+        <!-- Top HUD Telemetry -->
+        <div class="hud-top-telemetry">
+          <span class="hud-badge live">
+            <i class="fa-solid fa-circle text-[7px]"></i>
+            <span>RANGE 01 • READY</span>
+          </span>
+          <span class="hud-badge" id="hudCaliber">4.5MM (.177)</span>
+        </div>
+
+        <!-- Muzzle Flash & Screen Shake -->
+        <div class="muzzle-flash" id="muzzleFlash"></div>
+
+        <!-- The Olympic Target Container -->
+        <div class="target-wrapper" id="targetWrapper">
+          
+          <!-- ISSF 10M Electronic Target SVG (High Contrast Olympic Official Card) -->
+          <svg class="target-svg" viewBox="0 0 300 300" id="targetSvg">
+            <defs>
+              <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="15" stdDeviation="20" flood-color="rgba(0,0,0,0.85)" />
+              </filter>
+              <filter id="glowFilter" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+
+            <!-- Target Background Outer Paper (Authentic ISSF Cream Card) -->
+            <rect width="300" height="300" rx="20" fill="#FAF6EE" stroke="#E2D9C5" stroke-width="2.5" filter="url(#cardShadow)" />
+            
+            <!-- Outer Paper Scoring Rings (1 to 3) -->
+            <circle cx="150" cy="150" r="140" fill="none" stroke="#A8A192" stroke-width="1.3" />
+            <circle cx="150" cy="150" r="126" fill="none" stroke="#A8A192" stroke-width="1.3" />
+            <circle cx="150" cy="150" r="112" fill="none" stroke="#A8A192" stroke-width="1.3" />
+
+            <!-- Black Center Aiming Bull (Rings 4 to 10) -->
+            <circle cx="150" cy="150" r="98" fill="#14171E" stroke="#14171E" stroke-width="1.5" />
+            
+            <!-- White Inner Rings (5 to 8) -->
+            <circle cx="150" cy="150" r="84" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" />
+            <circle cx="150" cy="150" r="70" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" />
+            <circle cx="150" cy="150" r="56" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="1.2" />
+            <circle cx="150" cy="150" r="42" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.2" />
+            
+            <!-- 9 Ring & 10 Ring -->
+            <circle cx="150" cy="150" r="28" fill="none" stroke="#ffffff" stroke-width="1.4" id="nineRing" />
+            <circle cx="150" cy="150" r="14" fill="none" stroke="#FF5B37" stroke-width="1.8" id="tenRing" />
+
+            <!-- Inner Ten (Bullseye Dot) -->
+            <circle cx="150" cy="150" r="3.5" fill="#FF5B37" id="bullseyeDot" filter="url(#glowFilter)" />
+
+            <!-- Ring Numbers on Cream Paper (1, 2, 3) -->
+            <g font-family="var(--font-mono)" font-size="10" fill="#524C41" font-weight="800" text-anchor="middle">
+              <text x="150" y="27">1</text>
+              <text x="150" y="41">2</text>
+              <text x="150" y="55">3</text>
+              
+              <text x="150" y="286">1</text>
+              <text x="150" y="272">2</text>
+              <text x="150" y="258">3</text>
+            </g>
+
+            <!-- Ring Numbers on Black Center (4 to 8) -->
+            <g font-family="var(--font-mono)" font-size="9" fill="#ffffff" font-weight="700" text-anchor="middle">
+              <text x="150" y="69">4</text>
+              <text x="150" y="83">5</text>
+              <text x="150" y="97">6</text>
+              <text x="150" y="111">7</text>
+              <text x="150" y="125">8</text>
+
+              <text x="150" y="244">4</text>
+              <text x="150" y="230">5</text>
+              <text x="150" y="216">6</text>
+              <text x="150" y="202">7</text>
+              <text x="150" y="188">8</text>
+            </g>
+          </svg>
+
+          <!-- Sniper Crosshair Reticle -->
+          <div class="scope-reticle" id="scopeReticle">
+            <svg class="reticle-svg" viewBox="0 0 200 200">
+              <!-- Circular Scope Lines -->
+              <circle cx="100" cy="100" r="75" fill="none" stroke="rgba(255, 91, 55, 0.4)" stroke-width="1.5" stroke-dasharray="8 6" />
+              <circle cx="100" cy="100" r="45" fill="none" stroke="rgba(255, 91, 55, 0.65)" stroke-width="1.5" />
+              
+              <!-- Crosshair Lines with Center Gap -->
+              <line x1="100" y1="10" x2="100" y2="85" stroke="#FF5B37" stroke-width="1.5" />
+              <line x1="100" y1="115" x2="100" y2="190" stroke="#FF5B37" stroke-width="1.5" />
+              <line x1="10" y1="100" x2="85" y2="100" stroke="#FF5B37" stroke-width="1.5" />
+              <line x1="115" y1="100" x2="190" y2="100" stroke="#FF5B37" stroke-width="1.5" />
+
+              <!-- Mil Dots -->
+              <circle cx="100" cy="50" r="2" fill="#FF5B37" />
+              <circle cx="100" cy="70" r="2" fill="#FF5B37" />
+              <circle cx="100" cy="130" r="2" fill="#FF5B37" />
+              <circle cx="100" cy="150" r="2" fill="#FF5B37" />
+              <circle cx="50" cy="100" r="2" fill="#FF5B37" />
+              <circle cx="70" cy="100" r="2" fill="#FF5B37" />
+              <circle cx="130" cy="100" r="2" fill="#FF5B37" />
+              <circle cx="150" cy="100" r="2" fill="#FF5B37" />
+
+              <!-- Lock Corners -->
+              <path d="M 85,85 L 85,90 M 85,85 L 90,85" stroke="#34D399" stroke-width="2" fill="none" />
+              <path d="M 115,85 L 115,90 M 115,85 L 110,85" stroke="#34D399" stroke-width="2" fill="none" />
+              <path d="M 85,115 L 85,110 M 85,115 L 90,115" stroke="#34D399" stroke-width="2" fill="none" />
+              <path d="M 115,115 L 115,110 M 115,115 L 110,115" stroke="#34D399" stroke-width="2" fill="none" />
+            </svg>
+          </div>
+
+          <!-- Bullet Tracer Streak -->
+          <div class="bullet-tracer" id="bulletTracer"></div>
+
+          <!-- Impact Point / Bullet Hole -->
+          <div class="bullet-hole" id="bulletHole"></div>
+
+          <!-- Spark Particles Canvas -->
+          <canvas class="particle-canvas" id="particleCanvas"></canvas>
+        </div>
+
+        <!-- Real-time Score Readout (10.9 Pop) -->
+        <div class="impact-telemetry" id="impactTelemetry">
+          <div class="telemetry-score-badge">
+            <span id="scoreVal">10</span><span class="decimal">.9</span>
+            <span class="telemetry-x-pill" id="scorePill">10X</span>
+          </div>
+          <div class="telemetry-subtext" id="telemetrySubtext">PERFECT BULLSEYE • DEVIATION: 0.00mm</div>
+        </div>
+
+      </div>
+
+      <!-- ================= LAYER 2: CHAMPIONSHIP PORTAL FINALE ================= -->
+      <div class="splash-final" id="splashFinal">
+        
+        <!-- Top Tournament Crest & NexShot Emblem -->
+        <div class="emblem-showcase">
+          <div class="full-emblem-wrap" id="fullEmblemWrap">
+            <div class="emblem-glow-ring"></div>
+            <!-- Branded Olympic Target Emblem SVG -->
+            <svg viewBox="0 0 160 160" width="100%" height="100%">
+              <defs>
+                <linearGradient id="crestGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FF6B4A" />
+                  <stop offset="100%" stop-color="#E03813" />
+                </linearGradient>
+                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FCD34D" />
+                  <stop offset="100%" stop-color="#D97706" />
+                </linearGradient>
+              </defs>
+
+              <!-- Outer Hexagonal Tactical Shield -->
+              <polygon points="80,10 145,45 145,115 80,150 15,115 15,45" fill="rgba(255, 91, 55, 0.12)" stroke="var(--brand-primary)" stroke-width="2" />
+              
+              <!-- Crosshair Lines -->
+              <line x1="80" y1="20" x2="80" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 3" />
+              <line x1="25" y1="80" x2="135" y2="80" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 3" />
+
+              <!-- Outer Gold Laurel Rings -->
+              <circle cx="80" cy="80" r="54" fill="none" stroke="url(#goldGrad)" stroke-width="2.5" stroke-dasharray="7 4" />
+              <circle cx="80" cy="80" r="42" fill="#140E1B" stroke="var(--brand-primary)" stroke-width="2" />
+              
+              <!-- Inner Electronic Target Center -->
+              <circle cx="80" cy="80" r="28" fill="url(#crestGrad)" />
+              <circle cx="80" cy="80" r="14" fill="#ffffff" />
+              <circle cx="80" cy="80" r="6" fill="#000000" />
+
+              <!-- Crown / Flame Top Crest -->
+              <path d="M 68,36 L 80,24 L 92,36 L 86,40 L 80,33 L 74,40 Z" fill="url(#goldGrad)" />
+            </svg>
+          </div>
+          <div class="emblem-shadow" id="emblemShadow"></div>
+
+          <!-- Championship Typography -->
+          <div class="brand-content" id="brandContent">
+            <div class="brand-tag">
+              <i class="fa-solid fa-trophy"></i>
+              <span>NATIONAL LEVEL OPEN • 2026</span>
+            </div>
+            <h1 class="brand-title" id="dispTitle">BBC SHOOTING ACADEMY</h1>
+            <p class="brand-subtitle" id="dispSubtitle">
+              2nd Late Smt. Kiran Chopra Championship<br>
+              <span style="color: rgba(255,255,255,0.45);">Precision SIUS Electronic Target Range</span>
+            </p>
+            <div class="brand-meta-pill">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>By NexShot Technologies • Sikandrabad</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3D Extruded Action Buttons -->
+        <div class="button-group" id="buttonGroup">
+          <a href="index.html" class="btn-tactical-primary" id="btnEnterPortal">
+            <i class="fa-solid fa-crosshairs text-base"></i>
+            <span>Enter Championship Portal</span>
+          </a>
+          <a href="register.html" class="btn-tactical-secondary" id="btnRegister">
+            <i class="fa-solid fa-user-plus text-sm text-[#FF5B37]"></i>
+            <span>Athlete Registration</span>
+          </a>
+          <div class="btn-ghost-row">
+            <a href="live-scoring.html" class="btn-ghost-sm">
+              <i class="fa-solid fa-bolt mr-1 text-amber-400"></i> Live Scores
+            </a>
+            <a href="match-schedule.html" class="btn-ghost-sm">
+              <i class="fa-regular fa-clock mr-1 text-cyan-400"></i> Relays
+            </a>
+            <a href="track-booking.html" class="btn-ghost-sm">
+              <i class="fa-solid fa-id-card mr-1 text-emerald-400"></i> Pass
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= CUSTOMIZER CONTROLS SIDEBAR ================= -->
+  <div class="controls-panel" id="controlsPanel">
+    <div class="panel-header">
+      <h2>🎯 Intro Customizer</h2>
+      <p>Fine-tune the shooting animation & client branding</p>
+    </div>
+
+    <!-- View Mode Toggle -->
+    <div class="control-item">
+      <label>Viewport Preview Mode</label>
+      <div class="btn-toggle-row">
+        <button class="btn-toggle-opt active" id="btnModeMobile">
+          <i class="fa-solid fa-mobile-screen"></i> Mobile
+        </button>
+        <button class="btn-toggle-opt" id="btnModeFullscreen">
+          <i class="fa-solid fa-expand"></i> Fullscreen
+        </button>
+      </div>
+    </div>
+
+    <!-- Sound Toggle -->
+    <div class="control-item">
+      <label>
+        <span>Sound Effects (Web Audio)</span>
+        <span id="soundLabel" style="color: #34D399;">SYNTHESIS ON</span>
+      </label>
+      <div class="btn-toggle-row">
+        <button class="btn-toggle-opt active" id="btnSoundOn">
+          <i class="fa-solid fa-volume-high"></i> SFX ON
+        </button>
+        <button class="btn-toggle-opt" id="btnSoundOff">
+          <i class="fa-solid fa-volume-xmark"></i> MUTE
+        </button>
+      </div>
+    </div>
+
+    <!-- Weapon Discipline Preset -->
+    <div class="control-item">
+      <label>Discipline Preset</label>
+      <select id="selectWeapon">
+        <option value="rifle">🎯 10m Air Rifle (Olympic Anatomic - 4.5mm)</option>
+        <option value="pistol">🔫 10m Air Pistol (Steyr Match - 4.5mm)</option>
+        <option value="rapid">⚡ Rapid Fire Shootout (10X Final)</option>
+      </select>
+    </div>
+
+    <!-- Score Outcome -->
+    <div class="control-item">
+      <label>Hit Accuracy Outcome</label>
+      <select id="selectScore">
+        <option value="10.9">10.9 ★ Dead Center Inner 10X (0.00mm)</option>
+        <option value="10.8">10.8 ★ Micro-Precision Ring</option>
+        <option value="10.7">10.7 ★ Solid 10-Ring Hit</option>
+      </select>
+    </div>
+
+    <!-- Color Theme Preset -->
+    <div class="control-item">
+      <label>Brand Theme Color</label>
+      <div class="color-swatches">
+        <div class="swatch active" style="background: #FF5B37;" data-color="#FF5B37" data-dark="#D43815" data-glow="rgba(255,91,55,0.45)" title="Pioneer Coral"></div>
+        <div class="swatch" style="background: #06B6D4;" data-color="#06B6D4" data-dark="#0891B2" data-glow="rgba(6,182,212,0.45)" title="Cyan Laser"></div>
+        <div class="swatch" style="background: #10B981;" data-color="#10B981" data-dark="#059669" data-glow="rgba(16,185,129,0.45)" title="Match Emerald"></div>
+        <div class="swatch" style="background: #F59E0B;" data-color="#F59E0B" data-dark="#D97706" data-glow="rgba(245,158,11,0.45)" title="Gold Champion"></div>
+      </div>
+    </div>
+
+    <!-- Animation Speed -->
+    <div class="control-item">
+      <label>Shot Speed</label>
+      <select id="selectSpeed">
+        <option value="1">Realistic Match Speed (1.1s)</option>
+        <option value="1.5">Cinematic Tension (1.8s)</option>
+        <option value="0.75">Matrix Slow-Mo Tracer (2.6s)</option>
+      </select>
+    </div>
+
+    <!-- Title & Tagline -->
+    <div class="control-item">
+      <label>Academy Name</label>
+      <input type="text" id="inputTitle" value="BBC SHOOTING ACADEMY" />
+    </div>
+
+    <div class="control-item">
+      <label>Tournament Subtitle</label>
+      <input type="text" id="inputSubtitle" value="2nd Late Smt. Kiran Chopra Championship" />
+    </div>
+
+    <!-- Replay Trigger -->
+    <button class="btn-action-replay" id="btnReplay">
+      <i class="fa-solid fa-rotate-right"></i>
+      <span>Replay Bullseye Shot</span>
+    </button>
+
+    <!-- Jump to actual portal -->
+    <a href="index.html" class="btn-direct-portal">
+      <span>Launch Live Portal</span>
+      <i class="fa-solid fa-arrow-right"></i>
+    </a>
+  </div>
+
+  <script>
+    /* ================= 1. WEB AUDIO API SYNTHESIZER (NO EXTERNAL FILES) ================= */
+    class RangeAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+        }
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      // Reticle mechanical locking click
+      playLockClick() {
+        if (!this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(2400, now);
+        osc.frequency.exponentialRampToValueAtTime(800, now + 0.04);
+        
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+        
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.04);
+      }
+
+      // Supersonic Air Rifle Gunshot & Muzzle Thump
+      playGunshot() {
+        if (!this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+
+        // 1. Noise burst (Air blast + gunpowder crack)
+        const bufferSize = this.ctx.sampleRate * 0.18;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const output = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+
+        const whiteNoise = this.ctx.createBufferSource();
+        whiteNoise.buffer = buffer;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(1400, now);
+        filter.frequency.exponentialRampToValueAtTime(300, now + 0.15);
+
+        const noiseGain = this.ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.55, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+        whiteNoise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(this.ctx.destination);
+        whiteNoise.start(now);
+
+        // 2. Sub bass punch (Recoil thump)
+        const subOsc = this.ctx.createOscillator();
+        const subGain = this.ctx.createGain();
+        subOsc.type = 'triangle';
+        subOsc.frequency.setValueAtTime(140, now);
+        subOsc.frequency.exponentialRampToValueAtTime(35, now + 0.22);
+
+        subGain.gain.setValueAtTime(0.7, now);
+        subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+
+        subOsc.connect(subGain);
+        subGain.connect(this.ctx.destination);
+        subOsc.start(now);
+        subOsc.stop(now + 0.22);
+      }
+
+      // Metallic Steel Plate "DING" & SIUS Target Beep (10.9 confirmation)
+      playBullseyeHit() {
+        if (!this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+
+        // Metallic bell harmonics (880Hz + 1760Hz with long shimmering decay)
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(880, now); // A5
+
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(1760, now); // A6 harmonic
+
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 0.85);
+        osc2.stop(now + 0.85);
+
+        // Electronic SIUS Telemetry confirmation chime
+        setTimeout(() => {
+          if (!this.enabled) return;
+          const chimeNow = this.ctx.currentTime;
+          const chimeOsc = this.ctx.createOscillator();
+          const chimeGain = this.ctx.createGain();
+
+          chimeOsc.type = 'sine';
+          chimeOsc.frequency.setValueAtTime(1046.5, chimeNow); // C6
+          chimeOsc.frequency.setValueAtTime(1318.5, chimeNow + 0.08); // E6
+
+          chimeGain.gain.setValueAtTime(0.25, chimeNow);
+          chimeGain.gain.exponentialRampToValueAtTime(0.001, chimeNow + 0.4);
+
+          chimeOsc.connect(chimeGain);
+          chimeGain.connect(this.ctx.destination);
+          chimeOsc.start(chimeNow);
+          chimeOsc.stop(chimeNow + 0.4);
+        }, 120);
+      }
+    }
+
+    const sound = new RangeAudioEngine();
+
+    /* ================= 2. PARTICLE SPARK CANVAS ================= */
+    class SparkEmitter {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.particles = [];
+        this.animId = null;
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+      }
+
+      resize() {
+        this.canvas.width = this.canvas.offsetWidth;
+        this.canvas.height = this.canvas.offsetHeight;
+      }
+
+      explode(x, y, color = '#FF5B37', count = 35) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 2 + Math.random() * 6;
+          this.particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            radius: 1.5 + Math.random() * 2.5,
+            color: Math.random() > 0.3 ? color : '#FCD34D',
+            alpha: 1,
+            decay: 0.02 + Math.random() * 0.03
+          });
+        }
+        if (!this.animId) this.loop();
+      }
+
+      loop() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const p = this.particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vx *= 0.94;
+          p.vy *= 0.94;
+          p.alpha -= p.decay;
+
+          if (p.alpha <= 0) {
+            this.particles.splice(i, 1);
+            continue;
+          }
+
+          this.ctx.save();
+          this.ctx.globalAlpha = p.alpha;
+          this.ctx.fillStyle = p.color;
+          this.ctx.shadowColor = p.color;
+          this.ctx.shadowBlur = 8;
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+
+        if (this.particles.length > 0) {
+          this.animId = requestAnimationFrame(() => this.loop());
+        } else {
+          this.animId = null;
+          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+      }
+    }
+
+    /* ================= 3. ANIMATION ORCHESTRATION ================= */
+    const splashInitial = document.getElementById('splashInitial');
+    const scopeReticle = document.getElementById('scopeReticle');
+    const muzzleFlash = document.getElementById('muzzleFlash');
+    const targetWrapper = document.getElementById('targetWrapper');
+    const bulletHole = document.getElementById('bulletHole');
+    const impactTelemetry = document.getElementById('impactTelemetry');
+    const fullEmblemWrap = document.getElementById('fullEmblemWrap');
+    const emblemShadow = document.getElementById('emblemShadow');
+    const brandContent = document.getElementById('brandContent');
+    const buttonGroup = document.getElementById('buttonGroup');
+    const bulletTracer = document.getElementById('bulletTracer');
+    const particleCanvas = document.getElementById('particleCanvas');
+    const sparks = new SparkEmitter(particleCanvas);
+
+    // Audio / Customizer Settings State
+    let speedMultiplier = 1;
+    let selectedScore = '10.9';
+    let activeTimeouts = [];
+
+    function safeTimeout(fn, ms) {
+      const id = setTimeout(fn, ms);
+      activeTimeouts.push(id);
+      return id;
+    }
+
+    function clearAllTimeouts() {
+      activeTimeouts.forEach(id => clearTimeout(id));
+      activeTimeouts = [];
+    }
+
+    function runShootingAnimation() {
+      // 1. Cancel any active timeouts & instant snap-reset of the circular mask
+      clearAllTimeouts();
+
+      splashInitial.style.transition = 'none';
+      splashInitial.classList.remove('reveal');
+      void splashInitial.offsetWidth; // Force synchronous layout reflow
+      splashInitial.style.transition = '';
+
+      // Reset state of all interactive elements
+      scopeReticle.classList.remove('locked');
+      bulletHole.classList.remove('impact');
+      bulletTracer.style.opacity = '0';
+      muzzleFlash.classList.remove('flash');
+      impactTelemetry.classList.remove('show');
+      fullEmblemWrap.classList.remove('animate-in');
+      emblemShadow.classList.remove('animate-in');
+      brandContent.classList.remove('animate-in');
+      buttonGroup.classList.remove('animate-in');
+      targetWrapper.style.transform = 'scale(1)';
+
+      const base = 1000 * (1 / speedMultiplier);
+
+      // Phase 1: Reticle sweeps and locks onto center (350ms)
+      safeTimeout(() => {
+        scopeReticle.classList.add('locked');
+        sound.playLockClick();
+      }, base * 0.35);
+
+      // Phase 2: FIRE THE SHOT! Recoil + Muzzle Flash + Gunshot + Supersonic Bullet Tracer (1050ms)
+      safeTimeout(() => {
+        // Muzzle flash
+        muzzleFlash.classList.add('flash');
+        safeTimeout(() => muzzleFlash.classList.remove('flash'), 80);
+
+        // Screen Recoil Shake
+        targetWrapper.style.transform = 'scale(0.96) translate(0px, 4px)';
+        sound.playGunshot();
+
+        // Animate Supersonic Bullet Tracer down the center
+        if (bulletTracer) {
+          bulletTracer.style.transition = 'none';
+          bulletTracer.style.transform = 'translate(0px, 140px) scale(3.5)';
+          bulletTracer.style.opacity = '1';
+          void bulletTracer.offsetWidth;
+          bulletTracer.style.transition = `transform ${0.14 / speedMultiplier}s cubic-bezier(0.1, 0.8, 0.2, 1), opacity ${0.14 / speedMultiplier}s ease`;
+          bulletTracer.style.transform = 'translate(0px, 0px) scale(0.4)';
+          safeTimeout(() => {
+            bulletTracer.style.opacity = '0';
+          }, (0.13 / speedMultiplier) * 1000);
+        }
+      }, base * 1.05);
+
+      // Phase 3: IMPACT ON TARGET (BULLSEYE 10.9) (1220ms)
+      safeTimeout(() => {
+        targetWrapper.style.transform = 'scale(1.05)';
+        safeTimeout(() => targetWrapper.style.transform = 'scale(1)', 140);
+
+        // Bullet hole punch
+        bulletHole.classList.add('impact');
+
+        // Spark explosion from target center
+        sparks.explode(
+          particleCanvas.width / 2, 
+          particleCanvas.height / 2, 
+          getComputedStyle(document.documentElement).getPropertyValue('--brand-primary').trim() || '#FF5B37', 
+          50
+        );
+
+        // Sound: Metallic plate DING + SIUS score beep
+        sound.playBullseyeHit();
+
+        // Reveal Telemetry Score Tag (10.9)
+        impactTelemetry.classList.add('show');
+      }, base * 1.22);
+
+      // Phase 4: DUOLINGO-STYLE CIRCLE EXPANSION (Reveal Championship Portal) (2250ms)
+      safeTimeout(() => {
+        splashInitial.classList.add('reveal');
+      }, base * 2.25);
+
+      // Phase 5: Crest & 3D Emblem Drop (2600ms)
+      safeTimeout(() => {
+        fullEmblemWrap.classList.add('animate-in');
+        emblemShadow.classList.add('animate-in');
+      }, base * 2.6);
+
+      // Phase 6: Brand Title & Subtitle Fade In (2900ms)
+      safeTimeout(() => {
+        brandContent.classList.add('animate-in');
+      }, base * 2.9);
+
+      // Phase 7: Tactile Action Buttons Slide Up (3200ms)
+      safeTimeout(() => {
+        buttonGroup.classList.add('animate-in');
+      }, base * 3.2);
+    }
+
+    /* ================= 4. CONTROLS & LIVE CUSTOMIZER LISTENERS ================= */
+    const btnReplay = document.getElementById('btnReplay');
+    const selectWeapon = document.getElementById('selectWeapon');
+    const selectScore = document.getElementById('selectScore');
+    const selectSpeed = document.getElementById('selectSpeed');
+    const inputTitle = document.getElementById('inputTitle');
+    const inputSubtitle = document.getElementById('inputSubtitle');
+    const dispTitle = document.getElementById('dispTitle');
+    const dispSubtitle = document.getElementById('dispSubtitle');
+    const hudCaliber = document.getElementById('hudCaliber');
+    const scoreVal = document.getElementById('scoreVal');
+    const scorePill = document.getElementById('scorePill');
+    const telemetrySubtext = document.getElementById('telemetrySubtext');
+
+    // Replay
+    btnReplay.addEventListener('click', runShootingAnimation);
+
+    // Weapon Preset
+    selectWeapon.addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (val === 'rifle') {
+        hudCaliber.textContent = '4.5MM (.177) • AIR RIFLE';
+      } else if (val === 'pistol') {
+        hudCaliber.textContent = '4.5MM (.177) • AIR PISTOL';
+      } else {
+        hudCaliber.textContent = '10X SUPER FINAL • MATCH';
+      }
+      runShootingAnimation();
+    });
+
+    // Score outcome
+    selectScore.addEventListener('change', (e) => {
+      selectedScore = e.target.value;
+      if (selectedScore === '10.9') {
+        scoreVal.textContent = '10';
+        scorePill.textContent = '10X';
+        telemetrySubtext.textContent = 'PERFECT BULLSEYE • DEVIATION: 0.00MM';
+      } else if (selectedScore === '10.8') {
+        scoreVal.textContent = '10';
+        scorePill.textContent = '10X';
+        telemetrySubtext.textContent = 'INNER RING HIT • DEVIATION: 0.05MM';
+      } else {
+        scoreVal.textContent = '10';
+        scorePill.textContent = 'TEN';
+        telemetrySubtext.textContent = 'PRECISION TEN • DEVIATION: 0.12MM';
+      }
+      runShootingAnimation();
+    });
+
+    // Speed
+    selectSpeed.addEventListener('change', (e) => {
+      speedMultiplier = parseFloat(e.target.value);
+      runShootingAnimation();
+    });
+
+    // Brand Text
+    inputTitle.addEventListener('input', (e) => {
+      dispTitle.textContent = e.target.value || 'BBC SHOOTING ACADEMY';
+    });
+    inputSubtitle.addEventListener('input', (e) => {
+      dispSubtitle.innerHTML = (e.target.value || '2nd Late Smt. Kiran Chopra Championship') + '<br><span style="color: rgba(255,255,255,0.45);">Precision SIUS Electronic Target Range</span>';
+    });
+
+    // Viewport Mode Switcher (Mobile vs Fullscreen)
+    const btnModeMobile = document.getElementById('btnModeMobile');
+    const btnModeFullscreen = document.getElementById('btnModeFullscreen');
+    const btnPanelToggle = document.getElementById('btnPanelToggle');
+    const controlsPanel = document.getElementById('controlsPanel');
+
+    btnModeMobile.addEventListener('click', () => {
+      document.body.classList.remove('fullscreen-mode');
+      btnModeMobile.classList.add('active');
+      btnModeFullscreen.classList.remove('active');
+      controlsPanel.classList.remove('open');
+      sparks.resize();
+    });
+
+    btnModeFullscreen.addEventListener('click', () => {
+      document.body.classList.add('fullscreen-mode');
+      btnModeFullscreen.classList.add('active');
+      btnModeMobile.classList.remove('active');
+      sparks.resize();
+    });
+
+    btnPanelToggle.addEventListener('click', () => {
+      controlsPanel.classList.toggle('open');
+    });
+
+    // Sound Controls
+    const btnSoundOn = document.getElementById('btnSoundOn');
+    const btnSoundOff = document.getElementById('btnSoundOff');
+    const soundLabel = document.getElementById('soundLabel');
+
+    btnSoundOn.addEventListener('click', () => {
+      sound.enabled = true;
+      sound.init();
+      btnSoundOn.classList.add('active');
+      btnSoundOff.classList.remove('active');
+      soundLabel.textContent = 'SYNTHESIS ON';
+      soundLabel.style.color = '#34D399';
+    });
+
+    btnSoundOff.addEventListener('click', () => {
+      sound.enabled = false;
+      btnSoundOff.classList.add('active');
+      btnSoundOn.classList.remove('active');
+      soundLabel.textContent = 'MUTED';
+      soundLabel.style.color = '#9aa1b0';
+    });
+
+    // Color Swatches
+    document.querySelectorAll('.swatch').forEach(sw => {
+      sw.addEventListener('click', () => {
+        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+        sw.classList.add('active');
+        const color = sw.getAttribute('data-color');
+        const dark = sw.getAttribute('data-dark');
+        const glow = sw.getAttribute('data-glow');
+
+        document.documentElement.style.setProperty('--brand-primary', color);
+        document.documentElement.style.setProperty('--brand-dark', dark);
+        document.documentElement.style.setProperty('--brand-glow', glow);
+        runShootingAnimation();
+      });
+    });
+
+    // Auto-start on user interaction / load
+    window.addEventListener('load', () => {
+      // First click enables AudioContext smoothly per browser autoplay policies
+      document.body.addEventListener('click', () => {
+        sound.init();
+      }, { once: true });
+      
+      runShootingAnimation();
+    });
+  </script>
+</body>
+</html>
