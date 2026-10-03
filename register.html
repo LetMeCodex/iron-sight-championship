@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <link rel="stylesheet" href="assets/css/pioneer-theme.css?v=2.4">
   <style>
     .jersey-preview {
@@ -31,6 +32,256 @@
       height: 140px;
       background: radial-gradient(circle, rgba(255, 91, 55, 0.25) 0%, transparent 70%);
       border-radius: 50%;
+    }
+
+    /* ================= STRAVA CELEBRATION OVERLAY & TRANSITION ================= */
+    .strava-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #08080b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .strava-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .strava-sweep-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .strava-ribbon-top,
+    .strava-ribbon-bottom {
+      position: absolute;
+      pointer-events: none;
+      z-index: 15;
+      opacity: 0;
+      filter: drop-shadow(0 10px 30px rgba(255, 91, 55, 0.4));
+    }
+    .strava-ribbon-top {
+      top: -30px;
+      right: -30px;
+      width: 380px;
+      height: 380px;
+    }
+    .strava-ribbon-bottom {
+      bottom: -50px;
+      left: -50px;
+      width: 420px;
+      height: 300px;
+    }
+
+    .strava-stamp {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.85);
+      pointer-events: none;
+      z-index: 20;
+      transform: scale(0);
+      transform-origin: center center;
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.7));
+    }
+
+    .strava-content {
+      position: relative;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 440px;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(35px);
+    }
+
+    .strava-badge-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 91, 55, 0.28) 0%, rgba(20, 16, 26, 0.85) 100%);
+      border: 2px solid rgba(255, 91, 55, 0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FF5B37;
+      font-size: 30px;
+      margin-bottom: 16px;
+      box-shadow: 0 0 35px rgba(255, 91, 55, 0.5), inset 0 0 15px rgba(255, 91, 55, 0.3);
+      animation: badgePulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes badgePulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 35px rgba(255, 91, 55, 0.5); }
+      50% { transform: scale(1.06); box-shadow: 0 0 50px rgba(255, 91, 55, 0.8); }
+    }
+
+    .strava-headline {
+      font-size: clamp(28px, 6vw, 36px);
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      color: #ffffff;
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+
+    .strava-subheadline {
+      font-family: var(--font-mono, monospace);
+      font-size: 11px;
+      font-weight: 700;
+      color: #34D399;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .strava-ticket-card {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 20px;
+      padding: 18px 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .ticket-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+
+    .ticket-pass-id {
+      font-family: var(--font-mono, monospace);
+      font-size: 13px;
+      font-weight: 800;
+      color: #FBBF24;
+      letter-spacing: 0.5px;
+    }
+
+    .ticket-status-pill {
+      font-family: var(--font-mono, monospace);
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34D399;
+      padding: 3px 8px;
+      border-radius: 99px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .ticket-label {
+      color: rgba(255, 255, 255, 0.45);
+      text-transform: uppercase;
+      font-size: 9px;
+      letter-spacing: 0.8px;
+      margin-bottom: 2px;
+    }
+
+    .ticket-val {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .strava-action-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-strava-primary {
+      width: 100%;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, #FF6A49 0%, #FF441D 100%);
+      color: #ffffff;
+      border-radius: 16px;
+      font-family: var(--font-mono, monospace);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 0 #9E260C, 0 12px 25px rgba(255, 91, 55, 0.4);
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .btn-strava-primary:hover {
+      background: linear-gradient(135deg, #FF7B5C 0%, #FF330A 100%);
+      transform: translateY(-1px);
+    }
+    .btn-strava-primary:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #9E260C, 0 6px 15px rgba(255, 91, 55, 0.3);
+    }
+
+    .btn-strava-secondary {
+      width: 100%;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 16px;
+      font-family: var(--font-mono, monospace);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .btn-strava-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-strava-ghost {
+      margin-top: 4px;
+      color: rgba(255, 255, 255, 0.45);
+      font-family: var(--font-mono, monospace);
+      font-size: 11px;
+      cursor: pointer;
+      transition: color 0.15s ease;
+      background: transparent;
+      border: none;
+    }
+    .btn-strava-ghost:hover {
+      color: #ffffff;
     }
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -299,9 +550,12 @@
 
         <!-- ================= SUBMIT & PROCEED STRIP ================= -->
         <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div class="text-xs font-mono text-white/50 flex items-center gap-2">
-            <i class="fa-solid fa-shield-halved text-emerald-400"></i>
-            <span>Instant Digital Pass Generation • 100% Guaranteed Spot</span>
+          <div class="text-xs font-mono text-white/50 flex flex-col sm:flex-row items-start sm:items-center gap-2">
+            <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-400"></i> Instant Digital Pass Generation</span>
+            <span class="hidden sm:inline text-white/20">•</span>
+            <button type="button" onclick="previewStravaSuccess()" class="text-[11px] text-[#FF5B37] hover:underline flex items-center gap-1 cursor-pointer">
+              <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Preview Strava Success Animation
+            </button>
           </div>
 
           <button type="submit" class="w-full sm:w-auto px-8 py-4 rounded-2xl pioneer-btn-coral font-display font-bold text-sm tracking-wider btn-tactile flex items-center justify-center gap-2 shadow-xl">
@@ -562,6 +816,11 @@
         <span>PAY VIA RAZORPAY / UPI</span>
       </button>
 
+      <button type="button" onclick="testStravaSuccess()" class="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/80 hover:text-white font-mono text-[11px] border border-white/10 flex items-center justify-center gap-2 transition-colors">
+        <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+        <span>Instant Sandbox Test (Strava Animation)</span>
+      </button>
+
       <div class="flex items-center justify-center gap-2 text-[10px] text-white/40 font-mono">
         <i class="fa-solid fa-shield-halved text-emerald-400"></i>
         <span>100% Secure • Powered by Razorpay Standard</span>
@@ -571,6 +830,104 @@
         Cancel & Review Details
       </button>
     </div>
+  </div>
+
+  <!-- ================= STRAVA ACTIVITY COMPLETION TRANSITION OVERLAY ================= -->
+  <div id="stravaOverlay" class="strava-overlay">
+    
+    <!-- 1. Morphing Fullscreen SVG Wave Wipe (Exact Strava Curved Sweep) -->
+    <svg class="strava-sweep-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="stravaGrad" x1="0%" y1="100%" x2="50%" y2="0%">
+          <stop offset="0%" stop-color="#FF5B37" />
+          <stop offset="100%" stop-color="#FF380E" />
+        </linearGradient>
+      </defs>
+      <path id="stravaWavePath" fill="url(#stravaGrad)" d="M 0,1000 Q 500,1000 1000,1000 L 1000,1000 L 0,1000 Z"></path>
+    </svg>
+
+    <!-- 2. Looping Ambient Ribbon Tracks (Strava frame 12-15) -->
+    <div class="strava-ribbon-top" id="ribbonTop">
+      <svg viewBox="0 0 380 380" width="100%" height="100%" fill="none">
+        <path d="M 120,0 C 260,20 380,140 380,280 C 380,220 280,100 160,50 Z" fill="#FF5B37" opacity="0.9" />
+        <path d="M 220,0 C 320,50 380,160 380,260" stroke="#FF5B37" stroke-width="48" stroke-linecap="round" />
+      </svg>
+    </div>
+
+    <div class="strava-ribbon-bottom" id="ribbonBottom">
+      <svg viewBox="0 0 440 320" width="100%" height="100%" fill="none">
+        <path d="M 0,120 C 140,240 280,260 400,220" stroke="#FF5B37" stroke-width="56" stroke-linecap="round" />
+      </svg>
+    </div>
+
+    <!-- 3. Scattered Floating Line-Art Icon Stamps (Strava Kudos & Shooting Badges) -->
+    <div id="stampsContainer" class="absolute inset-0 pointer-events-none"></div>
+
+    <!-- 4. Central Celebration & Telemetry Content -->
+    <div class="strava-content" id="stravaContent">
+      
+      <!-- Top Target Badge Icon -->
+      <div class="strava-badge-icon" id="stravaBadgeIcon">
+        <i class="fa-solid fa-bullseye"></i>
+      </div>
+
+      <!-- Athlete Headline (Exact Strava "Nice work!" format) -->
+      <h2 class="strava-headline" id="stravaHeadline">Nice work, Athlete!</h2>
+      <div class="strava-subheadline">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span>REGISTRATION CONFIRMED • 2026</span>
+      </div>
+
+      <!-- Ticket Telemetry Card -->
+      <div class="strava-ticket-card" id="stravaTicketCard">
+        <div class="ticket-header">
+          <div>
+            <div class="ticket-label">COMPETITOR PASS NUMBER</div>
+            <div class="ticket-pass-id" id="ticketPassId">NSC-2026-084</div>
+          </div>
+          <div class="ticket-status-pill">
+            <i class="fa-solid fa-bolt text-xs"></i>
+            <span>PAID & CONFIRMED</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 font-mono text-xs">
+          <div>
+            <div class="ticket-label">EVENT</div>
+            <div class="ticket-val" id="ticketEvent">10M Air Rifle ISSF</div>
+          </div>
+          <div>
+            <div class="ticket-label">CATEGORY</div>
+            <div class="ticket-val" id="ticketCategory">Sub-Youth Men [AR-01]</div>
+          </div>
+          <div>
+            <div class="ticket-label">ASSIGNED RELAY</div>
+            <div class="ticket-val text-amber-300" id="ticketRelay">Relay 01 • 09:00 AM</div>
+          </div>
+          <div>
+            <div class="ticket-label">TARGET LANE</div>
+            <div class="ticket-val text-cyan-400" id="ticketLane">Lane #04 (SIUS)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="strava-action-group" id="stravaActionGroup">
+        <a href="track-booking.html" class="btn-strava-primary" id="btnDownloadPass">
+          <i class="fa-solid fa-id-card"></i>
+          <span>View / Download Gate Pass</span>
+        </a>
+        <a href="match-schedule.html" class="btn-strava-secondary" id="btnViewSchedule">
+          <i class="fa-regular fa-clock"></i>
+          <span>Check Match Schedule & Relays</span>
+        </a>
+        <button type="button" class="btn-strava-ghost" id="btnCloseOverlay">
+          Done & Return to Portal
+        </button>
+      </div>
+
+    </div>
+
   </div>
 
   <!-- ================= SCRIPTS ================= -->
@@ -1132,17 +1489,9 @@
               };
               saveBooking(bookingRecord);
 
-              // Celebration confetti
-              try {
-                confetti({ particleCount: 160, spread: 85, origin: { y: 0.6 } });
-              } catch(e) {}
-
+              // Trigger Strava Activity Completion Celebration Animation
               showToast(`Payment Verified! Pass ID: ${compNumber}`, "circle-check");
-
-              // Redirect to booking tracking pass
-              setTimeout(() => {
-                window.location.href = `track-booking.html?mobile=${encodeURIComponent(regMobile)}&payment_id=${encodeURIComponent(paymentResponse.razorpay_payment_id)}`;
-              }, 1200);
+              triggerStravaSuccessAnimation(bookingRecord);
 
             } catch (vErr) {
               console.error("Signature verification error:", vErr);
@@ -1173,6 +1522,256 @@
     }
 
     const confirmBookingPayment = initiateRazorpayCheckout;
+
+    // ================= STRAVA CELEBRATION ANIMATION ENGINE =================
+    // Web Audio Harmonic Chime (Strava Completion Chime)
+    class StravaAudioEngine {
+      constructor() {
+        this.ctx = null;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playCelebrationChime() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          
+          // Rising major chord arpeggio: A4 (440), C#5 (554.37), E5 (659.25), A5 (880)
+          const notes = [440, 554.37, 659.25, 880];
+          notes.forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+
+            gain.gain.setValueAtTime(0.22, now + idx * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.9);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.9);
+          });
+        } catch(e) {}
+      }
+    }
+
+    const stravaAudio = new StravaAudioEngine();
+
+    // Icon Stamps Setup (Thumbs Up, Bullseye, Trophy, Award, Crosshairs, Medal)
+    const STAMP_ICONS = [
+      'fa-solid fa-thumbs-up',
+      'fa-solid fa-bullseye',
+      'fa-solid fa-trophy',
+      'fa-solid fa-award',
+      'fa-solid fa-crosshairs',
+      'fa-solid fa-medal',
+      'fa-regular fa-thumbs-up',
+      'fa-solid fa-star'
+    ];
+
+    const STAMP_COORDS = [
+      { x: 7, y: 12, size: 26, rot: -18 },
+      { x: 91, y: 10, size: 28, rot: 22 },
+      { x: 8, y: 28, size: 24, rot: 14 },
+      { x: 92, y: 26, size: 28, rot: -12 },
+      { x: 6, y: 48, size: 28, rot: -24 },
+      { x: 93, y: 46, size: 26, rot: 16 },
+      { x: 8, y: 68, size: 26, rot: 20 },
+      { x: 91, y: 68, size: 28, rot: -15 },
+      { x: 10, y: 88, size: 24, rot: -8 },
+      { x: 88, y: 88, size: 26, rot: 12 },
+      { x: 50, y: 6, size: 22, rot: 5 },
+      { x: 50, y: 95, size: 24, rot: -14 }
+    ];
+
+    function buildStravaStamps() {
+      const container = document.getElementById('stampsContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      STAMP_COORDS.forEach((coord, idx) => {
+        const el = document.createElement('div');
+        el.className = 'strava-stamp';
+        const iconClass = STAMP_ICONS[idx % STAMP_ICONS.length];
+        el.innerHTML = `<i class="${iconClass}"></i>`;
+        el.style.left = `${coord.x}%`;
+        el.style.top = `${coord.y}%`;
+        el.style.fontSize = `${coord.size}px`;
+        el.dataset.rot = coord.rot;
+        container.appendChild(el);
+      });
+    }
+
+    // Strava Completion Transition Orchestrator
+    function triggerStravaSuccessAnimation(data = {}) {
+      const overlay = document.getElementById('stravaOverlay');
+      if (!overlay) return;
+
+      const wavePath = document.getElementById('stravaWavePath');
+      const ribbonTop = document.getElementById('ribbonTop');
+      const ribbonBottom = document.getElementById('ribbonBottom');
+      const content = document.getElementById('stravaContent');
+      const headline = document.getElementById('stravaHeadline');
+      const ticketPassId = document.getElementById('ticketPassId');
+      const ticketEvent = document.getElementById('ticketEvent');
+      const ticketCategory = document.getElementById('ticketCategory');
+      const ticketRelay = document.getElementById('ticketRelay');
+      const ticketLane = document.getElementById('ticketLane');
+      const btnDownloadPass = document.getElementById('btnDownloadPass');
+      const btnCloseOverlay = document.getElementById('btnCloseOverlay');
+
+      // Populate Telemetry Data
+      const name = data.name || (document.getElementById('regName') ? document.getElementById('regName').value : '') || 'Athlete';
+      const firstName = name.split(' ')[0] || 'Athlete';
+      if (headline) headline.innerText = `Nice work, ${firstName}!`;
+      if (ticketPassId) ticketPassId.innerText = data.compNo || 'NSC-2026-084';
+      if (ticketEvent) ticketEvent.innerText = data.event || selectedEvent || '10M Air Rifle ISSF';
+      if (ticketCategory) ticketCategory.innerText = data.category || (selectedMatch ? selectedMatch.category : 'Sub-Youth Men [AR-01]');
+      if (ticketRelay) ticketRelay.innerText = data.relay ? `${data.relay} • ${data.time || chosenTime}` : `${chosenRelay} • ${chosenTime}`;
+      if (ticketLane) ticketLane.innerText = data.lane || `Lane #${chosenLane < 10 ? '0' + chosenLane : chosenLane} (SIUS Electronic)`;
+
+      // Set link to download/track pass
+      if (btnDownloadPass) {
+        const mobile = data.mobile || (document.getElementById('regMobile') ? document.getElementById('regMobile').value : '');
+        const payId = data.paymentId || '';
+        btnDownloadPass.href = `track-booking.html?mobile=${encodeURIComponent(mobile)}&payment_id=${encodeURIComponent(payId)}`;
+      }
+
+      if (btnCloseOverlay) {
+        btnCloseOverlay.onclick = () => {
+          overlay.classList.remove('active');
+        };
+      }
+
+      buildStravaStamps();
+      overlay.classList.add('active');
+
+      // Audio trigger
+      stravaAudio.playCelebrationChime();
+
+      // Ensure GSAP is present
+      if (typeof gsap === 'undefined') {
+        if (content) { content.style.opacity = '1'; content.style.transform = 'translateY(0)'; }
+        return;
+      }
+
+      // Reset GSAP properties
+      gsap.killTweensOf([wavePath, ribbonTop, ribbonBottom, content, '.strava-stamp']);
+      gsap.set(content, { opacity: 0, y: 40 });
+      gsap.set([ribbonTop, ribbonBottom], { opacity: 0, scale: 0.6 });
+      gsap.set('.strava-stamp', { scale: 0, opacity: 0 });
+
+      // Path Morph: Wave sweep from bottom up (Strava frame 1 to 7)
+      const tl = gsap.timeline();
+
+      // Phase 1: Wave surges upward across viewport
+      tl.fromTo(wavePath, 
+        { 
+          attr: { d: "M 0,1000 Q 500,1000 1000,1000 L 1000,1000 L 0,1000 Z" } 
+        },
+        { 
+          attr: { d: "M 0,-50 Q 500,-150 1000,-50 L 1000,1000 L 0,1000 Z" },
+          duration: 0.75,
+          ease: "power3.inOut"
+        }
+      )
+      // Phase 2: Wave sweeps off the top, leaving pitch dark canvas
+      .to(wavePath, {
+        attr: { d: "M 0,-150 Q 500,-150 1000,-150 L 1000,-50 L 0,-50 Z" },
+        duration: 0.5,
+        ease: "power2.inOut"
+      }, "-=0.2")
+
+      // Phase 3: Ambient Ribbon Tracks enter along corners (Strava frame 12-15)
+      .to([ribbonTop, ribbonBottom], {
+        opacity: 1,
+        scale: 1,
+        duration: 0.85,
+        ease: "back.out(1.4)"
+      }, "-=0.45")
+
+      // Phase 4: Scattered Line-Art Icon Stamps Pop in (Strava frame 7)
+      .to('.strava-stamp', {
+        scale: 1,
+        opacity: 0.85,
+        duration: 0.5,
+        ease: "back.out(2.2)",
+        stagger: {
+          amount: 0.35,
+          from: "random"
+        }
+      }, "-=0.6")
+
+      // Phase 5: Central Card & Headline Slide Up
+      .to(content, {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: "power3.out"
+      }, "-=0.35")
+
+      // Phase 6: Soft ambient drift of stamps & gentle confetti burst
+      .call(() => {
+        try {
+          if (typeof confetti === 'function') {
+            confetti({
+              particleCount: 65,
+              spread: 75,
+              origin: { y: 0.5 },
+              colors: ['#FF5B37', '#FF7A5C', '#FCD34D', '#ffffff']
+            });
+          }
+        } catch(e) {}
+
+        // Ambient gentle drift
+        gsap.to('.strava-stamp', {
+          opacity: 0.28,
+          duration: 1.2,
+          ease: "power1.out"
+        });
+      }, null, "-=0.2");
+    }
+
+    // Sandbox Test Trigger Functions
+    function testStravaSuccess() {
+      document.getElementById('payModal')?.classList.add('hidden');
+      triggerStravaSuccessAnimation({
+        name: document.getElementById('regName')?.value || "Aarav Sharma",
+        compNo: `NSC-2026-${Math.floor(100 + Math.random() * 900)}`,
+        event: selectedEvent || "10M Air Rifle ISSF",
+        category: selectedMatch?.category || "Sub-Youth Men [AR-01]",
+        relay: chosenRelay || "Relay 01",
+        time: chosenTime || "08:30 — 09:35 AM",
+        lane: `Lane #${chosenLane < 10 ? '0' + chosenLane : chosenLane} (SIUS Electronic)`,
+        mobile: document.getElementById('regMobile')?.value || "9876543210",
+        paymentId: "pay_sandbox_test"
+      });
+    }
+
+    function previewStravaSuccess() {
+      testStravaSuccess();
+    }
+
+    // Auto-trigger test if query parameter ?test_success=1 or ?strava=1 exists
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('test_success') === '1' || params.get('strava') === '1' || params.get('demo') === '1') {
+        setTimeout(() => {
+          testStravaSuccess();
+        }, 300);
+      }
+    });
   </script>
 </body>
 </html>
