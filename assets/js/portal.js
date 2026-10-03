@@ -431,16 +431,21 @@ function initGSAPAnimations() {
     });
   });
 
-  // Staggered card entrance
-  if (document.querySelectorAll('.pioneer-card').length > 0) {
-    gsap.from('.pioneer-card', {
-      y: 18,
-      opacity: 0,
-      duration: 0.6,
-      stagger: 0.05,
-      ease: 'power2.out',
-      delay: 0.15
-    });
+  // Staggered card entrance (safe fromTo with clearProps to prevent freezing opacity)
+  const cards = document.querySelectorAll('.pioneer-card');
+  if (cards.length > 0 && !window.__pioneerCardsAnimated) {
+    window.__pioneerCardsAnimated = true;
+    gsap.fromTo('.pioneer-card', 
+      { opacity: 0, y: 16 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.45,
+        stagger: 0.04,
+        ease: 'power2.out',
+        clearProps: 'all' // Ensures opacity and transform are cleanly removed when done
+      }
+    );
   }
 
   // Tactile liquid button physics
@@ -484,16 +489,19 @@ function initChampionshipCountdown() {
   setInterval(update, 1000);
 }
 
-// Auto-init on DOMContentLoaded or immediate if ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    initThemeSwitcher();
-    initGSAPAnimations();
-    initChampionshipCountdown();
-  });
-} else {
+// Auto-init on DOMContentLoaded or immediate if ready (guaranteed single execution)
+let __portalInitialized = false;
+function __bootstrapPortal() {
+  if (__portalInitialized) return;
+  __portalInitialized = true;
   initThemeSwitcher();
   initGSAPAnimations();
   initChampionshipCountdown();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', __bootstrapPortal);
+} else {
+  __bootstrapPortal();
 }
 

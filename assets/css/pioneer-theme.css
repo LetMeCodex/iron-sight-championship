@@ -27,9 +27,9 @@
   --card-border-top: rgba(255, 255, 255, 0.55);
   --nav-bg: rgba(8, 24, 36, 0.60);
   --watermark-color: #061824;
-  --watermark-opacity: 0.22;
-  --watermark-emblem-filter: grayscale(100%) contrast(150%) brightness(20%);
-  --watermark-emblem-opacity: 0.30;
+  --watermark-opacity: 0.32;
+  --watermark-emblem-filter: grayscale(100%) contrast(150%) brightness(25%);
+  --watermark-emblem-opacity: 0.50;
   --watermark-blend: multiply;
 
   /* Master Poster Footer Variables (Theme 1: Azure Watercolor) */
@@ -66,9 +66,9 @@ body[data-theme="azure"] {
   --card-border-top: rgba(255, 255, 255, 0.65);
   --nav-bg: rgba(8, 24, 36, 0.60);
   --watermark-color: #061d2d;
-  --watermark-opacity: 0.30;
+  --watermark-opacity: 0.40;
   --watermark-emblem-filter: grayscale(100%) contrast(160%) brightness(15%);
-  --watermark-emblem-opacity: 0.40;
+  --watermark-emblem-opacity: 0.60;
   --watermark-blend: multiply;
 
   --footer-bg: #071926;
@@ -110,9 +110,9 @@ body[data-theme="onyx"] {
   --card-border-top: rgba(255, 255, 255, 0.50);
   --nav-bg: rgba(10, 11, 15, 0.70);
   --watermark-color: #ffffff;
-  --watermark-opacity: 0.13;
-  --watermark-emblem-filter: brightness(220%) drop-shadow(0 0 40px rgba(255, 91, 55, 0.45));
-  --watermark-emblem-opacity: 0.28;
+  --watermark-opacity: 0.28;
+  --watermark-emblem-filter: brightness(240%) drop-shadow(0 0 45px rgba(255, 91, 55, 0.55));
+  --watermark-emblem-opacity: 0.52;
   --watermark-blend: screen;
 
   --footer-bg: #FF441D;
@@ -156,9 +156,9 @@ body[data-theme="dusk"] {
   --card-border-top: rgba(255, 255, 255, 0.55);
   --nav-bg: rgba(20, 15, 26, 0.70);
   --watermark-color: #FFDFEA;
-  --watermark-opacity: 0.15;
-  --watermark-emblem-filter: brightness(180%) drop-shadow(0 0 40px rgba(255, 91, 55, 0.4));
-  --watermark-emblem-opacity: 0.28;
+  --watermark-opacity: 0.30;
+  --watermark-emblem-filter: brightness(220%) drop-shadow(0 0 45px rgba(255, 91, 55, 0.5));
+  --watermark-emblem-opacity: 0.52;
   --watermark-blend: plus-lighter;
 
   --footer-bg: #FF5A78;
@@ -1010,9 +1010,36 @@ body::before {
 
 /* ================= MOBILE VIEWPORT OPTIMIZATIONS (<= 768px) ================= */
 @media (max-width: 768px) {
-  /* 1. Hide Fixed Watermark on Mobile (Prevents clashing with hero cards & footer) */
+  /* 1. Visible, scaled watermark on Mobile */
   .site-watermark-bg {
-    display: none !important;
+    display: flex !important;
+    top: 22vh !important;
+    transform: translate(-50%, -10%) !important;
+    width: 95% !important;
+    padding: 0 1rem !important;
+    opacity: var(--watermark-opacity) !important;
+  }
+
+  .watermark-emblem-wrap {
+    width: clamp(70px, 18vw, 100px) !important;
+    height: clamp(70px, 18vw, 100px) !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  .watermark-title {
+    font-size: clamp(2.2rem, 11vw, 3.6rem) !important;
+    line-height: 0.9 !important;
+  }
+
+  .watermark-subtitle {
+    font-size: clamp(0.85rem, 4vw, 1.3rem) !important;
+    letter-spacing: 0.20em !important;
+  }
+
+  .watermark-tagline {
+    font-size: clamp(0.5rem, 2vw, 0.65rem) !important;
+    letter-spacing: 0.14em !important;
+    margin-top: 0.4rem !important;
   }
 
   /* 2. Scaled Brand Logo */
