@@ -72,10 +72,163 @@ function getBookings() {
   }
 }
 
-function saveBooking(booking) {
+// ================= TOURNAMENT GLOBAL CONFIGURATION (CUSTOMIZABLE VIA ADMIN) ================= //
+
+const STORAGE_KEY_TOURNAMENT_SETTINGS = 'nexshot_tournament_settings';
+const STORAGE_KEY_RELAYS_CONFIG = 'nexshot_relays_config';
+const STORAGE_KEY_EVENTS_CONFIG = 'nexshot_events_config';
+const STORAGE_KEY_RULES_CONFIG = 'nexshot_rules_config';
+const STORAGE_KEY_ADMIN_PIN = 'nexshot_admin_pin';
+
+const DEFAULT_TOURNAMENT_SETTINGS = {
+  tournamentName: "2nd Late Smt. Kiran Chopra Shooting Championship",
+  championshipFullTitle: "2nd Late Smt. Kiran Chopra Memorial Shooting Championship 2026",
+  hostAcademy: "BBC Shooting Academy",
+  techPartner: "NexShot Technologies",
+  datesText: "25 — 28 NOVEMBER 2026",
+  startDate: "2026-11-25",
+  endDate: "2026-11-28",
+  dailyTiming: "08:30 AM — 06:30 PM",
+  venueName: "BBC Shooting Academy",
+  venueSubName: "Babu Bodhraj Convent School",
+  venueAddress: "Sikandrabad, Bulandshahr, Uttar Pradesh - 203205",
+  venueMapsUrl: "https://maps.google.com/?q=Babu+Bodhraj+Convent+School+Sikandrabad+Bulandshahr",
+  helplinePhone: "+91 8445070791",
+  helplinePhoneSecondary: "+91 9758789512",
+  officialEmail: "nexshottechnologies@gmail.com",
+  baseFee: 1500,
+  registrationOpen: true,
+  announcementActive: true,
+  announcementHeadline: "Official Tournament Bulletin",
+  announcementText: "Reporting time is strictly 30 minutes prior to your allocated relay. Original ID / School proof mandatory.",
+  circularPdfUrl: "assets/docs/Championship_Circular_2025.pdf"
+};
+
+const DEFAULT_RELAYS_CONFIG = [
+  { id: 1, name: 'Relay 01', type: 'NR', matchTitle: 'NR Match (40 Shots)', time: '08:30 - 09:35 AM', reporting: '08:00 AM', duration: '1h 05m', maxSlots: 15, active: true },
+  { id: 2, name: 'Relay 02', type: 'ISSF', matchTitle: 'ISSF Match (60 Shots)', time: '10:00 - 11:15 AM', reporting: '09:30 AM', duration: '1h 15m', maxSlots: 15, active: true },
+  { id: 3, name: 'Relay 03', type: 'NR', matchTitle: 'NR Match (40 Shots)', time: '11:40 AM - 12:45 PM', reporting: '11:10 AM', duration: '1h 05m', maxSlots: 15, active: true },
+  { id: 4, name: 'Relay 04', type: 'NR', matchTitle: 'NR Match (40 Shots)', time: '01:45 - 02:50 PM', reporting: '01:15 PM', duration: '1h 05m', maxSlots: 15, active: true },
+  { id: 5, name: 'Relay 05', type: 'ISSF', matchTitle: 'ISSF Match (60 Shots)', time: '03:15 - 04:30 PM', reporting: '02:45 PM', duration: '1h 15m', maxSlots: 15, active: true },
+  { id: 6, name: 'Relay 06', type: 'NR', matchTitle: 'NR Match (40 Shots)', time: '05:00 - 06:05 PM', reporting: '04:30 PM', duration: '1h 05m', maxSlots: 15, active: true }
+];
+
+const DEFAULT_RULES_CONFIG = {
+  decimalScoring: "Rifle scores are calculated with decimal precision (e.g. 10.9, 10.5). Pistol scores are integer based (whole numbers).",
+  tieBreaker: "In case of identical scores, higher 10X (Inner Bullseye) count determines superior rank.",
+  reportingRule: "Mandatory reporting 30 minutes before firing start time for equipment check.",
+  dressCode: "ISSF approved shooting jackets/trousers for ISSF category. Standard clean sportswear for NR.",
+  weaponInspection: "Pellets and cylinder pressure check conducted at Range Desk before entry."
+};
+
+function getTournamentSettings() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_TOURNAMENT_SETTINGS);
+    if (raw) return { ...DEFAULT_TOURNAMENT_SETTINGS, ...JSON.parse(raw) };
+  } catch(e) {}
+  return { ...DEFAULT_TOURNAMENT_SETTINGS };
+}
+
+function saveTournamentSettings(settings) {
+  const current = getTournamentSettings();
+  const merged = { ...current, ...settings };
+  localStorage.setItem(STORAGE_KEY_TOURNAMENT_SETTINGS, JSON.stringify(merged));
+  return merged;
+}
+
+function getRelaysConfig() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_RELAYS_CONFIG);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULT_RELAYS_CONFIG));
+}
+
+function saveRelaysConfig(relays) {
+  localStorage.setItem(STORAGE_KEY_RELAYS_CONFIG, JSON.stringify(relays));
+  return relays;
+}
+
+function getTournamentRules() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_RULES_CONFIG);
+    if (raw) return { ...DEFAULT_RULES_CONFIG, ...JSON.parse(raw) };
+  } catch(e) {}
+  return { ...DEFAULT_RULES_CONFIG };
+}
+
+function saveTournamentRules(rules) {
+  const current = getTournamentRules();
+  const merged = { ...current, ...rules };
+  localStorage.setItem(STORAGE_KEY_RULES_CONFIG, JSON.stringify(merged));
+  return merged;
+}
+
+function getAdminPin() {
+  try {
+    const pin = localStorage.getItem(STORAGE_KEY_ADMIN_PIN);
+    if (pin && pin.trim().length >= 4) return pin.trim();
+  } catch(e) {}
+  return '2026';
+}
+
+function saveAdminPin(pin) {
+  if (!pin || pin.trim().length < 4) return false;
+  localStorage.setItem(STORAGE_KEY_ADMIN_PIN, pin.trim());
+  return true;
+}
+
+function updateBooking(compNo, updatedFields) {
   const bookings = getBookings();
+  const idx = bookings.findIndex(b => (b.compNo === compNo || b.id === compNo || (b.mobile && b.mobile === compNo)));
+  if (idx !== -1) {
+    bookings[idx] = { ...bookings[idx], ...updatedFields };
+    localStorage.setItem(STORAGE_KEY_BOOKINGS, JSON.stringify(bookings));
+    return true;
+  }
+  return false;
+}
+
+function deleteBooking(compNo) {
+  let bookings = getBookings();
+  bookings = bookings.filter(b => b.compNo !== compNo && b.id !== compNo);
+  localStorage.setItem(STORAGE_KEY_BOOKINGS, JSON.stringify(bookings));
+  return true;
+}
+
+function addManualBooking(booking) {
+  const bookings = getBookings();
+  if (!booking.compNo) {
+    booking.compNo = `NSC-2026-${Math.floor(100 + Math.random() * 900)}`;
+  }
   bookings.unshift(booking);
   localStorage.setItem(STORAGE_KEY_BOOKINGS, JSON.stringify(bookings));
+  return booking;
+}
+
+function renderGlobalAnnouncementBar() {
+  const settings = getTournamentSettings();
+  if (!settings.announcementActive || !settings.announcementText) return;
+  if (sessionStorage.getItem('nexshot_announcement_dismissed') === 'true') return;
+  if (document.getElementById('globalAnnouncementBar')) return;
+
+  const bar = document.createElement('aside');
+  bar.id = 'globalAnnouncementBar';
+  bar.className = 'w-full bg-gradient-to-r from-amber-500/25 via-orange-500/20 to-amber-500/25 border-b border-amber-500/30 text-amber-200 px-4 py-2 text-xs font-mono flex items-center justify-between gap-3 z-50 backdrop-blur-md relative';
+  bar.innerHTML = `
+    <div class="max-w-7xl mx-auto flex items-center gap-2 truncate">
+      <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping flex-shrink-0"></span>
+      <span class="font-bold text-amber-300 uppercase tracking-wider flex-shrink-0">${settings.announcementHeadline || 'OFFICIAL BULLETIN'}:</span>
+      <span class="truncate text-white/90">${settings.announcementText}</span>
+    </div>
+    <button onclick="document.getElementById('globalAnnouncementBar').remove(); sessionStorage.setItem('nexshot_announcement_dismissed', 'true');" class="text-white/60 hover:text-white px-2 py-0.5 rounded text-xs flex-shrink-0" title="Dismiss">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  `;
+  document.body.prepend(bar);
 }
 
 // Global Floating Toast (Top Dynamic Island Style)
@@ -106,6 +259,8 @@ function showToast(msg, icon = 'check') {
 
 // Global Floating Mobile Bottom Dock (App-Style Navigation)
 function renderMobileBottomNav() {
+  const path = window.location.pathname.toLowerCase();
+  if (path.includes('admin')) return;
   if (document.getElementById('mobileBottomNav')) return;
   const nav = document.createElement('nav');
   nav.id = 'mobileBottomNav';
@@ -464,8 +619,11 @@ function initChampionshipCountdown() {
   const countdownEl = document.getElementById('countdownText');
   if (!countdownEl) return;
 
-  // Championship start: 25 Nov 2026, 08:30 AM IST (Indian Standard Time UTC+05:30)
-  const targetDate = new Date('2026-11-25T08:30:00+05:30').getTime();
+  const settings = (typeof getTournamentSettings === 'function') ? getTournamentSettings() : null;
+  const startDateStr = settings?.startDate || '2026-11-25';
+
+  // Championship start: Start Date, 08:30 AM IST (Indian Standard Time UTC+05:30)
+  const targetDate = new Date(`${startDateStr}T08:30:00+05:30`).getTime();
 
   function update() {
     const now = new Date().getTime();
@@ -497,6 +655,7 @@ function __bootstrapPortal() {
   initThemeSwitcher();
   initGSAPAnimations();
   initChampionshipCountdown();
+  renderGlobalAnnouncementBar();
 }
 
 if (document.readyState === 'loading') {

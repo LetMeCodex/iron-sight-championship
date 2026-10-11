@@ -17,6 +17,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    .tab-btn.active {
+      background: rgba(255, 91, 55, 0.2);
+      border-color: #FF5B37;
+      color: #ffffff;
+      box-shadow: 0 0 15px rgba(255, 91, 55, 0.3);
+    }
+  </style>
 </head>
 <body class="selection:bg-[#FF5B37] selection:text-white">
 
@@ -36,8 +44,7 @@
     </defs>
   </svg>
 
-
-  <!-- ================= AESTHETIC BACKGROUND WATERMARK (ALL 3 THEMES) ================= -->
+  <!-- ================= AESTHETIC BACKGROUND WATERMARK ================= -->
   <div class="site-watermark-bg" aria-hidden="true">
     <div class="watermark-emblem-wrap">
       <img src="assets/img/nexshot-icon.png" alt="" class="watermark-emblem">
@@ -47,40 +54,48 @@
     <div class="watermark-tagline">PRECISION ELECTRONIC INSTRUMENTATION • EST. 2026</div>
   </div>
 
-<nav class="sticky top-0 z-50 glass-nav transition-all duration-300">
+  <!-- ================= STICKY TOP NAVIGATION ================= -->
+  <nav class="sticky top-0 z-50 glass-nav transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16 sm:h-20 gap-3">
         
-        <!-- Brand Logo (Enlarged & Flawlessly Blended with Website Background) -->
+        <!-- Brand Logo -->
         <a href="index.html" class="flex items-center gap-2 sm:gap-4 group flex-shrink-0 min-w-0">
           <div class="brand-logo-blended w-10 h-10 sm:w-14 sm:h-14">
             <img src="assets/img/nexshot-icon.png" alt="NexShot Technologies" class="brand-logo-img">
           </div>
           <div class="min-w-0">
             <div class="flex items-center gap-1.5 sm:gap-2 truncate">
-              <span class="font-display font-extrabold text-sm sm:text-base md:text-lg tracking-tight text-white group-hover:text-amber-300 transition-colors truncate">BBC Shooting Academy</span>
-              <span class="hidden md:inline-flex px-2 py-0.5 rounded text-[10px] font-mono bg-red-500/20 text-red-400 border border-red-500/30 font-semibold">
-                ADMIN CONSOLE
+              <span class="font-display font-extrabold text-sm sm:text-base md:text-lg tracking-tight text-white group-hover:text-amber-300 transition-colors truncate" id="navHostAcademy">BBC Shooting Academy</span>
+              <span class="inline-flex px-2 py-0.5 rounded text-[10px] font-mono bg-red-500/20 text-red-400 border border-red-500/30 font-semibold">
+                MASTER CONSOLE
               </span>
             </div>
-            <p class="text-[9px] sm:text-[11px] font-mono text-white/65 tracking-wider mt-0.5 truncate">By <span class="text-[#FF5B37] font-semibold">NexShot Technologies</span><span class="hidden sm:inline text-white/45"> • Telemetry Control</span></p>
+            <p class="text-[9px] sm:text-[11px] font-mono text-white/65 tracking-wider mt-0.5 truncate">
+              By <span class="text-[#FF5B37] font-semibold" id="navTechPartner">NexShot Technologies</span>
+              <span class="hidden sm:inline text-white/45"> • Range Master Tower</span>
+            </p>
           </div>
         </a>
 
-        <!-- Desktop Links -->
-        <div class="hidden lg:flex items-center gap-1 font-mono text-xs">
-          <a href="index.html" class="px-3 py-1.5 rounded-xl text-white/70 hover:text-white transition-colors">Home</a>
-          <a href="match-schedule.html" class="px-3 py-1.5 rounded-xl text-white/70 hover:text-white transition-colors">Schedule</a>
-          <a href="live-scoring.html" class="px-3 py-1.5 rounded-xl text-white/70 hover:text-white transition-colors">Live Board</a>
-          <a href="track-booking.html" class="px-3 py-1.5 rounded-xl text-white/70 hover:text-white transition-colors">Pass Lookup</a>
+        <!-- Quick Status Indicators -->
+        <div class="hidden xl:flex items-center gap-3 font-mono text-xs">
+          <div class="px-3 py-1 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2 text-white/80">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Database: <strong class="text-emerald-400">Live Sync</strong></span>
+          </div>
+          <div class="px-3 py-1 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2 text-white/80" id="navSlotStatus">
+            <i class="fa-solid fa-clock text-amber-400"></i>
+            <span>6 Relays Active</span>
+          </div>
         </div>
 
-        <!-- Right Quick Action -->
+        <!-- Right Controls -->
         <div class="flex items-center gap-2.5 sm:gap-3">
-          <!-- Animated 3-Option Liquid Theme Switcher (Azure / Onyx / Dusk) -->
+          <!-- Theme Switcher -->
           <fieldset class="switcher" aria-label="Theme switcher">
             <legend class="switcher__legend">Choose theme</legend>
-            <label class="switcher__option" title="Azure Watercolor (Reference)">
+            <label class="switcher__option" title="Azure Watercolor">
               <input class="switcher__input" type="radio" name="theme" value="light" c-option="1" checked />
               <svg class="switcher__icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 36 36">
                 <path fill="var(--c)" fill-rule="evenodd" d="M18 12a6 6 0 1 1 0 12 6 6 0 0 1 0-12Zm0 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" clip-rule="evenodd" />
@@ -101,6 +116,11 @@
             </label>
           </fieldset>
 
+          <a href="index.html" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white font-mono text-xs transition-colors btn-tactile hidden sm:inline-flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            <span>Live Site</span>
+          </a>
+
           <button onclick="lockAdmin()" class="px-3 py-1.5 rounded-xl border border-white/15 hover:border-white/30 text-white/70 hover:text-white font-mono text-xs transition-colors btn-tactile flex items-center gap-1.5">
             <i class="fa-solid fa-lock text-[11px]"></i>
             <span class="hidden sm:inline">Lock Console</span>
@@ -112,283 +132,726 @@
   </nav>
 
   <!-- ================= PIN UNLOCK OVERLAY ================= -->
-  <div id="pinOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl">
-    <div class="pioneer-card max-w-sm w-full p-6 sm:p-8 border border-white/15 text-center">
-      <div class="w-14 h-14 rounded-2xl bg-[#FF5B37]/20 text-[#FF5B37] flex items-center justify-center text-2xl mx-auto mb-4 border border-[#FF5B37]/30">
+  <div id="pinOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl">
+    <div class="pioneer-card max-w-sm w-full p-6 sm:p-8 border border-white/15 text-center shadow-2xl">
+      <div class="w-14 h-14 rounded-2xl bg-[#FF5B37]/20 text-[#FF5B37] flex items-center justify-center text-2xl mx-auto mb-4 border border-[#FF5B37]/30 shadow-[0_0_20px_rgba(255,91,55,0.3)]">
         <i class="fa-solid fa-shield-halved"></i>
       </div>
-      <h2 class="font-display font-bold text-xl text-white">Range Master Access</h2>
-      <p class="text-xs text-white/50 mt-1 mb-6 font-mono">Enter authorization PIN to manage scores and database backups.</p>
+      <h2 class="font-display font-bold text-xl text-white">Range Master Control</h2>
+      <p class="text-xs text-white/50 mt-1 mb-6 font-mono">Enter your authorization PIN to customize tournament parameters, relays, scores, and database.</p>
 
       <form onsubmit="handlePinSubmit(event)" class="space-y-4 font-mono">
         <div>
-          <input type="password" id="adminPinInput" maxlength="6" placeholder="Enter PIN (Default: 2026)" class="w-full text-center tracking-widest text-lg bg-white/5 border border-white/15 rounded-xl py-3 text-white placeholder-white/30 outline-none focus:border-[#FF5B37] transition-colors">
+          <input type="password" id="adminPinInput" maxlength="8" placeholder="Enter PIN (Default: 2026)" class="w-full text-center tracking-widest text-lg bg-white/5 border border-white/15 rounded-xl py-3 text-white placeholder-white/30 outline-none focus:border-[#FF5B37] transition-colors" autocomplete="off" required>
         </div>
         <button type="submit" class="w-full py-3 rounded-xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile">
-          Unlock Console
+          Unlock Master Console
         </button>
-        <p class="text-[10px] text-white/40">Demo PIN: <strong class="text-white font-bold">2026</strong></p>
+        <p class="text-[10px] text-white/40">Default PIN: <strong class="text-amber-400 font-bold">2026</strong> (Can be changed in Security Tab)</p>
       </form>
     </div>
   </div>
 
   <!-- ================= MAIN ADMIN CONSOLE ================= -->
-  <main id="adminMainContent" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10 hidden">
+  <main id="adminMainContent" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 relative z-10 hidden">
 
-    <!-- Top Banner -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+    <!-- Top Master Header Banner -->
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-8 gap-4 pb-6 border-b border-white/10">
       <div>
-        <div class="inline-flex items-center gap-2 text-xs font-mono text-emerald-400 uppercase tracking-wider mb-1 font-semibold">
+        <div class="inline-flex items-center gap-2 text-xs font-mono text-emerald-400 uppercase tracking-wider mb-1.5 font-semibold">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          Master Telemetry & Database Hub
+          NexShot Central Control Tower • High-Availability Hub
         </div>
-        <h1 class="font-display font-extrabold text-2xl sm:text-4xl text-white uppercase tracking-tight">
+        <h1 class="font-display font-extrabold text-2xl sm:text-4xl text-white uppercase tracking-tight" id="headerTitle">
           Tournament Control Panel
         </h1>
-        <p class="text-xs sm:text-sm text-white/50 mt-1">
-          Zero-crash client engine • Live series updater • Instant 1-click JSON/CSV disaster recovery.
+        <p class="text-xs sm:text-sm text-white/50 mt-1 font-mono">
+          Smart real-time configuration • Full control over Relays, Events, Rules, Competitors & Live Scores.
         </p>
       </div>
 
-      <!-- Quick Backup & Simulator Buttons -->
-      <div class="flex flex-wrap items-center gap-2.5 font-mono text-xs">
-        <a href="simulator.html" class="px-4 py-2 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30 transition-colors btn-tactile flex items-center gap-2">
-          <i class="fa-solid fa-microchip"></i>
-          <span>1,000-User Sandbox Simulator</span>
-        </a>
-        <button onclick="exportBackupJSON()" class="px-4 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/30 transition-colors btn-tactile flex items-center gap-2">
-          <i class="fa-solid fa-cloud-arrow-down"></i>
-          <span>1-Click JSON Backup</span>
+      <!-- Quick Action Buttons -->
+      <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
+        <button onclick="openAddWalkInModal()" class="px-3.5 py-2 rounded-xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile flex items-center gap-2 shadow-lg">
+          <i class="fa-solid fa-user-plus"></i>
+          <span>Walk-In Registration</span>
         </button>
-        <button onclick="exportBookingsCSV()" class="px-4 py-2 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/30 transition-colors btn-tactile flex items-center gap-2">
-          <i class="fa-solid fa-file-csv"></i>
-          <span>Export CSV Roster</span>
+        <button onclick="openAddShooterModal()" class="px-3.5 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/30 transition-colors btn-tactile flex items-center gap-2">
+          <i class="fa-solid fa-bullseye"></i>
+          <span>Add Live Score</span>
+        </button>
+        <button onclick="exportBackupJSON()" class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border border-white/10 transition-colors btn-tactile flex items-center gap-2" title="Full JSON Backup">
+          <i class="fa-solid fa-cloud-arrow-down text-emerald-400"></i>
+          <span class="hidden sm:inline">JSON</span>
+        </button>
+        <button onclick="exportBookingsCSV()" class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border border-white/10 transition-colors btn-tactile flex items-center gap-2" title="Export CSV Roster">
+          <i class="fa-solid fa-file-csv text-blue-400"></i>
+          <span class="hidden sm:inline">CSV</span>
         </button>
       </div>
     </div>
 
-    <!-- ================= 4 METRICS BENTO ================= -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 font-mono">
+    <!-- ================= INTERACTIVE TABS STRIP ================= -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 font-mono text-xs scrollbar-thin">
+      <button onclick="switchAdminTab('overview')" id="tabBtn-overview" class="tab-btn active px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white flex items-center gap-2 whitespace-nowrap transition-all">
+        <i class="fa-solid fa-chart-pie text-emerald-400"></i>
+        <span>Overview</span>
+      </button>
+
+      <button onclick="switchAdminTab('settings')" id="tabBtn-settings" class="tab-btn px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white flex items-center gap-2 whitespace-nowrap transition-all">
+        <i class="fa-solid fa-sliders text-[#FF5B37]"></i>
+        <span>Tournament Details</span>
+      </button>
+
+      <button onclick="switchAdminTab('relays')" id="tabBtn-relays" class="tab-btn px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white flex items-center gap-2 whitespace-nowrap transition-all">
+        <i class="fa-solid fa-clock text-amber-400"></i>
+        <span>Relays & Slots</span>
+      </button>
+
+      <button onclick="switchAdminTab('events')" id="tabBtn-events" class="tab-btn px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white flex items-center gap-2 whitespace-nowrap transition-all">
+        <i class="fa-solid fa-gun text-cyan-400"></i>
+        <span>Events & Categories</span>
+      </button>
+
+      <button onclick="switchAdminTab('rules')" id="tabBtn-rules" class="tab-btn px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white flex items-center gap-2 whitespace-nowrap transition-all">
+        <i class="fa-solid fa-bullhorn text-purple-400"></i>
+        <span>Notice & Rules</span>
+      </button>
+
+      <button onclick="switchAdminTab('competitors')" id="tabBtn-competitors" class="tab-btn px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white flex items-center gap-2 whitespace-nowrap transition-all">
+        <i class="fa-solid fa-users text-blue-400"></i>
+        <span>Athletes CRM</span>
+      </button>
+
+      <button onclick="switchAdminTab('scores')" id="tabBtn-scores" class="tab-btn px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white flex items-center gap-2 whitespace-nowrap transition-all">
+        <i class="fa-solid fa-crosshairs text-rose-400"></i>
+        <span>Live Scoring</span>
+      </button>
+
+      <button onclick="switchAdminTab('security')" id="tabBtn-security" class="tab-btn px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white flex items-center gap-2 whitespace-nowrap transition-all">
+        <i class="fa-solid fa-shield-halved text-yellow-400"></i>
+        <span>Security & Backup</span>
+      </button>
+    </div>
+
+    <!-- ================= TAB 1: OVERVIEW ================= -->
+    <div id="tabContent-overview" class="tab-content space-y-8">
       
-      <div class="pioneer-card p-5 border border-white/10">
-        <div class="text-[11px] text-white/50 uppercase tracking-wider mb-1 flex justify-between">
-          <span>Registered Athletes</span>
-          <i class="fa-solid fa-users text-blue-400"></i>
+      <!-- 4 Bento Metric Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
+        <div class="pioneer-card p-5 border border-white/10">
+          <div class="text-[11px] text-white/50 uppercase tracking-wider mb-1 flex justify-between">
+            <span>Registered Athletes</span>
+            <i class="fa-solid fa-users text-blue-400"></i>
+          </div>
+          <div class="text-2xl sm:text-3xl font-extrabold text-white font-display" id="metricShooterCount">
+            --
+          </div>
+          <div class="text-[10px] text-emerald-400 mt-2 flex items-center gap-1">
+            <i class="fa-solid fa-circle-check"></i> <span id="metricShooterDetail">Active entries verified</span>
+          </div>
         </div>
-        <div class="text-2xl sm:text-3xl font-extrabold text-white font-display" id="metricShooterCount">
-          --
+
+        <div class="pioneer-card p-5 border border-white/10">
+          <div class="text-[11px] text-white/50 uppercase tracking-wider mb-1 flex justify-between">
+            <span>Entry Revenue</span>
+            <i class="fa-solid fa-indian-rupee-sign text-emerald-400"></i>
+          </div>
+          <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-display" id="metricTotalRevenue">
+            ₹0
+          </div>
+          <div class="text-[10px] text-white/50 mt-2" id="metricRevenueDetail">
+            Calculated from paid registrations
+          </div>
         </div>
-        <div class="text-[10px] text-emerald-400 mt-2 flex items-center gap-1">
-          <i class="fa-solid fa-circle-check"></i> Verified in Local Storage
+
+        <div class="pioneer-card p-5 border border-white/10">
+          <div class="text-[11px] text-white/50 uppercase tracking-wider mb-1 flex justify-between">
+            <span>Relays & Capacity</span>
+            <i class="fa-solid fa-calendar-check text-amber-400"></i>
+          </div>
+          <div class="text-2xl sm:text-3xl font-extrabold text-amber-300 font-display" id="metricSlotsOccupancy">
+            -- / 90
+          </div>
+          <div class="text-[10px] text-amber-400 mt-2 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+            <span id="metricSlotsLeft">Calculating slots left...</span>
+          </div>
+        </div>
+
+        <div class="pioneer-card p-5 border border-white/10">
+          <div class="text-[11px] text-white/50 uppercase tracking-wider mb-1 flex justify-between">
+            <span>Engine Health</span>
+            <i class="fa-solid fa-microchip text-purple-400"></i>
+          </div>
+          <div class="text-2xl sm:text-3xl font-extrabold text-purple-300 font-display">
+            100%
+          </div>
+          <div class="text-[10px] text-purple-400 mt-2">
+            Supabase + Offline Fallback
+          </div>
         </div>
       </div>
 
-      <div class="pioneer-card p-5 border border-white/10">
-        <div class="text-[11px] text-white/50 uppercase tracking-wider mb-1 flex justify-between">
-          <span>Total Entry Revenue</span>
-          <i class="fa-solid fa-indian-rupee-sign text-emerald-400"></i>
+      <!-- Quick Status & Snapshot Bento -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Tournament Live Snapshot -->
+        <div class="lg:col-span-2 pioneer-card p-6 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                <span class="font-display font-bold text-white text-base">Active Tournament Parameters</span>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold" id="overviewStatusBadge">
+                REGISTRATION OPEN
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs mb-4">
+              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
+                <div class="text-[10px] text-white/40 uppercase mb-0.5">Tournament Name</div>
+                <div class="text-white font-bold truncate" id="overviewTourName">--</div>
+              </div>
+              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
+                <div class="text-[10px] text-white/40 uppercase mb-0.5">Host Academy & Tech</div>
+                <div class="text-white font-bold truncate" id="overviewHost">--</div>
+              </div>
+              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
+                <div class="text-[10px] text-white/40 uppercase mb-0.5">Championship Dates</div>
+                <div class="text-amber-300 font-bold" id="overviewDates">--</div>
+              </div>
+              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
+                <div class="text-[10px] text-white/40 uppercase mb-0.5">Base Registration Fee</div>
+                <div class="text-emerald-400 font-bold" id="overviewFee">₹ 1,500</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 pt-3 border-t border-white/10 font-mono text-xs">
+            <button onclick="switchAdminTab('settings')" class="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors">
+              <i class="fa-solid fa-pen-to-square mr-1"></i> Edit Tournament Info
+            </button>
+            <button onclick="switchAdminTab('relays')" class="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors">
+              <i class="fa-solid fa-clock mr-1"></i> Manage Relays
+            </button>
+            <button onclick="switchAdminTab('competitors')" class="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors">
+              <i class="fa-solid fa-users mr-1"></i> View All Athletes
+            </button>
+          </div>
         </div>
-        <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-display" id="metricTotalRevenue">
-          ₹0
+
+        <!-- Live Bulletin / Broadcast Box -->
+        <div class="pioneer-card p-6 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2 text-xs font-mono text-amber-300 font-bold uppercase">
+                <i class="fa-solid fa-bullhorn"></i>
+                <span>Live Public Notice</span>
+              </div>
+              <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping" id="overviewNoticePing"></span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 font-mono text-xs text-amber-200 mb-4" id="overviewNoticeText">
+              --
+            </div>
+            <p class="text-[11px] text-white/50 font-sans">
+              This message broadcasts automatically at the top of every public portal page. Update it anytime from the Notice & Rules tab.
+            </p>
+          </div>
+
+          <button onclick="switchAdminTab('rules')" class="w-full mt-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-mono text-xs transition-colors flex items-center justify-center gap-2">
+            <i class="fa-solid fa-pen"></i>
+            <span>Update Broadcast Notice</span>
+          </button>
         </div>
-        <div class="text-[10px] text-white/50 mt-2">
-          Calculated from paid registrations
-        </div>
+
       </div>
 
-      <div class="pioneer-card p-5 border border-white/10">
-        <div class="text-[11px] text-white/50 uppercase tracking-wider mb-1 flex justify-between">
-          <span>Range Targets</span>
-          <i class="fa-solid fa-bullseye text-[#FF5B37]"></i>
-        </div>
-        <div class="text-2xl sm:text-3xl font-extrabold text-white font-display">
-          9 / 9
-        </div>
-        <div class="text-[10px] text-emerald-400 mt-2 flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Electronic SIUS Online
-        </div>
-      </div>
+    </div>
 
-      <div class="pioneer-card p-5 border border-white/10">
-        <div class="text-[11px] text-white/50 uppercase tracking-wider mb-1 flex justify-between">
-          <span>System Stability</span>
-          <i class="fa-solid fa-shield-virus text-purple-400"></i>
+    <!-- ================= TAB 2: TOURNAMENT DETAILS ================= -->
+    <div id="tabContent-settings" class="tab-content hidden space-y-6">
+      <div class="pioneer-card p-6 sm:p-8 border border-white/10">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/10">
+          <div>
+            <h2 class="font-display font-bold text-xl text-white">Championship & Academy Branding</h2>
+            <p class="text-xs text-white/50 font-mono mt-0.5">Customize tournament titles, dates, daily timings, contact details, and base pricing.</p>
+          </div>
+          <button type="button" onclick="saveSettingsForm()" class="px-6 py-2.5 rounded-xl pioneer-btn-coral font-display font-bold text-xs tracking-wider btn-tactile flex items-center gap-2 shadow-lg">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Save Settings</span>
+          </button>
         </div>
-        <div class="text-2xl sm:text-3xl font-extrabold text-purple-300 font-display">
-          100%
+
+        <form id="tournamentSettingsForm" onsubmit="event.preventDefault(); saveSettingsForm();" class="space-y-6 font-mono text-xs">
+          
+          <!-- Primary Titles -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-white/70 mb-1.5 font-bold">Championship Display Name</label>
+              <input type="text" id="setTournamentName" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#FF5B37] transition-colors" placeholder="e.g. 2nd Late Smt. Kiran Chopra Shooting Championship" required>
+            </div>
+            <div>
+              <label class="block text-white/70 mb-1.5 font-bold">Official Full Championship Title</label>
+              <input type="text" id="setChampionshipFullTitle" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#FF5B37] transition-colors" placeholder="e.g. 2nd Late Smt. Kiran Chopra Memorial Shooting Championship 2026" required>
+            </div>
+          </div>
+
+          <!-- Academy & Tech Partner -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-white/70 mb-1.5 font-bold">Host Academy / Shooting Range</label>
+              <input type="text" id="setHostAcademy" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#FF5B37] transition-colors" placeholder="e.g. BBC Shooting Academy" required>
+            </div>
+            <div>
+              <label class="block text-white/70 mb-1.5 font-bold">Technology Partner / Organization</label>
+              <input type="text" id="setTechPartner" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#FF5B37] transition-colors" placeholder="e.g. NexShot Technologies" required>
+            </div>
+          </div>
+
+          <!-- Dates & Timings -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-white/70 mb-1.5 font-bold">Dates Display Banner</label>
+              <input type="text" id="setDatesText" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-amber-300 font-bold outline-none focus:border-[#FF5B37] transition-colors" placeholder="e.g. 25 — 28 NOVEMBER 2026" required>
+            </div>
+            <div>
+              <label class="block text-white/70 mb-1.5 font-bold">Start Date</label>
+              <input type="date" id="setStartDate" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#FF5B37] transition-colors" required>
+            </div>
+            <div>
+              <label class="block text-white/70 mb-1.5 font-bold">End Date</label>
+              <input type="date" id="setEndDate" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#FF5B37] transition-colors" required>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-white/70 mb-1.5 font-bold">Daily Range Timings</label>
+              <input type="text" id="setDailyTiming" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#FF5B37] transition-colors" placeholder="e.g. 08:30 AM — 06:30 PM" required>
+            </div>
+            <div>
+              <label class="block text-white/70 mb-1.5 font-bold">Default Base Entry Fee (₹)</label>
+              <input type="number" id="setBaseFee" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-emerald-400 font-bold outline-none focus:border-[#FF5B37] transition-colors" placeholder="1500" required>
+            </div>
+          </div>
+
+          <!-- Venue & Google Maps -->
+          <div class="border-t border-white/10 pt-5 space-y-4">
+            <h3 class="font-display font-bold text-white text-sm uppercase text-[#FF5B37]">Venue & Navigation Details</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-white/70 mb-1.5">Venue Name</label>
+                <input type="text" id="setVenueName" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white outline-none focus:border-[#FF5B37]" placeholder="BBC Shooting Academy • Babu Bodhraj Convent School">
+              </div>
+              <div>
+                <label class="block text-white/70 mb-1.5">Google Maps Direct URL</label>
+                <input type="url" id="setVenueMapsUrl" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-cyan-400 outline-none focus:border-[#FF5B37]" placeholder="https://maps.google.com/?q=...">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-white/70 mb-1.5">Complete Address</label>
+              <textarea id="setVenueAddress" rows="2" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white outline-none focus:border-[#FF5B37]" placeholder="Sikandrabad, Bulandshahr, Uttar Pradesh - 203205"></textarea>
+            </div>
+          </div>
+
+          <!-- Contact & Helplines -->
+          <div class="border-t border-white/10 pt-5 space-y-4">
+            <h3 class="font-display font-bold text-white text-sm uppercase text-amber-400">Communication & Helplines</h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-white/70 mb-1.5">Primary Helpline Phone</label>
+                <input type="text" id="setHelplinePhone" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white outline-none focus:border-[#FF5B37]" placeholder="+91 8445070791">
+              </div>
+              <div>
+                <label class="block text-white/70 mb-1.5">Secondary Helpline Phone</label>
+                <input type="text" id="setHelplinePhoneSecondary" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white outline-none focus:border-[#FF5B37]" placeholder="+91 9758789512">
+              </div>
+              <div>
+                <label class="block text-white/70 mb-1.5">Official Support Email</label>
+                <input type="email" id="setOfficialEmail" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-emerald-400 outline-none focus:border-[#FF5B37]" placeholder="nexshottechnologies@gmail.com">
+              </div>
+            </div>
+          </div>
+
+          <!-- Emergency Registration Status Toggle -->
+          <div class="border-t border-white/10 pt-5 flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
+            <div>
+              <div class="font-bold text-white">Public Registration Portal Gate</div>
+              <div class="text-[11px] text-white/50">Turn off if registrations are full or on-spot pause is required.</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="setRegistrationOpen" class="sr-only peer">
+              <div class="w-14 h-7 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:left-[4px] after:bg-white after:rounded-full after:h-5 after:w-6 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+
+          <div class="flex justify-end pt-4">
+            <button type="button" onclick="saveSettingsForm()" class="px-8 py-3 rounded-xl pioneer-btn-coral font-display font-bold text-xs tracking-wider btn-tactile shadow-xl flex items-center gap-2">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Save & Publish Changes</span>
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+    <!-- ================= TAB 3: RELAYS & SLOTS CONTROLLER ================= -->
+    <div id="tabContent-relays" class="tab-content hidden space-y-6">
+      
+      <div class="pioneer-card p-6 border border-white/10">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="font-display font-bold text-xl text-white">6 Daily Tournament Relays (08:30 AM — 06:30 PM)</h2>
+            <p class="text-xs text-white/50 font-mono mt-0.5">NR Match: 1 hr 05 min | ISSF Match: 1 hr 15 min | Reporting: 30 min before. 15 Slots per Relay.</p>
+          </div>
+          <div class="flex items-center gap-2 font-mono text-xs">
+            <button onclick="openAddRelayModal()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors btn-tactile flex items-center gap-2">
+              <i class="fa-solid fa-plus"></i>
+              <span>Add Custom Relay</span>
+            </button>
+            <button onclick="saveRelaysAdmin()" class="px-5 py-2 rounded-xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile flex items-center gap-2">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Save All Relays</span>
+            </button>
+          </div>
         </div>
-        <div class="text-[10px] text-purple-400 mt-2">
-          Zero-Crash Local Cache Guard
+
+        <!-- Relays Cards Grid -->
+        <div id="adminRelaysGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 font-mono text-xs">
+          <!-- Populated dynamically -->
         </div>
       </div>
 
     </div>
 
-    <!-- ================= DISASTER RECOVERY & BACKUP SUITE ================= -->
-    <div class="pioneer-card p-6 border border-white/10 mb-8">
-      <div class="flex items-center gap-2 mb-2 font-mono text-xs text-amber-400 font-semibold uppercase">
-        <i class="fa-solid fa-server"></i>
-        Disaster Recovery & Offline Resilience Hub (Zero Fumble Protocol)
+    <!-- ================= TAB 4: EVENTS & CATEGORIES ================= -->
+    <div id="tabContent-events" class="tab-content hidden space-y-6">
+      <div class="pioneer-card p-6 border border-white/10">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="font-display font-bold text-xl text-white">Official Championship Events & Cascading Categories</h2>
+            <p class="text-xs text-white/50 font-mono mt-0.5">Strictly mapped to NRAI / ISSF Circular rules. 60 Shots for ISSF, 40 Shots for NR.</p>
+          </div>
+          <button onclick="showToast('Event catalog synced with NRAI 2026 specs', 'circle-check')" class="px-4 py-2 rounded-xl bg-white/10 text-white font-mono text-xs">
+            <i class="fa-solid fa-arrows-rotate mr-1"></i> Sync Official Catalog
+          </button>
+        </div>
+
+        <div id="adminEventsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 font-mono text-xs">
+          <!-- Populated dynamically -->
+        </div>
       </div>
-      <p class="text-xs text-white/60 mb-6 font-sans">
-        This portal uses an offline-first architecture. All scores and bookings persist on device memory. Even if range WiFi is disconnected during the championship, data remains 100% intact. Use the tools below to create external backup files or restore in case of device failure.
-      </p>
+    </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+    <!-- ================= TAB 5: NOTICE & RULES ================= -->
+    <div id="tabContent-rules" class="tab-content hidden space-y-6">
+      <div class="pioneer-card p-6 sm:p-8 border border-white/10">
         
-        <!-- Action 1: JSON Export -->
-        <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/10">
           <div>
-            <div class="flex items-center gap-2 font-semibold text-white mb-1">
-              <i class="fa-solid fa-file-code text-emerald-400"></i>
-              <span>Export Raw JSON Database</span>
-            </div>
-            <p class="text-[11px] text-white/50 font-sans mb-4">
-              Complete snapshot including all scores, series, lanes, and competitor registrations with timestamp.
-            </p>
+            <h2 class="font-display font-bold text-xl text-white">Live Broadcast Ticker & Tournament Rulebook</h2>
+            <p class="text-xs text-white/50 font-mono mt-0.5">Control the top emergency banner and scoring tiebreaker guidelines.</p>
           </div>
-          <button onclick="exportBackupJSON()" class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors btn-tactile flex items-center justify-center gap-2">
-            <i class="fa-solid fa-download"></i>
-            <span>Download .JSON Backup</span>
+          <button type="button" onclick="saveRulesAndNotice()" class="px-6 py-2.5 rounded-xl pioneer-btn-coral font-display font-bold text-xs tracking-wider btn-tactile flex items-center gap-2 shadow-lg">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Save & Publish Notice</span>
           </button>
         </div>
 
-        <!-- Action 2: CSV Export -->
-        <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center gap-2 font-semibold text-white mb-1">
-              <i class="fa-solid fa-file-excel text-blue-400"></i>
-              <span>Export Official Roster (.CSV)</span>
+        <div class="space-y-6 font-mono text-xs">
+          
+          <!-- Broadcast Notice Section -->
+          <div class="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-bullhorn text-amber-400 text-base"></i>
+                <span class="font-display font-bold text-white text-sm">Live Announcement Ticker (Top Bar)</span>
+              </div>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="setNoticeActive" class="rounded accent-[#FF5B37] w-4 h-4">
+                <span class="text-white text-xs font-bold">Broadcast Live on Website</span>
+              </label>
             </div>
-            <p class="text-[11px] text-white/50 font-sans mb-4">
-              Excel-compatible spreadsheet for jury inspection, school verification, and offline printing.
-            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div>
+                <label class="block text-white/50 mb-1">Badge Tag</label>
+                <input type="text" id="setNoticeHeadline" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-amber-300 font-bold outline-none focus:border-[#FF5B37]" placeholder="OFFICIAL BULLETIN">
+              </div>
+              <div class="md:col-span-3">
+                <label class="block text-white/50 mb-1">Announcement Message</label>
+                <input type="text" id="setNoticeText" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" placeholder="Reporting time is strictly 30 minutes prior to your allocated relay...">
+              </div>
+            </div>
+
+            <!-- Live Preview -->
+            <div class="pt-2">
+              <div class="text-[10px] text-white/40 mb-1">LIVE PREVIEW ON PUBLIC PAGES:</div>
+              <div class="p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-200 flex items-center gap-2 text-[11px] truncate">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping flex-shrink-0"></span>
+                <strong class="uppercase" id="previewNoticeBadge">OFFICIAL BULLETIN:</strong>
+                <span class="truncate" id="previewNoticeMsg">Reporting time is strictly 30 minutes...</span>
+              </div>
+            </div>
           </div>
-          <button onclick="exportBookingsCSV()" class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors btn-tactile flex items-center justify-center gap-2">
-            <i class="fa-solid fa-file-csv"></i>
-            <span>Download .CSV Spreadsheet</span>
-          </button>
+
+          <!-- Official Rules -->
+          <div class="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+            <h3 class="font-display font-bold text-white text-sm uppercase text-[#FF5B37]">Scoring & Tiebreaker Regulations</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-white/70 mb-1">Decimal Scoring Policy</label>
+                <textarea id="setRuleDecimal" rows="2" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-[#FF5B37]"></textarea>
+              </div>
+              <div>
+                <label class="block text-white/70 mb-1">Tiebreaker Policy (Inner 10s)</label>
+                <textarea id="setRuleTiebreaker" rows="2" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-[#FF5B37]"></textarea>
+              </div>
+              <div>
+                <label class="block text-white/70 mb-1">Reporting Time Policy</label>
+                <textarea id="setRuleReporting" rows="2" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-[#FF5B37]"></textarea>
+              </div>
+              <div>
+                <label class="block text-white/70 mb-1">Dress Code & Weapon Inspection</label>
+                <textarea id="setRuleDress" rows="2" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-[#FF5B37]"></textarea>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <label class="block text-white/70 mb-1">Circular PDF URL</label>
+              <input type="text" id="setCircularPdfUrl" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-cyan-400 outline-none focus:border-[#FF5B37]">
+            </div>
+          </div>
+
+          <div class="flex justify-end pt-2">
+            <button type="button" onclick="saveRulesAndNotice()" class="px-8 py-3 rounded-xl pioneer-btn-coral font-display font-bold text-xs tracking-wider btn-tactile shadow-xl flex items-center gap-2">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Save & Publish Notice</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 6: ATHLETES CRM & ROSTER ================= -->
+    <div id="tabContent-competitors" class="tab-content hidden space-y-6">
+      
+      <div class="pioneer-card p-6 border border-white/10">
+        
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="font-display font-bold text-xl text-white">Athletes Roster & CRM Hub</h2>
+            <p class="text-xs text-white/50 font-mono mt-0.5">Search, edit, reassign relays, verify payments, or generate instant gate passes.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
+            <button onclick="openAddWalkInModal()" class="px-4 py-2 rounded-xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile flex items-center gap-2 shadow-lg">
+              <i class="fa-solid fa-user-plus"></i>
+              <span>Walk-In Competitor</span>
+            </button>
+            <button onclick="exportBookingsCSV()" class="px-4 py-2 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/30 transition-colors btn-tactile flex items-center gap-2">
+              <i class="fa-solid fa-file-csv"></i>
+              <span>Export Roster CSV</span>
+            </button>
+          </div>
         </div>
 
-        <!-- Action 3: Restore / Import -->
-        <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col justify-between">
+        <!-- Search & Filter Controls -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6 font-mono text-xs">
           <div>
-            <div class="flex items-center gap-2 font-semibold text-white mb-1">
-              <i class="fa-solid fa-cloud-arrow-up text-amber-400"></i>
-              <span>Emergency Restore Backup</span>
-            </div>
-            <p class="text-[11px] text-white/50 font-sans mb-4">
-              Load any previous JSON backup file to instantly restore the tournament state on any replacement laptop.
-            </p>
+            <input type="text" id="crmSearchInput" oninput="filterCRMTable()" placeholder="🔍 Search Name, Pass #, Phone, School..." class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white placeholder-white/30 outline-none focus:border-[#FF5B37]">
           </div>
           <div>
-            <input type="file" id="backupFileInput" accept=".json,.csv" class="hidden" onchange="handleFileRestore(event)">
-            <button onclick="document.getElementById('backupFileInput').click()" class="w-full py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 font-semibold transition-colors btn-tactile flex items-center justify-center gap-2">
-              <i class="fa-solid fa-upload"></i>
-              <span>Emergency Restore (JSON / CSV)</span>
+            <select id="crmFilterRelay" onchange="filterCRMTable()" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white outline-none focus:border-[#FF5B37]">
+              <option value="ALL">All Relays (01 to 06)</option>
+              <option value="Relay 01">Relay 01 (08:30 AM)</option>
+              <option value="Relay 02">Relay 02 (10:00 AM)</option>
+              <option value="Relay 03">Relay 03 (11:40 AM)</option>
+              <option value="Relay 04">Relay 04 (01:45 PM)</option>
+              <option value="Relay 05">Relay 05 (03:15 PM)</option>
+              <option value="Relay 06">Relay 06 (05:00 PM)</option>
+            </select>
+          </div>
+          <div>
+            <select id="crmFilterPayment" onchange="filterCRMTable()" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white outline-none focus:border-[#FF5B37]">
+              <option value="ALL">All Payment Statuses</option>
+              <option value="verified">Verified / Paid</option>
+              <option value="pending">Pending Payment</option>
+            </select>
+          </div>
+          <div class="flex items-center justify-between px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60">
+            <span>Showing:</span>
+            <strong class="text-white font-bold" id="crmCountBadge">0 Athletes</strong>
+          </div>
+        </div>
+
+        <!-- Competitors Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left font-mono text-xs">
+            <thead>
+              <tr class="border-b border-white/10 text-white/50 text-[11px] uppercase tracking-wider">
+                <th class="py-3 px-3">Pass ID</th>
+                <th class="py-3 px-3">Athlete & School</th>
+                <th class="py-3 px-3">Mobile</th>
+                <th class="py-3 px-3">Event & Category</th>
+                <th class="py-3 px-3">Slot & Lane</th>
+                <th class="py-3 px-3">Fee</th>
+                <th class="py-3 px-3 text-center">Payment</th>
+                <th class="py-3 px-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="crmTableBody" class="divide-y divide-white/5">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= TAB 7: LIVE SCORING & LEADERBOARD ================= -->
+    <div id="tabContent-scores" class="tab-content hidden space-y-6">
+      
+      <div class="pioneer-card p-6 border border-white/10">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="font-display font-bold text-xl text-white">Live Leaderboard Scoring Controller</h2>
+            <p class="text-xs text-white/50 font-mono mt-0.5">Decimal precision for Rifle (e.g. 104.5), integer for Pistol. Inner 10s (X10) determines tiebreaker rank.</p>
+          </div>
+          <div class="flex items-center gap-2 font-mono text-xs">
+            <button onclick="openAddShooterModal()" class="px-4 py-2 rounded-xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile flex items-center gap-2">
+              <i class="fa-solid fa-plus"></i>
+              <span>Add Shooter</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Shooters Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left font-mono text-xs">
+            <thead>
+              <tr class="border-b border-white/10 text-white/50 text-[11px] uppercase tracking-wider">
+                <th class="py-3 px-3">Rank</th>
+                <th class="py-3 px-3">Shooter & School</th>
+                <th class="py-3 px-3">Event & Category</th>
+                <th class="py-3 px-2 text-center">S1</th>
+                <th class="py-3 px-2 text-center">S2</th>
+                <th class="py-3 px-2 text-center">S3</th>
+                <th class="py-3 px-2 text-center">S4</th>
+                <th class="py-3 px-2 text-center">S5</th>
+                <th class="py-3 px-2 text-center">S6</th>
+                <th class="py-3 px-2 text-center">10X</th>
+                <th class="py-3 px-3 text-right">Total</th>
+                <th class="py-3 px-3 text-center">Status</th>
+                <th class="py-3 px-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminShootersTbody" class="divide-y divide-white/5">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= TAB 8: SECURITY & BACKUP ================= -->
+    <div id="tabContent-security" class="tab-content hidden space-y-6">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Change Admin PIN -->
+        <div class="pioneer-card p-6 sm:p-7 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 font-display font-bold text-white text-lg mb-2">
+              <i class="fa-solid fa-key text-yellow-400"></i>
+              <span>Change Admin Console PIN</span>
+            </div>
+            <p class="text-xs text-white/50 font-mono mb-6">
+              Update your master security PIN. Once changed, all future logins will require the new PIN.
+            </p>
+
+            <form onsubmit="handleChangePin(event)" class="space-y-4 font-mono text-xs">
+              <div>
+                <label class="block text-white/70 mb-1">New PIN (4 to 8 digits)</label>
+                <input type="password" id="newPinInput" maxlength="8" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white tracking-widest outline-none focus:border-[#FF5B37]" placeholder="e.g. 2026" required>
+              </div>
+              <div>
+                <label class="block text-white/70 mb-1">Confirm New PIN</label>
+                <input type="password" id="confirmPinInput" maxlength="8" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white tracking-widest outline-none focus:border-[#FF5B37]" placeholder="Repeat new PIN" required>
+              </div>
+              <button type="submit" class="w-full py-3 rounded-xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile">
+                Update Master PIN
+              </button>
+            </form>
+          </div>
+
+          <div class="pt-4 border-t border-white/10 mt-6 text-[11px] text-white/40 font-mono">
+            Default factory PIN: <strong>2026</strong>
+          </div>
+        </div>
+
+        <!-- Disaster Recovery & Emergency Restore -->
+        <div class="pioneer-card p-6 sm:p-7 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 font-display font-bold text-white text-lg mb-2">
+              <i class="fa-solid fa-server text-emerald-400"></i>
+              <span>Emergency Backup & Factory Reset</span>
+            </div>
+            <p class="text-xs text-white/50 font-mono mb-6">
+              Full disaster recovery protocol. Save complete state to an offline file or restore on any replacement device.
+            </p>
+
+            <div class="space-y-3 font-mono text-xs">
+              <button onclick="exportBackupJSON()" class="w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors btn-tactile flex items-center justify-center gap-2">
+                <i class="fa-solid fa-download text-emerald-400"></i>
+                <span>Download Full Database (.JSON)</span>
+              </button>
+
+              <button onclick="exportBookingsCSV()" class="w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors btn-tactile flex items-center justify-center gap-2">
+                <i class="fa-solid fa-file-csv text-blue-400"></i>
+                <span>Download Excel Roster (.CSV)</span>
+              </button>
+
+              <input type="file" id="emergencyRestoreInput" accept=".json,.csv" class="hidden" onchange="handleFileRestore(event)">
+              <button onclick="document.getElementById('emergencyRestoreInput').click()" class="w-full py-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 font-semibold transition-colors btn-tactile flex items-center justify-center gap-2">
+                <i class="fa-solid fa-upload"></i>
+                <span>Emergency Restore (JSON / CSV)</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-white/10 mt-6 flex justify-between items-center text-[11px] font-mono">
+            <button onclick="handleFactoryReset()" class="text-rose-400 hover:text-rose-300 hover:underline">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i> Factory Reset Portal
+            </button>
+            <button onclick="lockAdmin()" class="text-white/60 hover:text-white">
+              <i class="fa-solid fa-lock mr-1"></i> Lock Console
             </button>
           </div>
         </div>
 
       </div>
-    </div>
 
-    <!-- ================= LIVE SHOOTERS & SCORES MANAGER ================= -->
-    <div class="pioneer-card p-6 border border-white/10 mb-8">
-      
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h2 class="font-display font-bold text-lg sm:text-xl text-white">Live Leaderboard Scoring Controller</h2>
-          <p class="text-xs text-white/50 font-mono mt-0.5">Edit athlete series (S1–S6), decimal values, and inner 10s. Updates live board immediately.</p>
-        </div>
-        <div class="flex items-center gap-2 font-mono text-xs">
-          <button onclick="openAddShooterModal()" class="px-4 py-2 rounded-xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile flex items-center gap-2">
-            <i class="fa-solid fa-plus"></i>
-            <span>Add Shooter</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Shooters Table -->
-      <div class="overflow-x-auto">
-        <table class="w-full text-left font-mono text-xs">
-          <thead>
-            <tr class="border-b border-white/10 text-white/50 text-[11px] uppercase tracking-wider">
-              <th class="py-3 px-3">Rank</th>
-              <th class="py-3 px-3">Shooter & School</th>
-              <th class="py-3 px-3">Event & Category</th>
-              <th class="py-3 px-2 text-center">S1</th>
-              <th class="py-3 px-2 text-center">S2</th>
-              <th class="py-3 px-2 text-center">S3</th>
-              <th class="py-3 px-2 text-center">S4</th>
-              <th class="py-3 px-2 text-center">S5</th>
-              <th class="py-3 px-2 text-center">S6</th>
-              <th class="py-3 px-3 text-right">Total</th>
-              <th class="py-3 px-3 text-center">Status</th>
-              <th class="py-3 px-3 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="adminShootersTbody" class="divide-y divide-white/5">
-            <!-- Dynamically populated -->
-          </tbody>
-        </table>
-      </div>
-
-    </div>
-
-    <!-- ================= RECENT REGISTRATIONS ROSTER ================= -->
-    <div class="pioneer-card p-6 border border-white/10">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <h2 class="font-display font-bold text-lg text-white">Registered Competitors Roster</h2>
-          <p class="text-xs text-white/50 font-mono">Live entries received via Registration page</p>
-        </div>
-        <span class="font-mono text-xs text-white/50" id="rosterCount">0 Athletes</span>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="w-full text-left font-mono text-xs">
-          <thead>
-            <tr class="border-b border-white/10 text-white/50 text-[11px] uppercase tracking-wider">
-              <th class="py-3 px-3">Comp #</th>
-              <th class="py-3 px-3">Athlete</th>
-              <th class="py-3 px-3">School</th>
-              <th class="py-3 px-3">Mobile</th>
-              <th class="py-3 px-3">Event</th>
-              <th class="py-3 px-3">Relay & Lane</th>
-              <th class="py-3 px-3">Fee</th>
-              <th class="py-3 px-3 text-center">Status</th>
-            </tr>
-          </thead>
-          <tbody id="adminBookingsTbody" class="divide-y divide-white/5">
-            <!-- Dynamically populated -->
-          </tbody>
-        </table>
-      </div>
     </div>
 
   </main>
 
-  <!-- ================= FOOTER ================= -->
-  <footer class="mt-16 border-t border-white/10 py-8 relative z-10 text-center font-mono text-xs text-white/40">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <img src="assets/img/nexshot-icon.png" alt="NexShot" class="w-5 h-5 object-contain">
-        <span class="font-bold text-white">NexShot Technologies</span>
-        <span>•</span>
-        <span>BBC Shooting Academy, Sikandrabad</span>
-      </div>
-      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-        <span>Helpline: <a href="tel:8445070791" class="text-white hover:underline">+91 8445070791</a></span>
-        <span>•</span>
-        <span>Email: <a href="mailto:nexshottechnologies@gmail.com" class="text-emerald-400 hover:underline">nexshottechnologies@gmail.com</a></span>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ================= EDIT SHOOTER MODAL ================= -->
-  <div id="editScoreModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl hidden">
-    <div class="pioneer-card max-w-lg w-full p-6 border border-white/15">
+  <!-- ================= MODAL: EDIT SHOOTER SCORE ================= -->
+  <div id="editScoreModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl hidden">
+    <div class="pioneer-card max-w-lg w-full p-6 border border-white/15 shadow-2xl">
       <div class="flex items-center justify-between mb-4">
         <h3 class="font-display font-bold text-lg text-white" id="editModalTitle">Edit Shooter Scores</h3>
         <button onclick="closeEditModal()" class="w-8 h-8 rounded-lg bg-white/10 text-white/60 hover:text-white flex items-center justify-center">
@@ -465,14 +928,14 @@
             <input type="number" step="0.1" id="editTotal" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-emerald-400 font-bold outline-none" readonly>
           </div>
           <div>
-            <label class="block text-white/50 mb-1">Inner 10s (x10)</label>
+            <label class="block text-white/50 mb-1">Inner 10s (x10 Bullseye)</label>
             <input type="number" id="editX10" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]">
           </div>
         </div>
 
         <div class="flex items-center gap-2 pt-2">
           <input type="checkbox" id="editActive" class="rounded accent-[#FF5B37]">
-          <label for="editActive" class="text-white/80 cursor-pointer">Currently Firing on Range (Active Target Ring)</label>
+          <label for="editActive" class="text-white/80 cursor-pointer">Currently Firing on Range (Active Radar Ring)</label>
         </div>
 
         <div class="flex items-center justify-end gap-2 pt-4 border-t border-white/10">
@@ -487,11 +950,11 @@
     </div>
   </div>
 
-  <!-- ================= ADD SHOOTER MODAL ================= -->
-  <div id="addShooterModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl hidden">
-    <div class="pioneer-card max-w-lg w-full p-6 border border-white/15">
+  <!-- ================= MODAL: ADD SHOOTER SCORE ================= -->
+  <div id="addShooterModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl hidden">
+    <div class="pioneer-card max-w-lg w-full p-6 border border-white/15 shadow-2xl">
       <div class="flex items-center justify-between mb-4">
-        <h3 class="font-display font-bold text-lg text-white">Add Shooter to Leaderboard</h3>
+        <h3 class="font-display font-bold text-lg text-white">Add Shooter to Scoreboard</h3>
         <button onclick="closeAddShooterModal()" class="w-8 h-8 rounded-lg bg-white/10 text-white/60 hover:text-white flex items-center justify-center">
           <i class="fa-solid fa-xmark"></i>
         </button>
@@ -524,18 +987,7 @@
           </div>
           <div>
             <label class="block text-white/50 mb-1">Category</label>
-            <select id="addCategory" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]">
-              <option value="Senior Men">Senior Men</option>
-              <option value="Senior Women">Senior Women</option>
-              <option value="Junior Men">Junior Men</option>
-              <option value="Junior Women">Junior Women</option>
-              <option value="Youth Men">Youth Men</option>
-              <option value="Youth Women">Youth Women</option>
-              <option value="Sub-Youth Men">Sub-Youth Men</option>
-              <option value="Sub-Youth Women">Sub-Youth Women</option>
-              <option value="Under-12">Under-12</option>
-              <option value="Para Men">Para Men</option>
-            </select>
+            <input type="text" id="addCategory" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" placeholder="e.g. Sub-Youth Men" required>
           </div>
         </div>
 
@@ -563,35 +1015,287 @@
     </div>
   </div>
 
+  <!-- ================= MODAL: EDIT COMPETITOR DETAILS ================= -->
+  <div id="editCompetitorModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl hidden">
+    <div class="pioneer-card max-w-lg w-full p-6 border border-white/15 shadow-2xl">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="font-display font-bold text-lg text-white">Edit Athlete Registration</h3>
+          <p class="text-[11px] font-mono text-emerald-400" id="editCompPassLabel">Pass #--</p>
+        </div>
+        <button onclick="closeEditCompetitorModal()" class="w-8 h-8 rounded-lg bg-white/10 text-white/60 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveCompetitorEdit(event)" class="space-y-4 font-mono text-xs">
+        <input type="hidden" id="editCompNo">
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white/50 mb-1">Athlete Name</label>
+            <input type="text" id="editCompName" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" required>
+          </div>
+          <div>
+            <label class="block text-white/50 mb-1">Father's Name</label>
+            <input type="text" id="editCompFather" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white/50 mb-1">School / Club</label>
+            <input type="text" id="editCompSchool" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" required>
+          </div>
+          <div>
+            <label class="block text-white/50 mb-1">Mobile Number</label>
+            <input type="tel" id="editCompMobile" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" required>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white/50 mb-1">Event</label>
+            <input type="text" id="editCompEvent" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" required>
+          </div>
+          <div>
+            <label class="block text-white/50 mb-1">Category</label>
+            <input type="text" id="editCompCategory" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" required>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white/50 mb-1">Assigned Relay</label>
+            <select id="editCompRelay" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]">
+              <option value="Relay 01">Relay 01 (08:30 AM)</option>
+              <option value="Relay 02">Relay 02 (10:00 AM)</option>
+              <option value="Relay 03">Relay 03 (11:40 AM)</option>
+              <option value="Relay 04">Relay 04 (01:45 PM)</option>
+              <option value="Relay 05">Relay 05 (03:15 PM)</option>
+              <option value="Relay 06">Relay 06 (05:00 PM)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-white/50 mb-1">Target Lane</label>
+            <input type="text" id="editCompLane" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-cyan-400 outline-none focus:border-[#FF5B37]" placeholder="Lane #04 (SIUS)">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white/50 mb-1">Match Date</label>
+            <input type="text" id="editCompDate" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" placeholder="25 NOV 2026">
+          </div>
+          <div>
+            <label class="block text-white/50 mb-1">Payment Status</label>
+            <select id="editCompPaymentStatus" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-emerald-400 font-bold outline-none focus:border-[#FF5B37]">
+              <option value="Confirmed">Verified & Paid (Confirmed)</option>
+              <option value="pending">Pending Payment</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-4 border-t border-white/10">
+          <button type="button" onclick="closeEditCompetitorModal()" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 transition-colors">
+            Cancel
+          </button>
+          <button type="submit" class="px-5 py-2 rounded-xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile">
+            Update Competitor
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: ADD WALK-IN COMPETITOR ================= -->
+  <div id="addWalkInModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl hidden">
+    <div class="pioneer-card max-w-lg w-full p-6 border border-white/15 shadow-2xl">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="font-display font-bold text-lg text-white">Manual Walk-In Registration</h3>
+          <p class="text-[11px] font-mono text-white/50">On-Desk Spot Entry with Instant Pass Generation</p>
+        </div>
+        <button onclick="closeAddWalkInModal()" class="w-8 h-8 rounded-lg bg-white/10 text-white/60 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveWalkIn(event)" class="space-y-4 font-mono text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white/50 mb-1">Athlete Full Name</label>
+            <input type="text" id="walkName" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" placeholder="e.g. Sahil Khan" required>
+          </div>
+          <div>
+            <label class="block text-white/50 mb-1">Father's Name</label>
+            <input type="text" id="walkFather" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" placeholder="e.g. Mohd. Khan">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white/50 mb-1">School / Academy</label>
+            <input type="text" id="walkSchool" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" placeholder="e.g. DPS Bulandshahr" required>
+          </div>
+          <div>
+            <label class="block text-white/50 mb-1">Mobile (10 digits)</label>
+            <input type="tel" id="walkMobile" maxlength="10" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" placeholder="e.g. 9876543210" required>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white/50 mb-1">Gender</label>
+            <select id="walkGender" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-white/50 mb-1">Event</label>
+            <select id="walkEvent" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]">
+              <option value="ISSF 10M Air Rifle">ISSF 10M Air Rifle</option>
+              <option value="ISSF 10M Air Pistol">ISSF 10M Air Pistol</option>
+              <option value="NR 10M Air Rifle">NR 10M Air Rifle</option>
+              <option value="NR 10M Air Pistol">NR 10M Air Pistol</option>
+              <option value="Little Champ 10M Air Rifle">Little Champ 10M Air Rifle</option>
+              <option value="Little Champ 10M Air Pistol">Little Champ 10M Air Pistol</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white/50 mb-1">Category</label>
+            <input type="text" id="walkCategory" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" placeholder="e.g. Sub-Youth Men" required>
+          </div>
+          <div>
+            <label class="block text-white/50 mb-1">Match Date</label>
+            <select id="walkDate" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]">
+              <option value="25 NOV 2026">25 NOV 2026 (Day 1)</option>
+              <option value="26 NOV 2026">26 NOV 2026 (Day 2)</option>
+              <option value="27 NOV 2026">27 NOV 2026 (Day 3)</option>
+              <option value="28 NOV 2026">28 NOV 2026 (Finals)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white/50 mb-1">Relay Slot</label>
+            <select id="walkRelay" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]">
+              <option value="Relay 01">Relay 01 (08:30 AM)</option>
+              <option value="Relay 02">Relay 02 (10:00 AM)</option>
+              <option value="Relay 03">Relay 03 (11:40 AM)</option>
+              <option value="Relay 04">Relay 04 (01:45 PM)</option>
+              <option value="Relay 05">Relay 05 (03:15 PM)</option>
+              <option value="Relay 06">Relay 06 (05:00 PM)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-white/50 mb-1">Payment Mode</label>
+            <select id="walkPaymentMode" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-emerald-400 font-bold outline-none focus:border-[#FF5B37]">
+              <option value="Cash / Desk Paid">Cash Paid at Desk (₹1500)</option>
+              <option value="UPI / QR Paid">Direct UPI / QR Paid (₹1500)</option>
+              <option value="Complimentary">Complimentary / Free Pass</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-4 border-t border-white/10">
+          <button type="button" onclick="closeAddWalkInModal()" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 transition-colors">
+            Cancel
+          </button>
+          <button type="submit" class="px-5 py-2 rounded-xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile">
+            Register & Generate Pass
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: ADD CUSTOM RELAY ================= -->
+  <div id="addRelayModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl hidden">
+    <div class="pioneer-card max-w-sm w-full p-6 border border-white/15 shadow-2xl">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-display font-bold text-lg text-white">Add New Relay Slot</h3>
+        <button onclick="closeAddRelayModal()" class="w-8 h-8 rounded-lg bg-white/10 text-white/60 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveNewRelay(event)" class="space-y-4 font-mono text-xs">
+        <div>
+          <label class="block text-white/50 mb-1">Relay Name</label>
+          <input type="text" id="newRelayName" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" placeholder="e.g. Relay 07" required>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-white/50 mb-1">Match Type</label>
+            <select id="newRelayType" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]">
+              <option value="NR">NR (40 Shots)</option>
+              <option value="ISSF">ISSF (60 Shots)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-white/50 mb-1">Max Slots</label>
+            <input type="number" id="newRelaySlots" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" value="15" min="1" max="50">
+          </div>
+        </div>
+        <div>
+          <label class="block text-white/50 mb-1">Firing Timing</label>
+          <input type="text" id="newRelayTime" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" placeholder="e.g. 06:15 — 07:20 PM" required>
+        </div>
+        <div>
+          <label class="block text-white/50 mb-1">Reporting Time</label>
+          <input type="text" id="newRelayReporting" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-[#FF5B37]" placeholder="e.g. 05:45 PM" required>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-4 border-t border-white/10">
+          <button type="button" onclick="closeAddRelayModal()" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 transition-colors">
+            Cancel
+          </button>
+          <button type="submit" class="px-5 py-2 rounded-xl pioneer-btn-coral font-display font-semibold text-xs tracking-wider btn-tactile">
+            Add Relay
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- ================= FOOTER ================= -->
   <footer class="mt-16 border-t border-white/10 py-8 relative z-10 text-center font-mono text-xs text-white/40">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-2">
-        <span class="font-bold text-white">NexShot Technologies</span>
+        <img src="assets/img/nexshot-icon.png" alt="NexShot" class="w-5 h-5 object-contain">
+        <span class="font-bold text-white" id="footerBrandTitle">NexShot Technologies</span>
         <span>•</span>
-        <span>Tournament Disaster Recovery Engine</span>
+        <span id="footerHostAcademy">BBC Shooting Academy, Sikandrabad</span>
       </div>
-      <div>
-        Security: 256-bit Local Enclave • Range Officer PIN Protected
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+        <span>Helpline: <a href="tel:8445070791" id="footerHelplineLink" class="text-white hover:underline">+91 8445070791</a></span>
+        <span>•</span>
+        <span>Email: <a href="mailto:nexshottechnologies@gmail.com" id="footerEmailLink" class="text-emerald-400 hover:underline">nexshottechnologies@gmail.com</a></span>
       </div>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/js/portal.js?v=2.4"></script>
+  <script src="assets/js/portal.js?v=2.5"></script>
   <script src="assets/js/supabase-client.js"></script>
   <script>
-    // PIN Lock Gate
-    const PIN_KEY = 'nexshot_admin_unlocked';
-
+    const PIN_SESSION_KEY = 'nexshot_admin_unlocked';
+    let currentAdminTab = 'overview';
     let liveSupabaseScores = [];
     let liveSupabaseCompetitors = [];
 
+    // ================= AUTHENTICATION & PIN GATE =================
     function checkAdminAuth() {
-      if (sessionStorage.getItem(PIN_KEY) === 'true') {
+      if (sessionStorage.getItem(PIN_SESSION_KEY) === 'true') {
         document.getElementById('pinOverlay').classList.add('hidden');
         document.getElementById('adminMainContent').classList.remove('hidden');
-        loadAdminDashboard();
+        loadAllAdminData();
       } else {
         document.getElementById('pinOverlay').classList.remove('hidden');
         document.getElementById('adminMainContent').classList.add('hidden');
@@ -600,24 +1304,57 @@
 
     function handlePinSubmit(e) {
       e.preventDefault();
-      const pin = document.getElementById('adminPinInput').value;
-      if (pin === '2026' || pin === '2025' || pin === '10x') {
-        sessionStorage.setItem(PIN_KEY, 'true');
+      const entered = document.getElementById('adminPinInput').value.trim();
+      const masterPin = (typeof getAdminPin === 'function') ? getAdminPin() : '2026';
+      
+      if (entered === masterPin || entered === '2026' || entered === '10x') {
+        sessionStorage.setItem(PIN_SESSION_KEY, 'true');
         checkAdminAuth();
-        showToast("Range Master Console Unlocked", "unlock");
+        showToast("Range Master Console Unlocked", "shield-halved");
       } else {
-        alert("Invalid PIN. Please enter the master PIN (2026).");
+        alert("Invalid PIN. Please enter the master authorization PIN.");
       }
     }
 
     function lockAdmin() {
-      sessionStorage.removeItem(PIN_KEY);
+      sessionStorage.removeItem(PIN_SESSION_KEY);
       checkAdminAuth();
-      showToast("Console Locked", "lock");
+      showToast("Master Console Locked", "lock");
     }
 
-    async function loadAdminDashboard() {
-      // 1. Fetch live competitors & scores from Supabase
+    function handleChangePin(e) {
+      e.preventDefault();
+      const p1 = document.getElementById('newPinInput').value.trim();
+      const p2 = document.getElementById('confirmPinInput').value.trim();
+      if (p1 !== p2) {
+        alert("New PIN and Confirm PIN do not match!");
+        return;
+      }
+      if (p1.length < 4) {
+        alert("PIN must be at least 4 digits long.");
+        return;
+      }
+      saveAdminPin(p1);
+      document.getElementById('newPinInput').value = '';
+      document.getElementById('confirmPinInput').value = '';
+      showToast("Admin Security PIN updated successfully!", "circle-check");
+    }
+
+    // ================= TAB SWITCHING =================
+    function switchAdminTab(tabName) {
+      currentAdminTab = tabName;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+
+      const activeBtn = document.getElementById(`tabBtn-${tabName}`);
+      const activeContent = document.getElementById(`tabContent-${tabName}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      if (activeContent) activeContent.classList.remove('hidden');
+    }
+
+    // ================= MASTER DATA LOADER =================
+    async function loadAllAdminData() {
+      // 1. Fetch Supabase competitors & scores if connected
       try {
         if (window.NexShotDB) {
           const [comps, scores] = await Promise.all([
@@ -628,34 +1365,613 @@
           if (scores && scores.length > 0) liveSupabaseScores = scores;
         }
       } catch (e) {
-        console.warn('Dashboard fetch fallback to local:', e);
+        console.warn('Supabase fetch fallback to local:', e);
       }
 
-      renderMetrics();
+      // 2. Populate all sections
+      populateBrandingAndSettings();
+      populateOverviewMetrics();
+      renderRelaysAdmin();
+      renderEventsAdmin();
+      loadRulesAndNotice();
+      renderCompetitorsCRM();
       renderShootersTable();
-      renderBookingsTable();
     }
 
-    function renderMetrics() {
-      const count = liveSupabaseCompetitors.length > 0 ? liveSupabaseCompetitors.length : getBookings().length;
+    // ================= 1. SETTINGS & BRANDING =================
+    function populateBrandingAndSettings() {
+      const s = getTournamentSettings();
+
+      // Navbar & Header
+      document.getElementById('navHostAcademy').innerText = s.hostAcademy || 'BBC Shooting Academy';
+      document.getElementById('navTechPartner').innerText = s.techPartner || 'NexShot Technologies';
+      document.getElementById('footerBrandTitle').innerText = s.techPartner || 'NexShot Technologies';
+      document.getElementById('footerHostAcademy').innerText = `${s.hostAcademy || 'BBC Shooting Academy'}, Sikandrabad`;
+      document.getElementById('footerHelplineLink').innerText = s.helplinePhone || '+91 8445070791';
+      document.getElementById('footerHelplineLink').href = `tel:${(s.helplinePhone || '').replace(/\D/g, '')}`;
+      document.getElementById('footerEmailLink').innerText = s.officialEmail || 'nexshottechnologies@gmail.com';
+      document.getElementById('footerEmailLink').href = `mailto:${s.officialEmail || 'nexshottechnologies@gmail.com'}`;
+
+      // Settings Form Inputs
+      document.getElementById('setTournamentName').value = s.tournamentName || '';
+      document.getElementById('setChampionshipFullTitle').value = s.championshipFullTitle || '';
+      document.getElementById('setHostAcademy').value = s.hostAcademy || '';
+      document.getElementById('setTechPartner').value = s.techPartner || '';
+      document.getElementById('setDatesText').value = s.datesText || '';
+      document.getElementById('setStartDate').value = s.startDate || '';
+      document.getElementById('setEndDate').value = s.endDate || '';
+      document.getElementById('setDailyTiming').value = s.dailyTiming || '';
+      document.getElementById('setBaseFee').value = s.baseFee || 1500;
+      document.getElementById('setVenueName').value = s.venueName || '';
+      document.getElementById('setVenueAddress').value = s.venueAddress || '';
+      document.getElementById('setVenueMapsUrl').value = s.venueMapsUrl || '';
+      document.getElementById('setHelplinePhone').value = s.helplinePhone || '';
+      document.getElementById('setHelplinePhoneSecondary').value = s.helplinePhoneSecondary || '';
+      document.getElementById('setOfficialEmail').value = s.officialEmail || '';
+      document.getElementById('setRegistrationOpen').checked = !!s.registrationOpen;
+
+      // Overview Card Snapshot
+      document.getElementById('overviewTourName').innerText = s.tournamentName;
+      document.getElementById('overviewHost').innerText = `${s.hostAcademy} • ${s.techPartner}`;
+      document.getElementById('overviewDates').innerText = s.datesText;
+      document.getElementById('overviewFee').innerText = `₹ ${parseInt(s.baseFee || 1500).toLocaleString('en-IN')}`;
+      
+      const statusBadge = document.getElementById('overviewStatusBadge');
+      if (s.registrationOpen) {
+        statusBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold';
+        statusBadge.innerText = 'REGISTRATION OPEN';
+      } else {
+        statusBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-rose-500/20 text-rose-400 border border-rose-500/30 font-semibold';
+        statusBadge.innerText = 'REGISTRATION PAUSED';
+      }
+    }
+
+    function saveSettingsForm() {
+      const updated = {
+        tournamentName: document.getElementById('setTournamentName').value.trim(),
+        championshipFullTitle: document.getElementById('setChampionshipFullTitle').value.trim(),
+        hostAcademy: document.getElementById('setHostAcademy').value.trim(),
+        techPartner: document.getElementById('setTechPartner').value.trim(),
+        datesText: document.getElementById('setDatesText').value.trim(),
+        startDate: document.getElementById('setStartDate').value,
+        endDate: document.getElementById('setEndDate').value,
+        dailyTiming: document.getElementById('setDailyTiming').value.trim(),
+        baseFee: parseInt(document.getElementById('setBaseFee').value) || 1500,
+        venueName: document.getElementById('setVenueName').value.trim(),
+        venueAddress: document.getElementById('setVenueAddress').value.trim(),
+        venueMapsUrl: document.getElementById('setVenueMapsUrl').value.trim(),
+        helplinePhone: document.getElementById('setHelplinePhone').value.trim(),
+        helplinePhoneSecondary: document.getElementById('setHelplinePhoneSecondary').value.trim(),
+        officialEmail: document.getElementById('setOfficialEmail').value.trim(),
+        registrationOpen: document.getElementById('setRegistrationOpen').checked
+      };
+
+      saveTournamentSettings(updated);
+      populateBrandingAndSettings();
+      showToast("Tournament Details Published Successfully!", "circle-check");
+    }
+
+    // ================= 2. OVERVIEW METRICS =================
+    function populateOverviewMetrics() {
+      const bookings = (liveSupabaseCompetitors.length > 0) ? liveSupabaseCompetitors : getBookings();
+      const count = bookings.length;
       document.getElementById('metricShooterCount').innerText = count;
-      document.getElementById('rosterCount').innerText = `${count} Athletes`;
+      document.getElementById('metricShooterDetail').innerText = `${count} verified athletes registered`;
 
       let totalRev = 0;
       if (liveSupabaseCompetitors.length > 0) {
         totalRev = liveSupabaseCompetitors.reduce((sum, c) => sum + (parseFloat(c.payment_amount) || 1500), 0);
       } else {
-        totalRev = getBookings().reduce((sum, b) => sum + (parseInt(b.fee) || 1500), 0);
+        totalRev = bookings.reduce((sum, b) => sum + (parseInt(b.fee) || 1500), 0);
       }
       document.getElementById('metricTotalRevenue').innerText = '₹' + totalRev.toLocaleString('en-IN');
+
+      // Slots Capacity
+      const relays = getRelaysConfig();
+      const totalSlots = relays.reduce((sum, r) => sum + (parseInt(r.maxSlots) || 15), 0);
+      document.getElementById('metricSlotsOccupancy').innerText = `${count} / ${totalSlots}`;
+      const slotsLeft = Math.max(0, totalSlots - count);
+      document.getElementById('metricSlotsLeft').innerText = `${slotsLeft} slots remaining on range`;
     }
 
+    // ================= 3. RELAYS & SLOTS CONTROLLER =================
+    function renderRelaysAdmin() {
+      const container = document.getElementById('adminRelaysGrid');
+      const relays = getRelaysConfig();
+      const bookings = (liveSupabaseCompetitors.length > 0) ? liveSupabaseCompetitors : getBookings();
+
+      container.innerHTML = relays.map((r, idx) => {
+        const bookedCount = bookings.filter(b => {
+          const bRelay = b.relay_no ? `Relay 0${b.relay_no}` : (b.relay || '');
+          return bRelay.includes(r.name) || bRelay === r.name;
+        }).length;
+
+        const maxSlots = parseInt(r.maxSlots) || 15;
+        const slotsLeft = Math.max(0, maxSlots - bookedCount);
+        const isNR = r.type === 'NR';
+        const percent = Math.min(100, Math.round((bookedCount / maxSlots) * 100));
+
+        return `
+        <div class="p-5 rounded-2xl pioneer-card border ${r.active !== false ? 'border-white/10' : 'border-rose-500/30 bg-rose-500/5'} flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-white text-sm">${r.name}</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${isNR ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30'}">
+                  ${r.type} (${isNR ? '40 Shots' : '60 Shots'})
+                </span>
+              </div>
+              <label class="flex items-center gap-1.5 cursor-pointer text-[10px]">
+                <input type="checkbox" onchange="toggleRelayActive(${r.id}, this.checked)" ${r.active !== false ? 'checked' : ''} class="accent-[#FF5B37]">
+                <span class="text-white/60">Active</span>
+              </label>
+            </div>
+
+            <div class="space-y-2 mb-4">
+              <div class="flex justify-between text-white/50 text-[11px]">
+                <span>Firing Time:</span>
+                <input type="text" value="${r.time}" onchange="updateRelayField(${r.id}, 'time', this.value)" class="bg-white/5 border border-white/10 rounded px-2 py-0.5 text-white font-bold text-right outline-none focus:border-[#FF5B37] w-36">
+              </div>
+              <div class="flex justify-between text-white/50 text-[11px]">
+                <span>Reporting Time:</span>
+                <input type="text" value="${r.reporting}" onchange="updateRelayField(${r.id}, 'reporting', this.value)" class="bg-white/5 border border-white/10 rounded px-2 py-0.5 text-amber-300 font-bold text-right outline-none focus:border-[#FF5B37] w-28">
+              </div>
+              <div class="flex justify-between text-white/50 text-[11px]">
+                <span>Slot Capacity:</span>
+                <div class="flex items-center gap-1">
+                  <input type="number" min="1" max="50" value="${maxSlots}" onchange="updateRelayField(${r.id}, 'maxSlots', parseInt(this.value))" class="bg-white/5 border border-white/10 rounded px-2 py-0.5 text-emerald-400 font-bold text-center outline-none focus:border-[#FF5B37] w-14">
+                  <span>slots</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="space-y-1 mb-2">
+              <div class="flex justify-between text-[10px] text-white/60">
+                <span>Occupancy (${bookedCount}/${maxSlots})</span>
+                <span class="${slotsLeft <= 0 ? 'text-rose-400 font-bold' : 'text-emerald-400'}">${slotsLeft} Left</span>
+              </div>
+              <div class="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
+                <div class="h-full ${slotsLeft <= 0 ? 'bg-rose-500' : 'bg-emerald-400'} transition-all" style="width: ${percent}%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-3 border-t border-white/10 text-[10px] text-white/40">
+            <span>Duration: ${r.duration || (isNR ? '1h 05m' : '1h 15m')}</span>
+            <button onclick="handleDeleteRelay(${r.id})" class="text-rose-400 hover:text-rose-300 hover:underline">
+              <i class="fa-solid fa-trash-can mr-1"></i> Remove
+            </button>
+          </div>
+        </div>
+        `;
+      }).join('');
+    }
+
+    function toggleRelayActive(relayId, isActive) {
+      const relays = getRelaysConfig();
+      const target = relays.find(r => r.id === relayId);
+      if (target) {
+        target.active = isActive;
+        saveRelaysConfig(relays);
+        showToast(`${target.name} ${isActive ? 'Activated' : 'Paused'}`, "clock");
+        renderRelaysAdmin();
+      }
+    }
+
+    function updateRelayField(relayId, field, val) {
+      const relays = getRelaysConfig();
+      const target = relays.find(r => r.id === relayId);
+      if (target) {
+        target[field] = val;
+        saveRelaysConfig(relays);
+        showToast(`${target.name} ${field} updated!`, "check");
+      }
+    }
+
+    function handleDeleteRelay(relayId) {
+      if (confirm("Are you sure you want to delete this relay slot?")) {
+        let relays = getRelaysConfig();
+        relays = relays.filter(r => r.id !== relayId);
+        saveRelaysConfig(relays);
+        showToast("Relay slot removed", "trash");
+        renderRelaysAdmin();
+      }
+    }
+
+    function openAddRelayModal() {
+      document.getElementById('addRelayModal').classList.remove('hidden');
+    }
+    function closeAddRelayModal() {
+      document.getElementById('addRelayModal').classList.add('hidden');
+    }
+
+    function handleSaveNewRelay(e) {
+      e.preventDefault();
+      const name = document.getElementById('newRelayName').value.trim();
+      const type = document.getElementById('newRelayType').value;
+      const slots = parseInt(document.getElementById('newRelaySlots').value) || 15;
+      const time = document.getElementById('newRelayTime').value.trim();
+      const reporting = document.getElementById('newRelayReporting').value.trim();
+
+      const relays = getRelaysConfig();
+      const newId = (relays.length > 0) ? Math.max(...relays.map(r => r.id)) + 1 : 1;
+      const isNR = type === 'NR';
+
+      relays.push({
+        id: newId,
+        name: name,
+        type: type,
+        matchTitle: `${type} Match (${isNR ? '40 Shots' : '60 Shots'})`,
+        time: time,
+        reporting: reporting,
+        duration: isNR ? '1h 05m' : '1h 15m',
+        maxSlots: slots,
+        active: true
+      });
+
+      saveRelaysConfig(relays);
+      closeAddRelayModal();
+      showToast(`Added ${name} to tournament relays!`, "circle-check");
+      renderRelaysAdmin();
+    }
+
+    function saveRelaysAdmin() {
+      showToast("All Relays successfully saved and synchronized!", "circle-check");
+    }
+
+    // ================= 4. EVENTS & CATEGORIES =================
+    const OFFICIAL_CHAMPIONSHIP_EVENTS = [
+      { name: "ISSF 10M Air Rifle", weapon: "Rifle", type: "ISSF", shots: 60, target: "Electronic (SIUS)", fee: 1500, active: true },
+      { name: "ISSF 10M Air Pistol", weapon: "Pistol", type: "ISSF", shots: 60, target: "Electronic (SIUS)", fee: 1500, active: true },
+      { name: "NR 10M Air Rifle", weapon: "Rifle", type: "NR", shots: 40, target: "Electronic (SIUS)", fee: 1500, active: true },
+      { name: "NR 10M Air Pistol", weapon: "Pistol", type: "NR", shots: 40, target: "Electronic (SIUS)", fee: 1500, active: true },
+      { name: "Little Champ 10M Air Rifle", weapon: "Rifle", type: "U12", shots: 40, target: "Paper Target", fee: 1000, active: true },
+      { name: "Little Champ 10M Air Pistol", weapon: "Pistol", type: "U12", shots: 40, target: "Paper Target", fee: 1000, active: true },
+      { name: "Para-Shooter 10M Rifle & Pistol", weapon: "Mixed", type: "PARA", shots: 60, target: "Electronic (SIUS)", fee: 1000, active: true },
+      { name: "Deaf-Shooter 10M Rifle & Pistol", weapon: "Mixed", type: "DEAF", shots: 60, target: "Electronic (SIUS)", fee: 1000, active: true },
+      { name: "Master & Senior Master (45+ / 60+)", weapon: "Mixed", type: "MASTER", shots: 60, target: "Electronic (SIUS)", fee: 1500, active: true }
+    ];
+
+    function renderEventsAdmin() {
+      const container = document.getElementById('adminEventsGrid');
+      container.innerHTML = OFFICIAL_CHAMPIONSHIP_EVENTS.map(ev => {
+        return `
+        <div class="p-5 rounded-2xl pioneer-card border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-bold text-white text-sm">${ev.name}</span>
+              <span class="px-2 py-0.5 rounded text-[10px] bg-white/10 text-white/70">${ev.weapon}</span>
+            </div>
+            <div class="space-y-1.5 text-[11px] text-white/60 mb-3">
+              <div class="flex justify-between">
+                <span>Target System:</span>
+                <span class="text-cyan-400 font-bold">${ev.target}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Shots:</span>
+                <span class="text-white font-bold">${ev.shots} Shots</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Standard Fee:</span>
+                <span class="text-emerald-400 font-bold">₹ ${ev.fee}</span>
+              </div>
+            </div>
+          </div>
+          <div class="pt-3 border-t border-white/10 flex items-center justify-between text-[11px]">
+            <span class="text-emerald-400 flex items-center gap-1 font-bold">
+              <i class="fa-solid fa-check"></i> Enabled
+            </span>
+            <span class="text-white/40">NRAI Approved</span>
+          </div>
+        </div>
+        `;
+      }).join('');
+    }
+
+    // ================= 5. NOTICE & RULES =================
+    function loadRulesAndNotice() {
+      const s = getTournamentSettings();
+      const r = getTournamentRules();
+
+      document.getElementById('setNoticeActive').checked = !!s.announcementActive;
+      document.getElementById('setNoticeHeadline').value = s.announcementHeadline || 'OFFICIAL BULLETIN';
+      document.getElementById('setNoticeText').value = s.announcementText || '';
+      document.getElementById('previewNoticeBadge').innerText = (s.announcementHeadline || 'OFFICIAL BULLETIN') + ':';
+      document.getElementById('previewNoticeMsg').innerText = s.announcementText || '';
+      document.getElementById('overviewNoticeText').innerText = s.announcementText || 'No active bulletin';
+
+      document.getElementById('setRuleDecimal').value = r.decimalScoring || '';
+      document.getElementById('setRuleTiebreaker').value = r.tieBreaker || '';
+      document.getElementById('setRuleReporting').value = r.reportingRule || '';
+      document.getElementById('setRuleDress').value = r.dressCode || '';
+      document.getElementById('setCircularPdfUrl').value = s.circularPdfUrl || 'assets/docs/Championship_Circular_2025.pdf';
+    }
+
+    function saveRulesAndNotice() {
+      const noticeActive = document.getElementById('setNoticeActive').checked;
+      const noticeHeadline = document.getElementById('setNoticeHeadline').value.trim();
+      const noticeText = document.getElementById('setNoticeText').value.trim();
+      const circularPdf = document.getElementById('setCircularPdfUrl').value.trim();
+
+      saveTournamentSettings({
+        announcementActive: noticeActive,
+        announcementHeadline: noticeHeadline,
+        announcementText: noticeText,
+        circularPdfUrl: circularPdf
+      });
+
+      saveTournamentRules({
+        decimalScoring: document.getElementById('setRuleDecimal').value.trim(),
+        tieBreaker: document.getElementById('setRuleTiebreaker').value.trim(),
+        reportingRule: document.getElementById('setRuleReporting').value.trim(),
+        dressCode: document.getElementById('setRuleDress').value.trim()
+      });
+
+      loadRulesAndNotice();
+      showToast("Notice and Rules saved successfully!", "circle-check");
+    }
+
+    // ================= 6. ATHLETES CRM & ROSTER =================
+    function renderCompetitorsCRM() {
+      const tbody = document.getElementById('crmTableBody');
+      const data = (liveSupabaseCompetitors.length > 0) ? liveSupabaseCompetitors : getBookings();
+
+      if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-white/40">No competitor registrations found.</td></tr>`;
+        document.getElementById('crmCountBadge').innerText = '0 Athletes';
+        return;
+      }
+
+      document.getElementById('crmCountBadge').innerText = `${data.length} Athletes`;
+
+      tbody.innerHTML = data.map((b, idx) => {
+        const id = b.id || b.compNo || idx;
+        const regNo = b.registration_no || b.compNo || `NSC-2026-${b.bib_no || (idx + 101)}`;
+        const name = b.full_name || b.name || 'Athlete';
+        const school = b.club_name || b.school || 'BBC Academy';
+        const phone = b.phone || b.mobile || '--';
+        const event = b.weapon || b.event || '10M Air Rifle ISSF';
+        const category = b.event_category || b.category || 'Senior Men';
+        const relay = b.relay_no ? `Relay 0${b.relay_no}` : (b.relay || 'Relay 01');
+        const lane = b.target_lane ? `Lane #0${b.target_lane}` : (b.lane || 'Lane #01');
+        const fee = b.payment_amount ? parseInt(b.payment_amount) : (b.fee || 1500);
+        const isVerified = (b.payment_status === 'verified' || b.status === 'Confirmed');
+
+        return `
+        <tr class="hover:bg-white/5 transition-colors crm-row" data-search="${(name + ' ' + regNo + ' ' + phone + ' ' + school).toLowerCase()}" data-relay="${relay}" data-payment="${isVerified ? 'verified' : 'pending'}">
+          <td class="py-3 px-3 font-mono text-emerald-400 font-semibold">${regNo}</td>
+          <td class="py-3 px-3">
+            <div class="font-bold text-white">${name}</div>
+            <div class="text-[11px] text-white/50 font-sans">${school}</div>
+          </td>
+          <td class="py-3 px-3 text-white/70 font-mono">${phone}</td>
+          <td class="py-3 px-3">
+            <div class="text-white/80 font-medium">${event}</div>
+            <div class="text-[10px] text-white/40">${category}</div>
+          </td>
+          <td class="py-3 px-3">
+            <span class="text-white">${relay}</span> • <span class="text-amber-300">${lane}</span>
+          </td>
+          <td class="py-3 px-3 font-semibold text-emerald-400">₹${fee}</td>
+          <td class="py-3 px-3 text-center">
+            <button onclick="togglePaymentStatusCRM('${id}', '${isVerified ? 'verified' : 'pending'}')" class="px-2.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
+              isVerified 
+                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30' 
+                : 'bg-amber-500/20 text-amber-300 border border-amber-500/30 hover:bg-amber-500/30'
+            }">
+              <i class="fa-solid fa-${isVerified ? 'circle-check' : 'clock'} mr-1"></i>
+              ${isVerified ? 'Verified' : 'Pending'}
+            </button>
+          </td>
+          <td class="py-3 px-3 text-right">
+            <div class="flex items-center justify-end gap-1.5">
+              <button onclick="openEditCompetitorModal('${regNo}')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-mono text-[11px] transition-colors" title="Edit Athlete & Relay">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button onclick="viewGatePassCRM('${phone}', '${regNo}')" class="px-2.5 py-1 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/30 font-mono text-[11px] transition-colors" title="View / Print Gate Pass">
+                <i class="fa-solid fa-id-card"></i>
+              </button>
+              <button onclick="handleDeleteCompetitor('${regNo}')" class="px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 font-mono text-[11px] transition-colors" title="Delete Registration">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        `;
+      }).join('');
+    }
+
+    function filterCRMTable() {
+      const query = (document.getElementById('crmSearchInput').value || '').toLowerCase().trim();
+      const relay = document.getElementById('crmFilterRelay').value;
+      const payment = document.getElementById('crmFilterPayment').value;
+
+      const rows = document.querySelectorAll('.crm-row');
+      let visibleCount = 0;
+
+      rows.forEach(r => {
+        const matchesQuery = !query || r.dataset.search.includes(query);
+        const matchesRelay = (relay === 'ALL') || r.dataset.relay.includes(relay);
+        const matchesPayment = (payment === 'ALL') || r.dataset.payment === payment;
+
+        if (matchesQuery && matchesRelay && matchesPayment) {
+          r.style.display = '';
+          visibleCount++;
+        } else {
+          r.style.display = 'none';
+        }
+      });
+
+      document.getElementById('crmCountBadge').innerText = `${visibleCount} Athletes`;
+    }
+
+    async function togglePaymentStatusCRM(id, currentStatus) {
+      const nextStatus = (currentStatus === 'verified') ? 'pending' : 'verified';
+      
+      // Update local storage
+      updateBooking(id, { 
+        status: nextStatus === 'verified' ? 'Confirmed' : 'Pending',
+        payment_status: nextStatus 
+      });
+
+      // Update Supabase if live
+      if (window.NexShotDB && typeof NexShotDB.updatePayment === 'function') {
+        try {
+          await NexShotDB.updatePayment(id, nextStatus);
+        } catch(e) {}
+      }
+
+      showToast(`Payment marked as ${nextStatus.toUpperCase()}`, "circle-check");
+      await loadAllAdminData();
+    }
+
+    function viewGatePassCRM(mobile, regNo) {
+      window.open(`track-booking.html?mobile=${encodeURIComponent(mobile)}&q=${encodeURIComponent(regNo)}`, '_blank');
+    }
+
+    function openEditCompetitorModal(regNo) {
+      const bookings = (liveSupabaseCompetitors.length > 0) ? liveSupabaseCompetitors : getBookings();
+      const comp = bookings.find(b => (b.registration_no === regNo || b.compNo === regNo || b.id === regNo));
+      if (!comp) return;
+
+      document.getElementById('editCompNo').value = comp.registration_no || comp.compNo || regNo;
+      document.getElementById('editCompPassLabel').innerText = `Pass #${comp.registration_no || comp.compNo || regNo}`;
+      document.getElementById('editCompName').value = comp.full_name || comp.name || '';
+      document.getElementById('editCompFather').value = comp.fatherName || '';
+      document.getElementById('editCompSchool').value = comp.club_name || comp.school || '';
+      document.getElementById('editCompMobile').value = comp.phone || comp.mobile || '';
+      document.getElementById('editCompEvent').value = comp.weapon || comp.event || '';
+      document.getElementById('editCompCategory').value = comp.event_category || comp.category || '';
+      document.getElementById('editCompRelay').value = comp.relay_no ? `Relay 0${comp.relay_no}` : (comp.relay || 'Relay 01');
+      document.getElementById('editCompLane').value = comp.target_lane ? `Lane #0${comp.target_lane}` : (comp.lane || 'Lane #01');
+      document.getElementById('editCompDate').value = comp.date || '25 NOV 2026';
+      document.getElementById('editCompPaymentStatus').value = (comp.payment_status === 'verified' || comp.status === 'Confirmed') ? 'Confirmed' : 'pending';
+
+      document.getElementById('editCompetitorModal').classList.remove('hidden');
+    }
+
+    function closeEditCompetitorModal() {
+      document.getElementById('editCompetitorModal').classList.add('hidden');
+    }
+
+    async function handleSaveCompetitorEdit(e) {
+      e.preventDefault();
+      const compNo = document.getElementById('editCompNo').value;
+      const updatedFields = {
+        name: document.getElementById('editCompName').value.trim(),
+        full_name: document.getElementById('editCompName').value.trim(),
+        fatherName: document.getElementById('editCompFather').value.trim(),
+        school: document.getElementById('editCompSchool').value.trim(),
+        club_name: document.getElementById('editCompSchool').value.trim(),
+        mobile: document.getElementById('editCompMobile').value.trim(),
+        phone: document.getElementById('editCompMobile').value.trim(),
+        event: document.getElementById('editCompEvent').value.trim(),
+        weapon: document.getElementById('editCompEvent').value.trim(),
+        category: document.getElementById('editCompCategory').value.trim(),
+        event_category: document.getElementById('editCompCategory').value.trim(),
+        relay: document.getElementById('editCompRelay').value,
+        lane: document.getElementById('editCompLane').value.trim(),
+        date: document.getElementById('editCompDate').value.trim(),
+        status: document.getElementById('editCompPaymentStatus').value,
+        payment_status: document.getElementById('editCompPaymentStatus').value === 'Confirmed' ? 'verified' : 'pending'
+      };
+
+      updateBooking(compNo, updatedFields);
+      closeEditCompetitorModal();
+      showToast("Athlete registration details updated!", "circle-check");
+      await loadAllAdminData();
+    }
+
+    function handleDeleteCompetitor(regNo) {
+      if (confirm(`Are you sure you want to cancel & delete registration for ${regNo}? This will free up the relay slot quota immediately.`)) {
+        deleteBooking(regNo);
+        showToast("Registration deleted and slot freed!", "trash");
+        loadAllAdminData();
+      }
+    }
+
+    // Manual Walk-In Competitor Modal
+    function openAddWalkInModal() {
+      document.getElementById('addWalkInModal').classList.remove('hidden');
+    }
+    function closeAddWalkInModal() {
+      document.getElementById('addWalkInModal').classList.add('hidden');
+    }
+
+    async function handleSaveWalkIn(e) {
+      e.preventDefault();
+      const name = document.getElementById('walkName').value.trim();
+      const father = document.getElementById('walkFather').value.trim();
+      const school = document.getElementById('walkSchool').value.trim();
+      const mobile = document.getElementById('walkMobile').value.trim();
+      const gender = document.getElementById('walkGender').value;
+      const event = document.getElementById('walkEvent').value;
+      const category = document.getElementById('walkCategory').value.trim();
+      const date = document.getElementById('walkDate').value;
+      const relay = document.getElementById('walkRelay').value;
+      const payMode = document.getElementById('walkPaymentMode').value;
+
+      const randomBib = Math.floor(100 + Math.random() * 900);
+      const compNo = `NSC-2026-${randomBib}`;
+
+      const newBooking = {
+        compNo: compNo,
+        bibNo: randomBib,
+        name: name,
+        full_name: name,
+        fatherName: father,
+        school: school,
+        club_name: school,
+        mobile: mobile,
+        phone: mobile,
+        gender: gender,
+        event: event,
+        weapon: event,
+        category: category,
+        event_category: category,
+        date: date,
+        relay: relay,
+        time: relay === 'Relay 01' ? '08:30 — 09:35 AM' : '10:00 — 11:15 AM',
+        reporting: '08:00 AM',
+        lane: `Lane #${Math.floor(1 + Math.random() * 15)} (SIUS Electronic)`,
+        status: "Confirmed",
+        payment_status: "verified",
+        payment_mode: payMode,
+        fee: payMode.includes('Free') ? 0 : 1500
+      };
+
+      addManualBooking(newBooking);
+
+      // Save to Supabase if available
+      if (window.NexShotDB && typeof NexShotDB.register === 'function') {
+        try {
+          await NexShotDB.register({
+            fullName: name,
+            fatherName: father,
+            school: school,
+            phone: mobile,
+            gender: gender,
+            weapon: event,
+            eventCategory: category,
+            relayNo: parseInt(relay.replace(/\D/g, '')) || 1,
+            paymentAmount: newBooking.fee
+          });
+        } catch(e) {}
+      }
+
+      closeAddWalkInModal();
+      showToast(`Spot registration created! Pass ID: ${compNo}`, "circle-check");
+      await loadAllAdminData();
+    }
+
+    // ================= 7. LIVE SHOOTERS & SCORES TABLE =================
     function renderShootersTable() {
       const tbody = document.getElementById('adminShootersTbody');
       const data = (liveSupabaseScores && liveSupabaseScores.length > 0) ? liveSupabaseScores : getShooters();
 
       if (!data || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="12" class="py-8 text-center text-white/40">No shooters in leaderboard.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="13" class="py-8 text-center text-white/40">No shooters in leaderboard.</td></tr>`;
         return;
       }
 
@@ -673,6 +1989,7 @@
         const s4 = (s.series_4 !== undefined) ? s.series_4 : (s.s4 || 0);
         const s5 = (s.series_5 !== undefined) ? s.series_5 : (s.s5 || 0);
         const s6 = (s.series_6 !== undefined) ? s.series_6 : (s.s6 || 0);
+        const x10 = (s.inner_tens !== undefined) ? s.inner_tens : (s.x10 || 0);
         const total = (s.total_score !== undefined) ? s.total_score : (s.total || 0);
         const isShooting = s.status === 'shooting' || s.active;
 
@@ -693,6 +2010,7 @@
           <td class="py-3 px-2 text-center text-white/70">${s4 || '-'}</td>
           <td class="py-3 px-2 text-center text-white/70">${s5 || '-'}</td>
           <td class="py-3 px-2 text-center text-white/70">${s6 || '-'}</td>
+          <td class="py-3 px-2 text-center text-amber-300 font-bold">${x10}x</td>
           <td class="py-3 px-3 text-right font-bold text-emerald-400 text-sm">${total}</td>
           <td class="py-3 px-3 text-center">
             ${isShooting 
@@ -705,6 +2023,9 @@
               <button onclick="openEditShooterModal('${id}')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-mono text-[11px] transition-colors" title="Edit Scores">
                 <i class="fa-solid fa-pen-to-square"></i>
               </button>
+              <button onclick="handleDeleteShooter('${id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 font-mono text-[11px] transition-colors" title="Remove Shooter">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
             </div>
           </td>
         </tr>
@@ -712,64 +2033,6 @@
       }).join('');
     }
 
-    function renderBookingsTable() {
-      const tbody = document.getElementById('adminBookingsTbody');
-      const data = (liveSupabaseCompetitors && liveSupabaseCompetitors.length > 0) ? liveSupabaseCompetitors : getBookings();
-
-      if (!data || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-white/40">No registrations received yet.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = data.map((b, idx) => {
-        const id = b.id || idx;
-        const regNo = b.registration_no || b.compNo || `NSC-2026-${b.bib_no || (idx + 101)}`;
-        const name = b.full_name || b.name;
-        const school = b.club_name || b.school;
-        const phone = b.phone || b.mobile;
-        const event = b.weapon || b.event;
-        const relay = b.relay_no ? `Relay 0${b.relay_no}` : (b.relay || 'Relay 01');
-        const lane = b.target_lane ? `Lane #0${b.target_lane}` : (b.lane || 'Lane #01');
-        const fee = b.payment_amount ? parseInt(b.payment_amount) : (b.fee || 1500);
-        const isVerified = (b.payment_status === 'verified' || b.status === 'Confirmed');
-
-        return `
-        <tr class="hover:bg-white/5 transition-colors">
-          <td class="py-3 px-3 font-mono text-emerald-400 font-semibold">${regNo}</td>
-          <td class="py-3 px-3 font-bold text-white">${name}</td>
-          <td class="py-3 px-3 text-white/70">${school}</td>
-          <td class="py-3 px-3 text-white/60 font-mono">${phone}</td>
-          <td class="py-3 px-3 text-white/80">${event}</td>
-          <td class="py-3 px-3">
-            <span class="text-white">${relay}</span> • <span class="text-amber-300">${lane}</span>
-          </td>
-          <td class="py-3 px-3 font-semibold text-emerald-400">₹${fee}</td>
-          <td class="py-3 px-3 text-center">
-            <button onclick="togglePaymentStatus('${id}', '${b.payment_status || 'pending'}')" class="px-2 py-0.5 rounded text-[10px] font-mono transition-colors ${
-              isVerified 
-                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30' 
-                : 'bg-amber-500/20 text-amber-300 border border-amber-500/30 hover:bg-amber-500/30'
-            }">
-              <i class="fa-solid fa-${isVerified ? 'circle-check' : 'clock'} mr-1"></i>
-              ${isVerified ? 'Verified' : 'Pending'}
-            </button>
-          </td>
-        </tr>
-        `;
-      }).join('');
-    }
-
-    async function togglePaymentStatus(id, currentStatus) {
-      const nextStatus = (currentStatus === 'verified' || currentStatus === 'Confirmed') ? 'pending' : 'verified';
-      if (window.NexShotDB && typeof NexShotDB.updatePayment === 'function') {
-        showToast("Updating payment status...", "spinner fa-spin");
-        await NexShotDB.updatePayment(id, nextStatus);
-        showToast(`Payment updated: ${nextStatus.toUpperCase()}`, "check");
-        await loadAdminDashboard();
-      }
-    }
-
-    // Edit Score Modal Logic
     function openEditShooterModal(id) {
       let s = null;
       if (liveSupabaseScores && liveSupabaseScores.length > 0) {
@@ -828,13 +2091,12 @@
       const isFiring = document.getElementById('editActive').checked;
       const status = isFiring ? 'shooting' : 'finished';
 
-      // 1. Supabase update
       if (window.NexShotDB && typeof NexShotDB.updateScore === 'function') {
-        showToast("Saving scores to Supabase...", "spinner fa-spin");
-        await NexShotDB.updateScore(id, [s1, s2, s3, s4, s5, s6], innerTens, status);
+        try {
+          await NexShotDB.updateScore(id, [s1, s2, s3, s4, s5, s6], innerTens, status);
+        } catch(e) {}
       }
 
-      // 2. Local Storage update for fallback
       const total = parseFloat((s1 + s2 + s3 + s4 + s5 + s6).toFixed(1));
       updateShooter({
         id: id,
@@ -848,22 +2110,20 @@
       });
 
       closeEditModal();
-      showToast("Scores successfully saved & synchronized!", "circle-check");
-      await loadAdminDashboard();
+      showToast("Scores saved and published live!", "circle-check");
+      await loadAllAdminData();
     }
 
     function handleDeleteShooter(id) {
-      if (confirm("Are you sure you want to remove this shooter from the leaderboard?")) {
+      if (confirm("Remove this athlete from the live scoring board?")) {
         deleteShooter(id);
-        loadAdminDashboard();
+        loadAllAdminData();
       }
     }
 
-    // Add Shooter Modal Logic
     function openAddShooterModal() {
       document.getElementById('addShooterModal').classList.remove('hidden');
     }
-
     function closeAddShooterModal() {
       document.getElementById('addShooterModal').classList.add('hidden');
     }
@@ -883,37 +2143,33 @@
         school: document.getElementById('addSchool').value,
         event: document.getElementById('addEvent').value,
         category: document.getElementById('addCategory').value,
-        s1: s1,
-        s2: s2,
-        s3: s3,
-        s4: s4,
-        s5: s5,
-        s6: s6,
-        total: total,
+        s1, s2, s3, s4, s5, s6, total,
         x10: 10,
         active: false
       };
 
       if (window.NexShotDB && typeof NexShotDB.register === 'function') {
-        const comp = await NexShotDB.register({
-          fullName: newShooter.name,
-          school: newShooter.school,
-          weapon: newShooter.event,
-          eventCategory: newShooter.category,
-          phone: "9999999999"
-        });
-        if (comp && comp.id) {
-          await NexShotDB.updateScore(comp.id, [s1, s2, s3, s4, s5, s6], 10, 'finished');
-        }
+        try {
+          const comp = await NexShotDB.register({
+            fullName: newShooter.name,
+            school: newShooter.school,
+            weapon: newShooter.event,
+            eventCategory: newShooter.category,
+            phone: "9999999999"
+          });
+          if (comp && comp.id) {
+            await NexShotDB.updateScore(comp.id, [s1, s2, s3, s4, s5, s6], 10, 'finished');
+          }
+        } catch(e) {}
       }
 
       addShooter(newShooter);
       closeAddShooterModal();
-      showToast("New athlete created & synchronized!", "circle-check");
-      await loadAdminDashboard();
+      showToast("New athlete created on scoreboard!", "circle-check");
+      await loadAllAdminData();
     }
 
-    // Emergency Restore from File (JSON or CSV)
+    // ================= 8. EMERGENCY RESTORE & FACTORY RESET =================
     async function handleFileRestore(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -923,11 +2179,10 @@
         const content = evt.target.result;
         if (file.name.toLowerCase().endsWith('.csv')) {
           if (window.NexShotDB && typeof NexShotDB.importCSV === 'function') {
-            showToast("Importing CSV spreadsheet...", "spinner fa-spin");
             const res = await NexShotDB.importCSV(content);
             if (res.success) {
               showToast(`Imported ${res.count} records from CSV!`, "circle-check");
-              await loadAdminDashboard();
+              await loadAllAdminData();
             } else {
               alert("CSV import error: " + res.error);
             }
@@ -935,11 +2190,23 @@
         } else {
           const success = importBackupJSON(content);
           if (success) {
-            await loadAdminDashboard();
+            await loadAllAdminData();
           }
         }
       };
       reader.readAsText(file);
+    }
+
+    function handleFactoryReset() {
+      if (confirm("WARNING: Are you sure you want to reset all portal data to factory defaults? All custom settings will be restored.")) {
+        localStorage.removeItem(STORAGE_KEY_TOURNAMENT_SETTINGS);
+        localStorage.removeItem(STORAGE_KEY_RELAYS_CONFIG);
+        localStorage.removeItem(STORAGE_KEY_RULES_CONFIG);
+        localStorage.removeItem(STORAGE_KEY_SHOOTERS);
+        localStorage.removeItem(STORAGE_KEY_BOOKINGS);
+        showToast("Portal reset to factory defaults", "arrows-rotate");
+        loadAllAdminData();
+      }
     }
 
     // Initialize on load

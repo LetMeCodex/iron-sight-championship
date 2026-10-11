@@ -946,13 +946,12 @@
     let chosenReporting = '08:00 AM';
     let chosenRelayType = 'NR';
     let chosenLane = 1;
-    const baseFee = 1500;
-    const totalFee = 1500;
+    const tournamentSettings = (typeof getTournamentSettings === 'function') ? getTournamentSettings() : null;
+    const baseFee = (tournamentSettings && tournamentSettings.baseFee) ? parseInt(tournamentSettings.baseFee) : 1500;
+    const totalFee = baseFee;
 
-    // 6 Official Tournament Relays (08:30 AM to 06:30 PM)
-    // NR Match: 1 hr 05 min | ISSF Match: 1 hr 15 min | Reporting: 30 min before
-    // Max 15 slots per relay
-    const RELAYS = [
+    // 6 Official Tournament Relays (Dynamically loads from Admin Console)
+    const RELAYS = (typeof getRelaysConfig === 'function') ? getRelaysConfig() : [
       { id: 1, name: 'Relay 01', type: 'NR', matchTitle: 'NR Match (40 Shots)', time: '08:30 — 09:35 AM', reporting: '08:00 AM', duration: '1h 05m', maxSlots: 15 },
       { id: 2, name: 'Relay 02', type: 'ISSF', matchTitle: 'ISSF Match (60 Shots)', time: '10:00 — 11:15 AM', reporting: '09:30 AM', duration: '1h 15m', maxSlots: 15 },
       { id: 3, name: 'Relay 03', type: 'NR', matchTitle: 'NR Match (40 Shots)', time: '11:40 AM — 12:45 PM', reporting: '11:10 AM', duration: '1h 05m', maxSlots: 15 },
