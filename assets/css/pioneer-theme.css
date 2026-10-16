@@ -872,18 +872,50 @@ body::before {
 
 .footer-contacts-chips {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: 0.45rem;
+  margin-top: 1.15rem;
+}
+
+.footer-founder-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.footer-founder-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--footer-heading);
+  opacity: 0.9;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: color 400ms ease;
+}
+
+.footer-founder-label::before,
+.footer-founder-label::after {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 1px;
+  background-color: currentColor;
+  opacity: 0.4;
 }
 
 .footer-contact-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.75rem;
+  gap: 0.4rem;
+  padding: 0.4rem 0.95rem;
   border-radius: 9999px;
   background-color: var(--footer-badge-bg);
   border: 1px solid var(--footer-badge-border);
