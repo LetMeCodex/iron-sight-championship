@@ -33,7 +33,8 @@ const server = http.createServer(async (req, res) => {
     const routeName = pathname.replace('/api/', '').split('?')[0].replace('.js', '');
     const apiFilePath = path.join(__dirname, 'api', `${routeName}.js`);
 
-    if (fs.existsSync(apiFilePath)) {
+    // Like Vercel: only top-level files are routes; _lib/ helpers are not
+    if (/^[a-z0-9-]+$/i.test(routeName) && fs.existsSync(apiFilePath)) {
       try {
         const module = await import(`./api/${routeName}.js?t=${Date.now()}`);
         const handler = module.default;
@@ -51,6 +52,7 @@ const server = http.createServer(async (req, res) => {
             }
           }
           req.body = parsedBody;
+          req.rawBody = rawBody;
 
           // Polyfill res.status and res.json
           res.status = function(code) {
@@ -88,6 +90,12 @@ const server = http.createServer(async (req, res) => {
   let safePath = path.normalize(decodeURIComponent(pathname)).replace(/^(\.\.[\/\\])+/, '');
   if (safePath === '/' || safePath === '\\') safePath = '/index.html';
   let filePath = path.join(__dirname, safePath);
+  // Never serve dotfiles (.env), server code or anything outside this folder
+  if (!filePath.startsWith(__dirname) || /[\/\\]\./.test(safePath) ||
+      /^[\/\\](api|supabase|scripts|reports|node_modules)[\/\\]/.test(safePath) || /server\.js$/.test(safePath)) {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    return res.end('404 Not Found');
+  }
 
   // If file doesn't exist, try appending .html
   if (!fs.existsSync(filePath) && fs.existsSync(filePath + '.html')) {

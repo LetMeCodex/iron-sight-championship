@@ -1,0 +1,13 @@
+# Keep local/dev files off the public website
+server.js
+scripts/
+reports/
+supabase/
+tests/
+simulator.html
+*.py
+/*.png
+.env
+.env.*
+README.md
+SETUP.md

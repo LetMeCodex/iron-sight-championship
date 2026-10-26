@@ -21,4 +21,10 @@ Official multi-page tournament portal for the **2nd Late Smt. Kiran Chopra Shoot
 - `track-booking.html` — Competitor Card Lookup & Print Pass
 - `live-scoring.html` — Real-Time SIUS Leaderboard
 - `category-wise-scoring.html` — Rifle, Pistol, U-12 & Para Division Rankings
-- `admin.html` — Range Master Control & Backup Hub (PIN: `2026`)
+- `admin.html` — Admin console (password login, server-side). See [SETUP.md](SETUP.md).
+
+## ⚙️ Backend (v3)
+
+- Database: Supabase Postgres (`supabase/schema.sql`, `supabase/seed.sql`), accessed only from `api/*` with the service key.
+- Payments: Razorpay orders created on the server with the fee from the `events` table; confirmed by browser callback, webhook and reconcile.
+- Setup steps: [SETUP.md](SETUP.md). Tests: `npm test` (SQL + API) and `npm run test:ui` (pages in headless Edge).

@@ -391,133 +391,120 @@
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/js/portal.js?v=2.4"></script>
-  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/portal.js?v=3.0"></script>
+  <script src="assets/js/api-client.js?v=3.0"></script>
   <script>
     let currentFilter = 'ALL';
     let currentSearch = '';
     let autoRefreshTimer = null;
+    let lastScores = [];
+    let lastPublished = true;
 
     document.addEventListener('DOMContentLoaded', () => {
       loadAndRenderScores();
-      // Auto-refresh every 6 seconds from Edge Cache without hammering Supabase
-      autoRefreshTimer = setInterval(() => {
-        loadAndRenderScores(true);
-      }, 6000);
+      // CDN-cached endpoint: refreshing every 10s costs the database almost nothing
+      autoRefreshTimer = setInterval(() => loadAndRenderScores(true), 10000);
     });
 
     async function loadAndRenderScores(isAuto = false) {
       const tbody = document.getElementById('liveScoresTbody');
-      if (!isAuto && (!tbody.children || tbody.children.length === 0)) {
-        tbody.innerHTML = `<tr><td colspan="13" class="text-center py-8 font-mono text-white/40"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Syncing live telemetry from Supabase Edge...</td></tr>`;
+      if (!isAuto && !lastScores.length) {
+        tbody.innerHTML = `<tr><td colspan="13" class="text-center py-8 font-mono text-white/40"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Loading live scores...</td></tr>`;
       }
+      if (document.hidden && isAuto) return;
+      const result = await NexShotDB.getLiveScores();
+      lastScores = result.scores;
+      lastPublished = result.published;
+      renderTableData(lastScores, currentFilter, currentSearch);
+    }
 
-      try {
-        const rawScores = await NexShotDB.getLiveScores(isAuto);
-        renderTableData(rawScores, currentFilter, currentSearch);
-      } catch (err) {
-        console.error('Failed to load scores:', err);
-      }
+    // Rank inside each event/category (rankOverride from admin wins), ties broken by 10x
+    function withCategoryRanks(rows) {
+      const groups = {};
+      rows.forEach(r => { (groups[r.eventCode] = groups[r.eventCode] || []).push(r); });
+      Object.values(groups).forEach(list => {
+        list.sort((a, b) => (b.total || 0) - (a.total || 0) || (b.x10 || 0) - (a.x10 || 0));
+        list.forEach((r, i) => { r.rank = r.rankOverride || i + 1; });
+      });
+      return rows;
     }
 
     function renderTableData(data, filter = 'ALL', search = '') {
       const tbody = document.getElementById('liveScoresTbody');
       tbody.innerHTML = '';
 
-      if (!data || data.length === 0) {
+      if (!lastPublished) {
+        tbody.innerHTML = `<tr><td colspan="13" class="text-center py-8 font-mono text-white/40">Results will be published here once the matches begin.</td></tr>`;
+        return;
+      }
+      const started = (data || []).filter(s => (s.total || 0) > 0 || s.status === 'shooting' || s.status === 'finished');
+      if (!started.length) {
         tbody.innerHTML = `<tr><td colspan="13" class="text-center py-8 font-mono text-white/40">No live match scores recorded yet.</td></tr>`;
         return;
       }
 
-      // Normalize items whether from Supabase join or local format
-      let normalized = data.map(item => {
-        const comp = item.competitor || {};
-        return {
-          id: item.id || comp.id,
-          name: comp.full_name || item.name || 'Shooter',
-          bib: comp.bib_no || item.id || 100,
-          school: comp.club_name || item.school || 'BBC Shooting Academy',
-          event: comp.weapon ? `${comp.weapon} (${comp.event_category || 'ISSF'})` : (item.event || '10M Air Rifle'),
-          s1: parseFloat(item.series_1 !== undefined ? item.series_1 : item.s1) || 0,
-          s2: parseFloat(item.series_2 !== undefined ? item.series_2 : item.s2) || 0,
-          s3: parseFloat(item.series_3 !== undefined ? item.series_3 : item.s3) || 0,
-          s4: parseFloat(item.series_4 !== undefined ? item.series_4 : item.s4) || 0,
-          s5: parseFloat(item.series_5 !== undefined ? item.series_5 : item.s5) || 0,
-          s6: parseFloat(item.series_6 !== undefined ? item.series_6 : item.s6) || 0,
-          total: parseFloat(item.total_score !== undefined ? item.total_score : item.total) || 0,
-          x10: parseInt(item.inner_tens !== undefined ? item.inner_tens : item.x10) || 0,
-          active: (item.status === 'shooting') || item.active || false
-        };
-      });
-
-      let filtered = normalized.filter(s => {
-        const matchesEvent = (filter === 'ALL' || s.event.toLowerCase().includes(filter.toLowerCase()));
-        const matchesSearch = (!search || s.name.toLowerCase().includes(search.toLowerCase()) || s.school.toLowerCase().includes(search.toLowerCase()) || s.bib.toString().includes(search));
+      const term = search.trim().toLowerCase();
+      const filtered = withCategoryRanks(started.map(s => ({ ...s }))).filter(s => {
+        const label = `${s.event || ''} ${s.category || ''} ${s.weapon || ''}`.toLowerCase();
+        const matchesEvent = filter === 'ALL' || label.includes(filter.toLowerCase());
+        const matchesSearch = !term || (s.name || '').toLowerCase().includes(term) || (s.club || '').toLowerCase().includes(term) || String(s.bib || '').includes(term);
         return matchesEvent && matchesSearch;
       });
+      filtered.sort((a, b) => (b.total || 0) - (a.total || 0) || (b.x10 || 0) - (a.x10 || 0));
 
-      filtered.sort((a, b) => {
-        if (b.total !== a.total) return b.total - a.total;
-        return b.x10 - a.x10;
-      });
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="13" class="text-center py-8 font-mono text-white/40">No shooters match this filter.</td></tr>`;
+        return;
+      }
 
-      filtered.forEach((shooter, idx) => {
-        const rank = idx + 1;
-        const tr = document.createElement('tr');
-        tr.className = `hover:bg-white/5 transition-colors ${shooter.active ? 'bg-emerald-500/5' : ''}`;
-
+      const rowsHtml = filtered.map(shooter => {
+        const rank = shooter.rank;
         let rankBadge = `<span class="font-mono text-white/60 font-bold">#${rank}</span>`;
         if (rank === 1) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-amber-400/20 text-amber-300 border border-amber-400/40">1</span>`;
         if (rank === 2) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-slate-300/20 text-slate-200 border border-slate-300/30">2</span>`;
         if (rank === 3) rankBadge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-amber-700/20 text-amber-500 border border-amber-700/40">3</span>`;
 
-        const isRifle = !shooter.event.toLowerCase().includes('pistol');
-        const isISSF = shooter.event.toLowerCase().includes('issf');
-        const fmtVal = (val) => {
-          if (!val || val <= 0) return '-';
-          return isRifle ? Number(val).toFixed(1) : Math.round(Number(val));
-        };
+        const isRifle = shooter.weapon !== 'Pistol';
+        const series = shooter.shots && shooter.shots <= 40 ? 4 : 6;
+        const fmtVal = (val) => (val === null || val === undefined || val <= 0) ? '-' : (isRifle ? Number(val).toFixed(1) : Math.round(Number(val)));
+        const cell = (n) => n > series ? '-' : fmtVal(shooter['s' + n]);
+        const totalDisp = isRifle ? Number(shooter.total || 0).toFixed(1) : Math.round(shooter.total || 0);
+        const active = shooter.status === 'shooting';
+        const statusLabel = { finished: 'COMPLETED', dns: 'DNS', dnf: 'DNF', dq: 'DQ', pending: 'WAITING' }[shooter.status] || 'COMPLETED';
 
-        const s1Disp = fmtVal(shooter.s1);
-        const s2Disp = fmtVal(shooter.s2);
-        const s3Disp = fmtVal(shooter.s3);
-        const s4Disp = fmtVal(shooter.s4);
-        const s5Disp = isISSF && shooter.s5 > 0 ? fmtVal(shooter.s5) : '-';
-        const s6Disp = isISSF && shooter.s6 > 0 ? fmtVal(shooter.s6) : '-';
-        const totalDisp = isRifle ? shooter.total.toFixed(1) : Math.round(shooter.total);
-
-        tr.innerHTML = `
+        return `<tr class="hover:bg-white/5 transition-colors ${active ? 'bg-emerald-500/5' : ''}">
           <td class="py-3 px-4 text-center">${rankBadge}</td>
           <td class="py-3 px-4 font-semibold text-white">
-            <div>${shooter.name}</div>
-            <div class="text-[10px] font-mono text-white/40">BIB #${shooter.bib}</div>
+            <div>${escapeHtml(shooter.name)}</div>
+            <div class="text-[10px] font-mono text-white/40">BIB #${escapeHtml(shooter.bib)}</div>
           </td>
-          <td class="py-3 px-4 text-white/60 text-xs">${shooter.school}</td>
-          <td class="py-3 px-4 font-mono text-[11px] text-cyan-400">${shooter.event}</td>
-          <td class="py-3 px-2 text-center font-mono text-white/70">${s1Disp}</td>
-          <td class="py-3 px-2 text-center font-mono text-white/70">${s2Disp}</td>
-          <td class="py-3 px-2 text-center font-mono text-white/70">${s3Disp}</td>
-          <td class="py-3 px-2 text-center font-mono text-white/70">${s4Disp}</td>
-          <td class="py-3 px-2 text-center font-mono text-white/50">${s5Disp}</td>
-          <td class="py-3 px-2 text-center font-mono text-white/50">${s6Disp}</td>
+          <td class="py-3 px-4 text-white/60 text-xs">${escapeHtml(shooter.club || '—')}</td>
+          <td class="py-3 px-4 font-mono text-[11px] text-cyan-400">
+            <div>${escapeHtml(shooter.event)}</div>
+            <div class="text-[10px] text-white/40">${escapeHtml(shooter.category)}</div>
+          </td>
+          <td class="py-3 px-2 text-center font-mono text-white/70">${cell(1)}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/70">${cell(2)}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/70">${cell(3)}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/70">${cell(4)}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/50">${cell(5)}</td>
+          <td class="py-3 px-2 text-center font-mono text-white/50">${cell(6)}</td>
           <td class="py-3 px-4 text-center font-mono font-bold text-sm text-cyan-300">${totalDisp}</td>
-          <td class="py-3 px-4 text-center font-mono font-bold text-[#FF5B37]">${shooter.x10}x</td>
+          <td class="py-3 px-4 text-center font-mono font-bold text-[#FF5B37]">${shooter.x10 || 0}x</td>
           <td class="py-3 px-4 text-center">
-            ${shooter.active 
-              ? '<span class="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> FIRING</span>' 
-              : '<span class="text-[10px] font-mono text-white/40">COMPLETED</span>'}
+            ${active
+              ? '<span class="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> FIRING</span>'
+              : `<span class="text-[10px] font-mono text-white/40">${statusLabel}</span>`}
           </td>
-        `;
-
-        tbody.appendChild(tr);
+        </tr>`;
       });
+      tbody.innerHTML = rowsHtml.join('');
     }
 
     function filterLiveScores() {
       currentSearch = document.getElementById('liveSearch').value;
       currentFilter = document.getElementById('liveEventFilter').value;
-      loadAndRenderScores(false);
+      renderTableData(lastScores, currentFilter, currentSearch);
     }
   </script>
 </body>

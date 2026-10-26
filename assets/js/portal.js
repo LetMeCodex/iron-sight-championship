@@ -1,84 +1,49 @@
 // ================= PIONEER SHARED PORTAL DATA STORE ================= //
+// Source of truth is the server (/api/*). localStorage only keeps a cached copy
+// of public config and the athlete's own passes, so pages still render offline.
 
-const STORAGE_KEY_SHOOTERS = 'nexshot_shooters_db';
-const STORAGE_KEY_BOOKINGS = 'nexshot_bookings_db';
+const STORAGE_KEY_BOOKINGS = 'nexshot_my_passes';
+const STORAGE_KEY_PUBLIC_CONFIG = 'nexshot_public_config';
 
-// Initial Shooters Dataset
-const DEFAULT_SHOOTERS = [
-  { id: 1, rank: 1, name: "Aarav Sharma", school: "Babu Bodhraj Convent School", event: "10M Air Rifle ISSF", category: "Sub-Youth Men", s1: 104.2, s2: 103.8, s3: 104.5, s4: 104.9, s5: 103.6, s6: 104.8, total: 625.8, x10: 42, active: true },
-  { id: 2, rank: 2, name: "Rajat Sangwan", school: "Meerut Shooting Academy", event: "10M Air Pistol ISSF", category: "Junior Men", s1: 98.0, s2: 97.0, s3: 98.0, s4: 97.0, s5: 98.0, s6: 99.0, total: 587.0, x10: 26, active: false },
-  { id: 3, rank: 3, name: "Simran Kaur", school: "The Sapience Dwarka", event: "10M Air Rifle NR", category: "Junior Women", s1: 104.6, s2: 104.2, s3: 103.1, s4: 105.7, s5: 0.0, s6: 0.0, total: 417.6, x10: 36, active: false },
-  { id: 4, rank: 4, name: "Arvind Tomer", school: "Hawk2 Aim Shooting Range", event: "10M Air Pistol NR", category: "Senior Men", s1: 93.0, s2: 97.0, s3: 98.0, s4: 95.0, s5: 0.0, s6: 0.0, total: 383.0, x10: 14, active: false },
-  { id: 5, rank: 5, name: "Bhumi Verma", school: "Abhinandan Academy", event: "10M Air Rifle ISSF", category: "Youth Women", s1: 103.1, s2: 102.5, s3: 104.0, s4: 103.2, s5: 102.9, s6: 103.8, total: 619.5, x10: 31, active: false },
-  { id: 6, rank: 6, name: "Pulkit Kharb", school: "MDK Shooting Range", event: "Little Champ 10M Pistol", category: "Under-12", s1: 97.0, s2: 98.0, s3: 0.0, s4: 0.0, s5: 0.0, s6: 0.0, total: 195.0, x10: 11, active: false },
-  { id: 7, rank: 7, name: "Vanshik Singh", school: "Abhinandan Academy", event: "Little Champ 10M Rifle", category: "Under-12", s1: 98.6, s2: 99.0, s3: 0.0, s4: 0.0, s5: 0.0, s6: 0.0, total: 197.6, x10: 16, active: false },
-  { id: 8, rank: 8, name: "Soin Khan", school: "Binauli Rifle Club", event: "Deaf / Para 10M Pistol", category: "Para Men", s1: 91.0, s2: 90.0, s3: 91.0, s4: 89.0, s5: 0.0, s6: 0.0, total: 361.0, x10: 9, active: false }
-];
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
-// Initial Bookings
-const DEFAULT_BOOKINGS = [
-  {
-    compNo: "COMP #NST-2026-084",
-    name: "Aarav Sharma",
-    fatherName: "Rajesh Sharma",
-    school: "Babu Bodhraj Convent School",
-    mobile: "8445070791",
-    gender: "Male",
-    event: "10M Air Rifle (.177) ISSF",
-    category: "Sub-Youth Men",
-    date: "25 NOV 2026",
-    relay: "Relay 01",
-    time: "09:00 — 10:15 AM",
-    reporting: "08:30 AM",
-    lane: "Lane #04 (SIUS)",
-    status: "Confirmed",
-    fee: "1500"
-  }
-];
-
-function getShooters() {
-  let data = localStorage.getItem(STORAGE_KEY_SHOOTERS);
-  if (!data) {
-    data = localStorage.getItem('iron_sight_shooters_db');
-  }
-  if (!data) {
-    localStorage.setItem(STORAGE_KEY_SHOOTERS, JSON.stringify(DEFAULT_SHOOTERS));
-    return DEFAULT_SHOOTERS;
-  }
+function readJSON(key, fallback) {
   try {
-    return JSON.parse(data);
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
   } catch (e) {
-    return DEFAULT_SHOOTERS;
+    return fallback;
   }
 }
 
-function saveShooters(shooters) {
-  localStorage.setItem(STORAGE_KEY_SHOOTERS, JSON.stringify(shooters));
+function writeJSON(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {}
 }
 
+// Passes this browser has booked (offline copy shown on Track Booking if the server is unreachable)
 function getBookings() {
-  let data = localStorage.getItem(STORAGE_KEY_BOOKINGS);
-  if (!data) {
-    data = localStorage.getItem('iron_sight_bookings_db');
-  }
-  if (!data) {
-    localStorage.setItem(STORAGE_KEY_BOOKINGS, JSON.stringify(DEFAULT_BOOKINGS));
-    return DEFAULT_BOOKINGS;
-  }
-  try {
-    return JSON.parse(data);
-  } catch (e) {
-    return DEFAULT_BOOKINGS;
-  }
+  const list = readJSON(STORAGE_KEY_BOOKINGS, []);
+  return Array.isArray(list) ? list : [];
+}
+
+function saveBooking(pass) {
+  if (!pass) return;
+  const list = getBookings().filter(p => !(pass.regNo && p.regNo === pass.regNo));
+  list.unshift({ ...pass, savedAt: new Date().toISOString() });
+  writeJSON(STORAGE_KEY_BOOKINGS, list.slice(0, 20));
 }
 
 // ================= TOURNAMENT GLOBAL CONFIGURATION (CUSTOMIZABLE VIA ADMIN) ================= //
 
-const STORAGE_KEY_TOURNAMENT_SETTINGS = 'nexshot_tournament_settings';
-const STORAGE_KEY_RELAYS_CONFIG = 'nexshot_relays_config';
-const STORAGE_KEY_EVENTS_CONFIG = 'nexshot_events_config';
-const STORAGE_KEY_RULES_CONFIG = 'nexshot_rules_config';
-const STORAGE_KEY_ADMIN_PIN = 'nexshot_admin_pin';
 
 const DEFAULT_TOURNAMENT_SETTINGS = {
   tournamentName: "2nd Late Smt. Kiran Chopra Shooting Championship",
@@ -121,92 +86,57 @@ const DEFAULT_RULES_CONFIG = {
   weaponInspection: "Pellets and cylinder pressure check conducted at Range Desk before entry."
 };
 
-function getTournamentSettings() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_TOURNAMENT_SETTINGS);
-    if (raw) return { ...DEFAULT_TOURNAMENT_SETTINGS, ...JSON.parse(raw) };
-  } catch(e) {}
-  return { ...DEFAULT_TOURNAMENT_SETTINGS };
+function getPublicConfig() {
+  return readJSON(STORAGE_KEY_PUBLIC_CONFIG, null);
 }
 
-function saveTournamentSettings(settings) {
-  const current = getTournamentSettings();
-  const merged = { ...current, ...settings };
-  localStorage.setItem(STORAGE_KEY_TOURNAMENT_SETTINGS, JSON.stringify(merged));
-  return merged;
+function getTournamentSettings() {
+  const cfg = getPublicConfig();
+  return { ...DEFAULT_TOURNAMENT_SETTINGS, ...((cfg && cfg.settings) || {}) };
+}
+
+function mapRelay(r) {
+  return {
+    id: r.relay_no,
+    name: r.name,
+    type: r.type,
+    matchTitle: r.match_title,
+    time: r.time_text,
+    reporting: r.reporting_text,
+    duration: r.duration,
+    maxSlots: r.capacity,
+    active: true
+  };
 }
 
 function getRelaysConfig() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_RELAYS_CONFIG);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch(e) {}
+  const cfg = getPublicConfig();
+  if (cfg && Array.isArray(cfg.relays) && cfg.relays.length) return cfg.relays.map(mapRelay);
   return JSON.parse(JSON.stringify(DEFAULT_RELAYS_CONFIG));
 }
 
-function saveRelaysConfig(relays) {
-  localStorage.setItem(STORAGE_KEY_RELAYS_CONFIG, JSON.stringify(relays));
-  return relays;
-}
-
 function getTournamentRules() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_RULES_CONFIG);
-    if (raw) return { ...DEFAULT_RULES_CONFIG, ...JSON.parse(raw) };
-  } catch(e) {}
-  return { ...DEFAULT_RULES_CONFIG };
+  return { ...DEFAULT_RULES_CONFIG, ...(getTournamentSettings().rules || {}) };
 }
 
-function saveTournamentRules(rules) {
-  const current = getTournamentRules();
-  const merged = { ...current, ...rules };
-  localStorage.setItem(STORAGE_KEY_RULES_CONFIG, JSON.stringify(merged));
-  return merged;
-}
-
-function getAdminPin() {
-  try {
-    const pin = localStorage.getItem(STORAGE_KEY_ADMIN_PIN);
-    if (pin && pin.trim().length >= 4) return pin.trim();
-  } catch(e) {}
-  return '2026';
-}
-
-function saveAdminPin(pin) {
-  if (!pin || pin.trim().length < 4) return false;
-  localStorage.setItem(STORAGE_KEY_ADMIN_PIN, pin.trim());
-  return true;
-}
-
-function updateBooking(compNo, updatedFields) {
-  const bookings = getBookings();
-  const idx = bookings.findIndex(b => (b.compNo === compNo || b.id === compNo || (b.mobile && b.mobile === compNo)));
-  if (idx !== -1) {
-    bookings[idx] = { ...bookings[idx], ...updatedFields };
-    localStorage.setItem(STORAGE_KEY_BOOKINGS, JSON.stringify(bookings));
-    return true;
-  }
-  return false;
-}
-
-function deleteBooking(compNo) {
-  let bookings = getBookings();
-  bookings = bookings.filter(b => b.compNo !== compNo && b.id !== compNo);
-  localStorage.setItem(STORAGE_KEY_BOOKINGS, JSON.stringify(bookings));
-  return true;
-}
-
-function addManualBooking(booking) {
-  const bookings = getBookings();
-  if (!booking.compNo) {
-    booking.compNo = `NSC-2026-${Math.floor(100 + Math.random() * 900)}`;
-  }
-  bookings.unshift(booking);
-  localStorage.setItem(STORAGE_KEY_BOOKINGS, JSON.stringify(bookings));
-  return booking;
+// Fetch live config from the server (CDN cached). Pages listen for "nexshot:config".
+let __configPromise = null;
+function loadPublicConfig(force = false) {
+  if (__configPromise && !force) return __configPromise;
+  __configPromise = fetch('/api/config', { cache: 'no-cache' })
+    .then(res => res.ok ? res.json() : Promise.reject(new Error('config ' + res.status)))
+    .then(json => {
+      const cfg = { settings: json.settings || {}, events: json.events || [], relays: json.relays || [], fetchedAt: Date.now() };
+      writeJSON(STORAGE_KEY_PUBLIC_CONFIG, cfg);
+      document.dispatchEvent(new CustomEvent('nexshot:config', { detail: cfg }));
+      return cfg;
+    })
+    .catch(err => {
+      console.warn('Using cached tournament config:', err.message);
+      __configPromise = null;
+      return getPublicConfig();
+    });
+  return __configPromise;
 }
 
 function renderGlobalAnnouncementBar() {
@@ -221,8 +151,8 @@ function renderGlobalAnnouncementBar() {
   bar.innerHTML = `
     <div class="max-w-7xl mx-auto flex items-center gap-2 truncate">
       <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping flex-shrink-0"></span>
-      <span class="font-bold text-amber-300 uppercase tracking-wider flex-shrink-0">${settings.announcementHeadline || 'OFFICIAL BULLETIN'}:</span>
-      <span class="truncate text-white/90">${settings.announcementText}</span>
+      <span class="font-bold text-amber-300 uppercase tracking-wider flex-shrink-0">${escapeHtml(settings.announcementHeadline || 'OFFICIAL BULLETIN')}:</span>
+      <span class="truncate text-white/90">${escapeHtml(settings.announcementText)}</span>
     </div>
     <button onclick="document.getElementById('globalAnnouncementBar').remove(); sessionStorage.setItem('nexshot_announcement_dismissed', 'true');" class="text-white/60 hover:text-white px-2 py-0.5 rounded text-xs flex-shrink-0" title="Dismiss">
       <i class="fa-solid fa-xmark"></i>
@@ -245,7 +175,7 @@ function showToast(msg, icon = 'check') {
     <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs flex-shrink-0">
       <i class="fa-solid fa-${icon}"></i>
     </span>
-    <span class="text-white font-medium">${msg}</span>
+    <span class="text-white font-medium">${escapeHtml(msg)}</span>
   `;
 
   toast.classList.remove('-translate-y-16', 'opacity-0');
@@ -266,7 +196,6 @@ function renderMobileBottomNav() {
   nav.id = 'mobileBottomNav';
   nav.className = 'fixed bottom-3 inset-x-3 z-40 lg:hidden pioneer-card px-2 py-2 flex items-center justify-around text-center border border-white/15 backdrop-blur-2xl shadow-2xl rounded-2xl';
 
-  const path = window.location.pathname.toLowerCase();
   const isHome = path.endsWith('index.html') || path.endsWith('/') || path === '' || (!path.includes('.html'));
   const isSchedule = path.includes('match-schedule');
   const isRegister = path.includes('register');
@@ -303,126 +232,6 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', renderMobileBottomNav);
 } else {
   renderMobileBottomNav();
-}
-
-// ================= BACKUP & DISASTER RECOVERY HUB ================= //
-
-// 1. Export Complete JSON Backup
-function exportBackupJSON() {
-  const backupData = {
-    app: "NexShot Technologies Championship Portal 2026",
-    version: "2.0",
-    exportedAt: new Date().toISOString(),
-    shooters: getShooters(),
-    bookings: getBookings()
-  };
-
-  const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
-  a.href = url;
-  a.download = `NexShot_Championship_Backup_${stamp}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast("Full Database Backup Exported (.JSON)", "download");
-}
-
-// 2. Export Bookings CSV for Jury & School Verification
-function exportBookingsCSV() {
-  if (window.NexShotDB && typeof NexShotDB.exportCSV === 'function') {
-    showToast("Generating comprehensive database CSV...", "file-csv");
-    NexShotDB.exportCSV();
-    return;
-  }
-
-  const bookings = getBookings();
-  if (!bookings || bookings.length === 0) {
-    showToast("No athlete registrations found to export", "circle-exclamation");
-    return;
-  }
-
-  const headers = ["Comp ID", "Athlete Name", "Father Name", "School/Academy", "Mobile", "Gender", "Event", "Category", "Match Date", "Relay", "Firing Time", "Reporting Time", "Lane", "Fee Paid", "Status"];
-  const rows = bookings.map(b => [
-    `"${b.compNo || ''}"`,
-    `"${b.name || ''}"`,
-    `"${b.fatherName || ''}"`,
-    `"${b.school || ''}"`,
-    `"${b.mobile || ''}"`,
-    `"${b.gender || ''}"`,
-    `"${b.event || ''}"`,
-    `"${b.category || ''}"`,
-    `"${b.date || ''}"`,
-    `"${b.relay || ''}"`,
-    `"${b.time || ''}"`,
-    `"${b.reporting || ''}"`,
-    `"${b.lane || ''}"`,
-    `"${b.fee || ''}"`,
-    `"${b.status || ''}"`
-  ]);
-
-  const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
-  const encodedUri = encodeURI(csvContent);
-  const a = document.createElement("a");
-  const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 10);
-  a.setAttribute("href", encodedUri);
-  a.setAttribute("download", `NexShot_Athletes_Roster_${stamp}.csv`);
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  showToast("Registrations Roster Exported (.CSV)", "file-csv");
-}
-
-// 3. Import & Restore JSON Backup
-function importBackupJSON(jsonString) {
-  try {
-    const parsed = JSON.parse(jsonString);
-    if (!parsed.shooters || !parsed.bookings) {
-      throw new Error("Invalid backup schema. Required: shooters & bookings arrays.");
-    }
-    localStorage.setItem(STORAGE_KEY_SHOOTERS, JSON.stringify(parsed.shooters));
-    localStorage.setItem(STORAGE_KEY_BOOKINGS, JSON.stringify(parsed.bookings));
-    showToast(`Restored ${parsed.shooters.length} shooters & ${parsed.bookings.length} registrations!`, "cloud-arrow-up");
-    return true;
-  } catch (err) {
-    alert("Backup restoration error: " + err.message);
-    return false;
-  }
-}
-
-// 4. Update Shooter Scores
-function updateShooter(updated) {
-  const shooters = getShooters();
-  const idx = shooters.findIndex(s => s.id == updated.id);
-  if (idx !== -1) {
-    shooters[idx] = { ...shooters[idx], ...updated };
-    saveShooters(shooters);
-    showToast(`Updated scores for ${updated.name}`, "check");
-    return true;
-  }
-  return false;
-}
-
-// 5. Add New Shooter
-function addShooter(shooter) {
-  const shooters = getShooters();
-  shooter.id = Date.now();
-  shooter.rank = shooters.length + 1;
-  shooters.push(shooter);
-  saveShooters(shooters);
-  showToast(`Added ${shooter.name} to leaderboard!`, "user-plus");
-}
-
-// 6. Delete Shooter
-function deleteShooter(id) {
-  let shooters = getShooters();
-  shooters = shooters.filter(s => s.id != id);
-  // Re-rank
-  shooters.forEach((s, idx) => s.rank = idx + 1);
-  saveShooters(shooters);
-  showToast("Shooter removed from leaderboard", "trash");
 }
 
 // ================= OFFICIAL NRAI/ISSF MATCHES CATALOG (PAGES 10 & 11) ================= //
@@ -615,9 +424,11 @@ function initGSAPAnimations() {
 }
 
 /* ================= LIVE CHAMPIONSHIP COUNTDOWN ================= */
+let __countdownTimer = null;
 function initChampionshipCountdown() {
   const countdownEl = document.getElementById('countdownText');
   if (!countdownEl) return;
+  if (__countdownTimer) clearInterval(__countdownTimer);
 
   const settings = (typeof getTournamentSettings === 'function') ? getTournamentSettings() : null;
   const startDateStr = settings?.startDate || '2026-11-25';
@@ -644,7 +455,7 @@ function initChampionshipCountdown() {
   }
 
   update();
-  setInterval(update, 1000);
+  __countdownTimer = setInterval(update, 1000);
 }
 
 // Auto-init on DOMContentLoaded or immediate if ready (guaranteed single execution)
@@ -656,7 +467,37 @@ function __bootstrapPortal() {
   initGSAPAnimations();
   initChampionshipCountdown();
   renderGlobalAnnouncementBar();
+  applySettingsToPage();
+  loadPublicConfig();
 }
+
+// Push admin-edited settings into the page: elements marked data-setting="key" get the text,
+// and every Maps / circular link follows the links saved in the admin panel.
+function applySettingsToPage() {
+  const s = getTournamentSettings();
+  document.querySelectorAll('[data-setting]').forEach(el => {
+    const v = s[el.dataset.setting];
+    if (v !== undefined && v !== null && String(v).trim() !== '') el.textContent = v;
+  });
+  if (s.venueMapsUrl && /^https:\/\//.test(s.venueMapsUrl)) {
+    document.querySelectorAll('a[href*="maps.google."]').forEach(a => { a.href = s.venueMapsUrl; });
+  }
+  if (s.circularPdfUrl && /^(https:\/\/|assets\/)/.test(s.circularPdfUrl)) {
+    document.querySelectorAll('a[href*="Circular"][href$=".pdf"], a[data-circular]').forEach(a => {
+      a.href = s.circularPdfUrl;
+      a.setAttribute('data-circular', '1');
+    });
+  }
+}
+
+document.addEventListener('nexshot:config', () => {
+  applySettingsToPage();
+  // Rebuild the notice bar so admin edits show up without a second page load
+  const oldBar = document.getElementById('globalAnnouncementBar');
+  if (oldBar) oldBar.remove();
+  renderGlobalAnnouncementBar();
+  initChampionshipCountdown();
+});
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', __bootstrapPortal);

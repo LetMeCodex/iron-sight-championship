@@ -1,53 +1,47 @@
-// Vercel Serverless Edge API: /api/scores
-// Protects Supabase Free Tier by caching leaderboard responses on Vercel's Edge CDN
-// Max 1 database hit per 5 seconds, even with 1,000+ simultaneous users!
+// GET /api/scores — public results/leaderboard (no personal data).
+// CDN-cached for 5s: 1000+ people watching live costs ~12 DB reads per minute.
 
-const SUPABASE_URL = "https://ltsfadnajhxvwhzexktt.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0c2ZhZG5hamh4dndoemV4a3R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MTc4MDMsImV4cCI6MjA5NTk5MzgwM30.TF7KyvO_ySDduXzMv5TK3FYjpY36N2yz-8vC0IlvidY";
+import { db } from './_lib/db.js';
+import { handler, onlyMethods, send } from './_lib/http.js';
+import { getSettings } from './_lib/registrations.js';
 
-export default async function handler(req, res) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+export default handler(async (req, res) => {
+  if (!onlyMethods(req, res, ['GET'])) return;
+  const cache = { 'Cache-Control': 'public, max-age=0, s-maxage=5, stale-while-revalidate=30' };
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  const settings = await getSettings();
+  if (settings.resultsPublic === false) {
+    return send(res, 200, { success: true, published: false, scores: [] }, cache);
   }
 
-  // Set Edge Caching: 5s fresh on CDN, 10s stale-while-revalidate
-  res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=5, stale-while-revalidate=10, max-age=5'
-  );
+  const rows = await db.select('public_results', 'select=*&order=total.desc,inner_tens.desc&limit=5000');
+  const scores = (rows || []).map(r => ({
+    bib: r.bib_no,
+    regNo: r.reg_no,
+    name: r.full_name,
+    club: r.club_name,
+    gender: r.gender,
+    eventCode: r.event_code,
+    event: r.event_group,
+    category: r.category,
+    weapon: r.weapon,
+    shots: r.shots,
+    matchDate: r.match_date,
+    relayNo: r.relay_no,
+    lane: r.lane_no,
+    s1: num(r.s1), s2: num(r.s2), s3: num(r.s3), s4: num(r.s4), s5: num(r.s5), s6: num(r.s6),
+    total: num(r.total),
+    x10: r.inner_tens || 0,
+    finalScore: num(r.final_score),
+    status: r.status,
+    rankOverride: r.rank_override,
+    remarks: r.remarks,
+    updatedAt: r.updated_at
+  }));
 
-  try {
-    const fetchUrl = `${SUPABASE_URL}/rest/v1/scores?select=*,competitor:competitors(*)&order=total_score.desc,inner_tens.desc`;
-    const response = await fetch(fetchUrl, {
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-        'Content-Type': 'application/json'
-      }
-    });
+  send(res, 200, { success: true, published: true, cachedAt: new Date().toISOString(), count: scores.length, scores }, cache);
+});
 
-    if (!response.ok) {
-      throw new Error(`Supabase returned status ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    return res.status(200).json({
-      success: true,
-      cached_at: new Date().toISOString(),
-      count: data.length,
-      scores: data
-    });
-  } catch (error) {
-    console.error('Error fetching scores from Supabase:', error);
-    return res.status(500).json({
-      success: false,
-      error: error.message || 'Internal server error'
-    });
-  }
+function num(v) {
+  return v === null || v === undefined ? null : Number(v);
 }

@@ -1,65 +1,23 @@
-// Vercel Serverless API: /api/track
-// Quick lookup by Mobile, Bib Number, or Registration Number
+// GET /api/track?mobile=9876543210 — all passes registered with that mobile number.
+// Returns only pass details (no email / DOB / full phone).
 
-const SUPABASE_URL = "https://ltsfadnajhxvwhzexktt.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0c2ZhZG5hamh4dndoemV4a3R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MTc4MDMsImV4cCI6MjA5NTk5MzgwM30.TF7KyvO_ySDduXzMv5TK3FYjpY36N2yz-8vC0IlvidY";
+import { db, eq } from './_lib/db.js';
+import { fail, getQuery, handler, onlyMethods, send } from './_lib/http.js';
+import { normalizePhone, relaysMap, toPass } from './_lib/registrations.js';
 
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+export default handler(async (req, res) => {
+  if (!onlyMethods(req, res, ['GET'])) return;
+  const q = getQuery(req);
+  const phone = normalizePhone(q.mobile || q.q || '');
+  if (!/^[6-9]\d{9}$/.test(phone)) return fail(res, 400, 'Enter the 10-digit mobile number used during registration.');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  const rows = await db.select('registrations',
+    `phone=${eq(phone)}&status=in.(paid,pending)&select=*&order=created_at.desc&limit=20`);
+  // Hide abandoned checkouts: pending rows only matter for ~30 minutes
+  const recent = Date.now() - 35 * 60 * 1000;
+  const list = (rows || []).filter(r => r.status === 'paid' || new Date(r.created_at).getTime() > recent);
+  if (!list.length) return fail(res, 404, 'No registration found for this mobile number.');
 
-  let query = (req.query && (req.query.q || req.query.mobile)) || '';
-  if (!query && req.url) {
-    try {
-      const parsed = new URL(req.url, 'http://localhost');
-      query = parsed.searchParams.get('q') || parsed.searchParams.get('mobile') || '';
-    } catch(e) {}
-  }
-  query = (query || '').trim();
-
-  if (!query) {
-    return res.status(400).json({ success: false, error: 'Query parameter "q" or "mobile" required' });
-  }
-
-  try {
-    // Search by phone OR registration_no OR bib_no
-    let filterQuery = `phone=eq.${encodeURIComponent(query)}`;
-    if (query.toUpperCase().startsWith('NSC-')) {
-      filterQuery = `registration_no=eq.${encodeURIComponent(query.toUpperCase())}`;
-    } else if (!isNaN(parseInt(query)) && parseInt(query) < 9999) {
-      filterQuery = `or=(phone.eq.${encodeURIComponent(query)},bib_no.eq.${parseInt(query)})`;
-    }
-
-    const fetchUrl = `${SUPABASE_URL}/rest/v1/competitors?${filterQuery}&select=*,scores(*)&limit=5`;
-    const response = await fetch(fetchUrl, {
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Supabase error: ${response.status}`);
-    }
-
-    const results = await response.json();
-
-    if (!Array.isArray(results) || results.length === 0) {
-      return res.status(404).json({ success: false, message: 'No competitor pass found for this search' });
-    }
-
-    return res.status(200).json({
-      success: true,
-      competitor: results[0],
-      all: results
-    });
-  } catch (error) {
-    console.error('Track API error:', error);
-    return res.status(500).json({ success: false, error: error.message || 'Lookup failed' });
-  }
-}
+  const relays = await relaysMap();
+  send(res, 200, { success: true, passes: list.map(r => toPass(r, relays)) });
+});

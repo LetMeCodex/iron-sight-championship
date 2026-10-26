@@ -431,10 +431,11 @@
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/js/portal.js?v=2.4"></script>
-  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/portal.js?v=3.0"></script>
+  <script src="assets/js/api-client.js?v=3.0"></script>
   <script>
+    let foundPasses = [];
+
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       const mob = urlParams.get('mobile') || urlParams.get('q');
@@ -447,9 +448,54 @@
     async function searchBooking(e) {
       e.preventDefault();
       const mobile = document.getElementById('searchMobile').value.trim();
-      if (mobile) {
-        await executeSearch(mobile);
+      if (mobile) await executeSearch(mobile);
+    }
+
+    function formatMatchDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(`${iso}T00:00:00`);
+      if (isNaN(d)) return iso;
+      return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+    }
+
+    function renderPassChooser() {
+      let chooser = document.getElementById('passChooser');
+      if (!chooser) {
+        chooser = document.createElement('div');
+        chooser.id = 'passChooser';
+        chooser.className = 'flex flex-wrap gap-2 mb-4 font-mono text-xs';
+        const area = document.getElementById('bookingResultArea');
+        area.parentNode.insertBefore(chooser, area);
       }
+      if (foundPasses.length < 2) {
+        chooser.innerHTML = '';
+        return;
+      }
+      chooser.innerHTML = foundPasses.map((p, i) => `
+        <button type="button" onclick="showPass(${i})" class="px-3 py-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-white/80">
+          ${escapeHtml(p.name)} • ${escapeHtml(p.eventCode || '')}${p.status !== 'paid' ? ' (pending)' : ''}
+        </button>`).join('');
+    }
+
+    function showPass(i) {
+      const p = foundPasses[i];
+      if (!p) return;
+      const set = (id, text) => { const el = document.getElementById(id); if (el) el.innerText = text; };
+
+      set('cardCompNo', p.status === 'paid' ? `${p.regNo} • BIB ${p.bibNo}` : 'PAYMENT PENDING');
+      set('cardAthleteName', p.name);
+      set('cardSchool', p.club || '—');
+      set('cardDiscipline', p.event || '—');
+      set('cardMatchCode', p.eventCode ? `[MATCH ${p.eventCode}]` : 'OFFICIAL ENTRY');
+      set('cardCategory', p.category || '—');
+      set('cardTargetType', `${p.shots || ''} Shots`);
+      set('cardDate', formatMatchDate(p.matchDate));
+      set('cardRelay', p.relayName ? `${p.relayName}${p.relayTime ? ' • ' + p.relayTime : ''}` : 'To be allotted');
+      set('cardLane', p.lane ? `Lane #${String(p.lane).padStart(2, '0')}` : 'Lane to be allotted at desk');
+      set('cardReporting', p.reporting ? `${p.reporting} (Sharp)` : '—');
+
+      document.getElementById('bookingResultArea').classList.remove('hidden');
+      document.getElementById('bookingResultArea').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     async function executeSearch(query) {
@@ -459,64 +505,26 @@
       btn.disabled = true;
 
       try {
-        let found = null;
-        if (window.NexShotDB && typeof NexShotDB.getCompetitor === 'function') {
-          found = await NexShotDB.getCompetitor(query);
-        }
-
-        // Fallback to local storage if needed
-        if (!found && typeof getBookings === 'function') {
-          const bookings = getBookings();
-          found = bookings.find(b => (b.mobile && b.mobile === query) || (b.compNo && b.compNo.includes(query)));
-        }
-
-        if (found) {
-          // Normalize whether data is from Supabase or LocalStorage
-          const compNo = found.registration_no || found.compNo || `BIB #${found.bib_no || '101'}`;
-          const athleteName = found.full_name || found.name || 'Shooter';
-          const school = found.club_name || found.school || 'BBC Shooting Academy';
-          const weaponDiscipline = found.weapon || found.event || '10M Air Rifle (.177)';
-          const matchCode = found.matchCode ? `[MATCH NO. ${found.matchCode}]` : (found.event_category ? `[${found.event_category}]` : 'OFFICIAL ENTRY');
-          const category = found.age_category 
-            ? `${found.age_category} ${found.gender || ''}` 
-            : (found.category || 'Senior');
-          const targetInfo = found.targetType || (found.event ? `${found.event}` : 'SIUS Electronic Target System');
-          
-          let dateStr = found.match_date || found.date || '25 NOV 2026';
-          if (dateStr.includes('-')) {
-            const parts = dateStr.split('-');
-            dateStr = `${parts[2]} NOV ${parts[0]}`;
-          }
-
-          const relayStr = found.relay_no ? `Relay 0${found.relay_no}` : (found.relay || 'Relay 01');
-          const laneStr = found.target_lane ? `Lane #0${found.target_lane} (SIUS)` : (found.lane || 'Lane #04 (SIUS)');
-          const reportingStr = found.reporting_time ? `${found.reporting_time} (Sharp)` : (found.reporting || '08:30 AM (Sharp)');
-
-          document.getElementById('cardCompNo').innerText = compNo;
-          document.getElementById('cardAthleteName').innerText = athleteName;
-          document.getElementById('cardSchool').innerText = school;
-          document.getElementById('cardDiscipline').innerText = weaponDiscipline;
-          document.getElementById('cardMatchCode').innerText = matchCode;
-          document.getElementById('cardCategory').innerText = category;
-          if (document.getElementById('cardTargetType')) {
-            document.getElementById('cardTargetType').innerText = targetInfo;
-          }
-          document.getElementById('cardDate').innerText = dateStr;
-          document.getElementById('cardRelay').innerText = relayStr;
-          document.getElementById('cardLane').innerText = laneStr;
-          document.getElementById('cardReporting').innerText = reportingStr;
-
-          document.getElementById('bookingResultArea').classList.remove('hidden');
-          showToast("Competitor pass verified!", "check");
-          
-          // Scroll to result card
-          document.getElementById('bookingResultArea').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        } else {
-          alert(`No registered competitor found for "${query}".\n\nPlease check your registered mobile number or complete a new registration.`);
-        }
+        foundPasses = await NexShotDB.getPasses(query);
+        foundPasses.forEach(saveBooking);
+        renderPassChooser();
+        showPass(0);
+        showToast(foundPasses.length > 1 ? `${foundPasses.length} registrations found` : 'Competitor pass verified!', 'check');
       } catch (err) {
-        console.error("Search error:", err);
-        alert("Search could not be completed. Please try again.");
+        if (err.status === 404 || err.status === 400) {
+          alert(err.message);
+        } else {
+          // Server unreachable: fall back to passes saved on this device
+          // Saved passes only hold a masked phone, so match on its last two digits
+          foundPasses = getBookings().filter(p => p.phoneMasked && p.phoneMasked.slice(-2) === query.slice(-2));
+          if (foundPasses.length) {
+            renderPassChooser();
+            showPass(0);
+            showToast('Offline copy of your pass shown', 'circle-info');
+          } else {
+            alert('Could not reach the server. Please check your internet and try again.');
+          }
+        }
       } finally {
         btn.innerHTML = origText;
         btn.disabled = false;

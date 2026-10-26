@@ -1,12 +1,12 @@
 {
   "name": "portal",
   "version": "1.0.0",
-  "description": "Official multi-page tournament portal for the **2nd Late Smt. Kiran Chopra Shooting Championship 2026**, powered by **NexShot Technologies** at **BBC Shooting Academy, Babu Bodhraj Convent School, Sikandrabad, District Bulandshahr, Uttar Pradesh – 203205**.",
-  "main": "index.js",
+  "description": "Registration, payments, results and admin portal for the 2nd Late Smt. Kiran Chopra Shooting Championship (NexShot Technologies).",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node tests/run.mjs",
+    "test:ui": "node tests/run.mjs --ui"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,13 @@
   },
   "homepage": "https://github.com/LetMeCodex/iron-sight-championship#readme",
   "dependencies": {
-    "dotenv": "^18.0.5",
-    "razorpay": "^2.9.8"
+    "dotenv": "^18.0.5"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.2.17",
+    "puppeteer-core": "23.11.1"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

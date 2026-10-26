@@ -1,103 +1,87 @@
-// Vercel Serverless API: /api/create-order
-// Creates a Razorpay order for NexShot Technologies Shooting Championship registrations
+// POST /api/create-order
+// 1. Validates the athlete, 2. holds a seat in the chosen relay (30 min),
+// 3. creates a Razorpay order for the fee stored in the database (never the browser's amount).
 
-import Razorpay from 'razorpay';
-import 'dotenv/config';
+import { db, eq, friendlyDbError } from './_lib/db.js';
+import { fail, handler, HttpError, onlyMethods, readBody, send } from './_lib/http.js';
+import { createOrder, publicKeyId } from './_lib/razorpay.js';
+import { getSettings, registrationClosedReason, relaysMap, toPass, validateAthlete } from './_lib/registrations.js';
 
-export default async function handler(req, res) {
-  // CORS Headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+export default handler(async (req, res) => {
+  if (!onlyMethods(req, res, ['POST'])) return;
+  const { json } = await readBody(req);
+  const athlete = validateAthlete(json);
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  const settings = await getSettings();
+  const closed = registrationClosedReason(settings);
+  if (closed) return fail(res, 403, closed);
+  const days = Array.isArray(settings.matchDays) ? settings.matchDays : [];
+  if (days.length && !days.includes(athlete.match_date)) return fail(res, 400, 'Please pick one of the official match dates.');
+
+  // Same athlete (phone + name) already paid for this exact event?
+  const dupes = await db.select('registrations',
+    `phone=${eq(athlete.phone)}&event_code=${eq(athlete.event_code)}&status=eq.paid&select=id,full_name,reg_no`);
+  const dupe = (dupes || []).find(d => d.full_name.trim().toLowerCase() === athlete.full_name.toLowerCase());
+  if (dupe) {
+    return fail(res, 409, `${athlete.full_name} is already registered for this event (${dupe.reg_no}). Use "Track Booking" to see the pass.`);
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, error: 'Method not allowed. Use POST.' });
+  // Anti-hoarding: unpaid seat holds are capped per mobile and per network (IP),
+  // so nobody can block whole relays with fake checkouts.
+  const ip = String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
+  const since = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+  const [byPhone, byIp] = await Promise.all([
+    db.select('registrations', `phone=${eq(athlete.phone)}&status=eq.pending&created_at=gte.${since}&select=id`),
+    ip ? db.select('registrations', `client_ip=${eq(ip)}&status=eq.pending&created_at=gte.${since}&select=id`) : []
+  ]);
+  if ((byPhone || []).length >= 3 || (byIp || []).length >= 10) {
+    return fail(res, 429, 'Too many unfinished payments. Please complete or wait 30 minutes before trying again.');
   }
 
-  const key_id = process.env.RAZORPAY_KEY_ID;
-  const key_secret = process.env.RAZORPAY_KEY_SECRET;
-
-  if (!key_id || !key_secret) {
-    console.error('Razorpay credentials missing from environment variables.');
-    return res.status(500).json({
-      success: false,
-      error: 'Payment gateway configuration error: Razorpay API keys missing.'
-    });
-  }
-
+  let reg;
   try {
-    let body = req.body;
-    if (typeof body === 'string') {
-      try {
-        body = JSON.parse(body);
-      } catch (err) {
-        body = {};
-      }
-    }
-    body = body || {};
-
-    let { amount, currency, receipt, notes } = body;
-
-    // Validate amount
-    const parsedAmount = Number(amount);
-    if (!parsedAmount || isNaN(parsedAmount)) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid amount. Amount in paise is required.'
-      });
-    }
-
-    // Minimum amount: 100 paise (₹1)
-    if (parsedAmount < 100) {
-      return res.status(400).json({
-        success: false,
-        error: 'Amount must be at least 100 paise (₹1).'
-      });
-    }
-
-    currency = currency || 'INR';
-    receipt = receipt || `rcpt_nst_${Date.now()}`;
-
-    const razorpay = new Razorpay({
-      key_id,
-      key_secret
-    });
-
-    const orderOptions = {
-      amount: Math.round(parsedAmount),
-      currency,
-      receipt: String(receipt).slice(0, 40), // Razorpay receipt max 40 chars
-      notes: notes || {}
-    };
-
-    const order = await razorpay.orders.create(orderOptions);
-
-    return res.status(200).json({
-      success: true,
-      order_id: order.id,
-      id: order.id,
-      amount: order.amount,
-      currency: order.currency,
-      key_id: key_id
-    });
-  } catch (error) {
-    console.error('Razorpay order creation error:', error);
-
-    // Auth error handling
-    if (error.statusCode === 401 || (error.error && error.error.code === 'BAD_REQUEST_ERROR' && error.statusCode === 401)) {
-      return res.status(401).json({
-        success: false,
-        error: 'Authentication failed with payment gateway.'
-      });
-    }
-
-    return res.status(500).json({
-      success: false,
-      error: error.error?.description || error.message || 'Failed to create payment order.'
-    });
+    reg = await db.rpc('reserve_registration', { p: { ...athlete, client_ip: ip } });
+  } catch (err) {
+    const friendly = friendlyDbError(err);
+    if (friendly) throw new HttpError(409, friendly);
+    throw err;
   }
-}
+
+  // Free events (fee 0) are confirmed immediately.
+  if (!reg.fee) {
+    const confirmed = await db.rpc('confirm_registration', { p_id: reg.id, p_payment_id: null, p_mode: 'free' });
+    return send(res, 200, { success: true, free: true, pass: toPass(confirmed, await relaysMap()) });
+  }
+
+  let order;
+  try {
+    order = await createOrder({
+      amountPaise: reg.fee * 100,
+      receipt: reg.id,
+      notes: {
+        registration_id: reg.id,
+        athlete: reg.full_name,
+        phone: reg.phone,
+        event_code: reg.event_code,
+        match_date: reg.match_date,
+        relay: String(reg.relay_no)
+      }
+    });
+  } catch (err) {
+    await db.update('registrations', `id=${eq(reg.id)}`, { status: 'cancelled', notes: 'Order creation failed', updated_at: new Date().toISOString() });
+    throw err;
+  }
+
+  await db.update('registrations', `id=${eq(reg.id)}`, { rzp_order_id: order.id, updated_at: new Date().toISOString() });
+
+  send(res, 200, {
+    success: true,
+    keyId: publicKeyId(),
+    orderId: order.id,
+    amount: order.amount,
+    currency: order.currency,
+    fee: reg.fee,
+    registrationId: reg.id,
+    lane: reg.lane_no
+  });
+});

@@ -436,94 +436,81 @@
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/js/portal.js?v=2.4"></script>
-  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/portal.js?v=3.0"></script>
+  <script src="assets/js/api-client.js?v=3.0"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       loadCategoryScores();
+      setInterval(() => { if (!document.hidden) loadCategoryScores(); }, 20000);
     });
 
     async function loadCategoryScores() {
-      try {
-        const rawScores = await NexShotDB.getLiveScores();
-        renderCategoryTables(rawScores);
-      } catch (e) {
-        console.error('Error loading category scores:', e);
-      }
+      const result = await NexShotDB.getLiveScores();
+      renderCategoryTables(result.published ? result.scores : []);
+    }
+
+    // Ranks are computed inside each event/category (admin rank override wins; ties -> more 10x)
+    function rankWithinCategory(list) {
+      const groups = {};
+      list.forEach(s => { (groups[s.eventCode] = groups[s.eventCode] || []).push(s); });
+      const out = [];
+      Object.keys(groups).sort((a, b) => a.localeCompare(b)).forEach(code => {
+        const g = groups[code].sort((a, b) => (b.total || 0) - (a.total || 0) || (b.x10 || 0) - (a.x10 || 0));
+        g.forEach((s, i) => out.push({ ...s, rank: s.rankOverride || i + 1 }));
+      });
+      return out;
     }
 
     function renderCategoryTables(data) {
-      if (!data || data.length === 0) return;
+      const started = (data || []).filter(s => (s.total || 0) > 0 || s.status === 'finished');
+      const rifles = started.filter(s => s.weapon === 'Rifle');
+      const pistols = started.filter(s => s.weapon === 'Pistol');
+      const juniors = started.filter(s => /youth|junior|under|little/i.test(`${s.category} ${s.event}`));
 
-      const normalized = data.map(item => {
-        const comp = item.competitor || {};
-        return {
-          id: item.id || comp.id,
-          name: comp.full_name || item.name || 'Shooter',
-          bib: comp.bib_no || item.id || 100,
-          school: comp.club_name || item.school || 'BBC Shooting Academy',
-          weapon: (comp.weapon || item.event || '').toLowerCase(),
-          category: comp.age_category || item.category || 'Senior',
-          s1: parseFloat(item.series_1 !== undefined ? item.series_1 : item.s1) || 0,
-          s2: parseFloat(item.series_2 !== undefined ? item.series_2 : item.s2) || 0,
-          s3: parseFloat(item.series_3 !== undefined ? item.series_3 : item.s3) || 0,
-          s4: parseFloat(item.series_4 !== undefined ? item.series_4 : item.s4) || 0,
-          s5: parseFloat(item.series_5 !== undefined ? item.series_5 : item.s5) || 0,
-          s6: parseFloat(item.series_6 !== undefined ? item.series_6 : item.s6) || 0,
-          total: parseFloat(item.total_score !== undefined ? item.total_score : item.total) || 0,
-          x10: parseInt(item.inner_tens !== undefined ? item.inner_tens : item.x10) || 0
-        };
-      });
-
-      // Filter 1: Rifle
-      const rifles = normalized.filter(s => s.weapon.includes('rifle')).sort((a,b) => b.total - a.total);
-      // Filter 2: Pistol
-      const pistols = normalized.filter(s => s.weapon.includes('pistol')).sort((a,b) => b.total - a.total);
-      // Filter 3: Junior & Youth
-      const juniors = normalized.filter(s => s.category.toLowerCase().includes('youth') || s.category.toLowerCase().includes('junior') || s.category.toLowerCase().includes('under')).sort((a,b) => b.total - a.total);
-
-      populateTbody('tbodyRifle', rifles);
-      populateTbody('tbodyPistol', pistols);
-      populateTbody('tbodyJunior', juniors.length > 0 ? juniors : rifles.slice(0, 4));
+      populateTbody('tbodyRifle', rankWithinCategory(rifles));
+      populateTbody('tbodyPistol', rankWithinCategory(pistols));
+      populateTbody('tbodyJunior', rankWithinCategory(juniors));
     }
 
     function populateTbody(id, list) {
       const tb = document.getElementById(id);
       if (!tb) return;
-      tb.innerHTML = '';
 
       if (list.length === 0) {
         tb.innerHTML = `<tr><td colspan="12" class="text-center py-4 font-mono text-white/40">No entries recorded in this division.</td></tr>`;
         return;
       }
 
-      list.forEach((s, idx) => {
-        const rank = idx + 1;
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-white/5 transition-colors';
-
+      tb.innerHTML = list.map(s => {
+        const rank = s.rank;
         let badge = `<span class="font-mono text-white/60 font-bold">#${rank}</span>`;
         if (rank === 1) badge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-amber-400/20 text-amber-300">1</span>`;
         if (rank === 2) badge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-slate-300/20 text-slate-200">2</span>`;
         if (rank === 3) badge = `<span class="px-2 py-0.5 rounded font-mono font-bold bg-amber-700/20 text-amber-500">3</span>`;
+        const isRifle = s.weapon !== 'Pistol';
+        const series = s.shots && s.shots <= 40 ? 4 : 6;
+        const fmt = n => {
+          const v = s['s' + n];
+          if (n > series || v === null || v === undefined || v <= 0) return '-';
+          return isRifle ? Number(v).toFixed(1) : Math.round(v);
+        };
+        const total = isRifle ? Number(s.total || 0).toFixed(1) : Math.round(s.total || 0);
 
-        tr.innerHTML = `
+        return `<tr class="hover:bg-white/5 transition-colors">
           <td class="py-2.5 px-3 text-center">${badge}</td>
-          <td class="py-2.5 px-3 font-bold text-white">${s.name}</td>
-          <td class="py-2.5 px-3 text-white/60 text-xs">${s.school}</td>
-          <td class="py-2.5 px-3 font-mono text-[11px] text-white/80">${s.category}</td>
-          <td class="py-2.5 px-2 text-center font-mono">${s.s1.toFixed(1)}</td>
-          <td class="py-2.5 px-2 text-center font-mono">${s.s2.toFixed(1)}</td>
-          <td class="py-2.5 px-2 text-center font-mono">${s.s3.toFixed(1)}</td>
-          <td class="py-2.5 px-2 text-center font-mono">${s.s4.toFixed(1)}</td>
-          <td class="py-2.5 px-2 text-center font-mono text-white/50">${s.s5 > 0 ? s.s5.toFixed(1) : '-'}</td>
-          <td class="py-2.5 px-2 text-center font-mono text-white/50">${s.s6 > 0 ? s.s6.toFixed(1) : '-'}</td>
-          <td class="py-2.5 px-3 text-center font-mono font-bold text-cyan-300">${s.total.toFixed(1)}</td>
-          <td class="py-2.5 px-3 text-center font-mono font-bold text-[#FF5B37]">${s.x10}x</td>
-        `;
-        tb.appendChild(tr);
-      });
+          <td class="py-2.5 px-3 font-bold text-white">${escapeHtml(s.name)}<div class="text-[10px] font-mono text-white/40 font-normal">BIB #${escapeHtml(s.bib)}</div></td>
+          <td class="py-2.5 px-3 text-white/60 text-xs">${escapeHtml(s.club || '—')}</td>
+          <td class="py-2.5 px-3 font-mono text-[11px] text-white/80">${escapeHtml(s.category)}<div class="text-[10px] text-white/40">${escapeHtml(s.event)}</div></td>
+          <td class="py-2.5 px-2 text-center font-mono">${fmt(1)}</td>
+          <td class="py-2.5 px-2 text-center font-mono">${fmt(2)}</td>
+          <td class="py-2.5 px-2 text-center font-mono">${fmt(3)}</td>
+          <td class="py-2.5 px-2 text-center font-mono">${fmt(4)}</td>
+          <td class="py-2.5 px-2 text-center font-mono text-white/50">${fmt(5)}</td>
+          <td class="py-2.5 px-2 text-center font-mono text-white/50">${fmt(6)}</td>
+          <td class="py-2.5 px-3 text-center font-mono font-bold text-cyan-300">${total}</td>
+          <td class="py-2.5 px-3 text-center font-mono font-bold text-[#FF5B37]">${s.x10 || 0}x</td>
+        </tr>`;
+      }).join('');
     }
   </script>
 </body>
